@@ -12,7 +12,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-# options(digits = 2)
 ```
 
 ```{r setup}
@@ -99,6 +98,11 @@ Paasche Volume Measure (previous quarter = 100)
 paasche(data8.4cp, data8.4ep, output = "index", reference_freq = 4)
 ```
 
+Fisher Volume Index (previous quarter = 100)
+```{r}
+fisher(data8.4cp, data8.4ep, output = "index", reference_freq = 4)
+```
+
 # Chain-Linking Annually-weighted Laspeyres-type Indices: Annual Overlap Technique (example 8.6)
 
 Volume Measures (previous year = 100)
@@ -125,13 +129,13 @@ data8.6vol
 Chain-Indices with Annual Overlap (2010 =100)
 
 ```{r}
-cp_vo2vpch_ao(data8.6cp, data8.6vol, 
+vo_cp2vpch_ao(vo = data8.6vol, data8.6cp, 
 			  base_year = 2010, output = "index")
 ```
 Chain Volume Measures with Annual Overlap in Monetary Terms
 
 ```{r}
-cp_vo2vpch_ao(data8.6cp, data8.6vol, 
+vo_cp2vpch_ao(data8.6vol, data8.6cp, 
 			  base_year = 2010, output = "measure")
 ```
 
@@ -145,8 +149,7 @@ Volume Measures (previous year = 100) :
 ```{r}
 data8.7cp <- data8.2cp
 data8.7pi <- data8.2ep
-cp = data8.7cp[,1];pi = data8.7pi[,1] 
-reference_freq = 4; reference_cycle = 4
+
 data8.7vol <- cp_pi2vol(cp = data8.7cp, pi = data8.7pi, 
 						reference_freq = 4, reference_cycle = 4)
 data8.7vol.tot <- laspeyres(data8.7cp, data8.7pi, 
@@ -164,20 +167,26 @@ colnames(data8.7cp) <-
 data8.7vol
 ```
 
-Chain-Indices with Annual Overlap (2010 =100)
+Chain-Indices with One-Quarter Overlap (2010 = 100)
 
 ```{r}
-cp_vo2vpch_ao(data8.7cp, data8.7vol, 
+vo_cp2vpch_oqo(data8.7vol, data8.7cp, 
 			  base_year = 2010, output = "index")
 ```
-Chain Volume Measures with Annual Overlap in Monetary Terms
+Chain Volume Measures with One-Quarter Overlap in Monetary Terms
 
 ```{r}
-cp_vo2vpch_ao(data8.7cp, data8.7vol, 
+vo_cp2vpch_oqo(data8.7vol, data8.7cp, 
 			  base_year = 2010, output = "measure")
 ```
 
 # Chain-Linking and Benchmarking Quarterly Fisher Indices (example 8.8)
+
+```{r}
+fisher8.8 <- na.omit(fisher(data8.4cp, data8.4ep, output = "index", reference_freq = 4))
+```
+
+Not one-quarter overlap but quarterly chain
 
 # Contributions to Percent Change from Annually-chained Laspeyres-type Volume Measures (example 8.9)
 
