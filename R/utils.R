@@ -1,3 +1,4 @@
+#'@export
 extend_ts <- function(x, start = TRUE, end = TRUE) {
 	first_date <- stats::start(x)
 	last_date <- stats::end(x)
