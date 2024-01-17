@@ -101,6 +101,40 @@ paasche(data8.4cp, data8.4ep, output = "index", reference_freq = 4)
 
 # Chain-Linking Annually-weighted Laspeyres-type Indices: Annual Overlap Technique (example 8.6)
 
+Volume Measures (previous year = 100)
+
+```{r}
+data8.6cp <- data8.2cp
+data8.6pi <- data8.2ep
+
+data8.6vol <- cp_pi2vol(cp = data8.6cp,pi = data8.6pi)
+data8.6vol.tot <- laspeyres(data8.6cp, data8.6pi)
+data8.6cp.total <- ts(rowSums(data8.6cp), start = start(data8.6cp),
+					  frequency = frequency(data8.6cp))
+
+data8.6cp <- ts.union(data8.6cp,
+					  data8.6cp.total)
+data8.6vol <- ts.union(data8.6vol,
+					  data8.6vol.tot)
+colnames(data8.6cp) <- 
+	colnames(data8.6vol) <- 
+	c(colnames(data8.6pi), "Sum")
+data8.6vol
+```
+
+Chain-Indices with Annual Overlap (2010 =100)
+
+```{r}
+cp_vo2vpch_ao(data8.6cp, data8.6vol, 
+			  base_year = 2010, output = "index")
+```
+Chain Volume Measures with Annual Overlap in Monetary Terms
+
+```{r}
+cp_vo2vpch_ao(data8.6cp, data8.6vol, 
+			  base_year = 2010, output = "measure")
+```
+
 # Chain-Linking Annually-weighted Laspeyres-type Indices: the One-Quarter Overlap Technique (example 8.7)
 
 # Chain-Linking and Benchmarking Quarterly Fisher Indices (example 8.8)
