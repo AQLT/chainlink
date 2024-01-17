@@ -5,17 +5,20 @@
 # # vo[1:4] <- 25
 # base_year <- 2010
 #'
+#'
 #'@export
-cp_vo2vpch_ao <- function(cp, vo, base_year = NULL, output = c("index", "measure", "both")) {
-	UseMethod("cp_vo2vpch_ao", cp)
+vo_cp2vpch_ao <- function(vo, cp = NULL, base_year = NULL, output = c("index", "measure", "both")) {
+	UseMethod("vo_cp2vpch_ao", vo)
 }
 #'@export
-cp_vo2vpch_ao.ts <- function (cp, vo, base_year = NULL, output = c("index", "measure", "both")) {
+vo_cp2vpch_ao.ts <- function (vo, cp = NULL, base_year = NULL, output = c("index", "measure", "both")) {
 	output <- match.arg(output)
-	vo <- chainlink:::extend_ts(vo)
-	cp <- chainlink:::extend_ts(cp)
+	vo <- extend_ts(vo)
 	vo_y <- aggregate.ts(vo, nfrequency = 1, FUN = mean)
-	cp_y <- aggregate.ts(cp, nfrequency = 1, FUN = sum)
+	if (!is.null (cp)) {
+		cp <- extend_ts(cp)
+		cp_y <- aggregate.ts(cp, nfrequency = 1, FUN = sum)
+	}
 
 	if (missing(base_year)) {
 		base_year <- max(start(vo)[1] - 1, start(cp)[1])
@@ -29,21 +32,21 @@ cp_vo2vpch_ao.ts <- function (cp, vo, base_year = NULL, output = c("index", "mea
 			  annual_ch),
 			start = previous_y,
 			frequency = 1)
-		# annual_ch <- c(cp_y[1], window(vo_y, start = start(cp_y)[1] + 1) / 100)
 	}
-	# annual_ch <- c(cp_y[1], window(vo_y, start = start(cp_y)[1] + 1) / 100)
-	annual_ch <- ts(cumprod(annual_ch), start = start(cp_y), frequency = 1)
+	annual_ch <- ts(cumprod(annual_ch), start = start(annual_ch), frequency = 1)
 	annual_ch <- annual_ch / as.numeric(window(annual_ch, start = base_year, end = base_year)) * 100
 
-	# annual_links <- vo_y / stats::lag(cp_y, -1)
 
-	annual_links_q <- ts(rep(annual_ch, each = frequency(vo)), start = start(annual_ch),
+	annual_links_q <- ts(rep(annual_ch, each = frequency(vo)),
+						 start = start(annual_ch),
 						 frequency = frequency(vo))
 
 	ch_ind <- stats::lag(annual_links_q, - frequency(vo)) * vo / 100
 	if (output == 'index') {
 		return(ch_ind)
 	} else {
+		if (is.null(cp))
+			stop("cp variable must be defined")
 		cp_y_ref_base_year <- as.numeric(window(cp_y, start = base_year, end = base_year))
 		ch_m <- ch_ind * (cp_y_ref_base_year / (frequency(cp)) ) / 100
 		if (output == "measure") {
@@ -56,11 +59,76 @@ cp_vo2vpch_ao.ts <- function (cp, vo, base_year = NULL, output = c("index", "mea
 	}
 }
 #' @export
-cp_vo2vpch_ao.mts <- function(cp, vo, base_year = NULL, output = c("index", "measure", "both")) {
-	if (ncol(cp) != ncol(vo))
+vo_cp2vpch_ao.mts <- function(vo, cp = NULL, base_year = NULL, output = c("index", "measure", "both")) {
+	if (is.null(cp) && ncol(cp) != ncol(vo))
 		stop("cp and vo must have the same number of variables")
 	vol <- do.call(cbind, lapply(1:ncol(vo), function(i){
-		cp_vo2vpch_ao(cp[,i], vo[,i], base_year = base_year, output = output)
+		vo_cp2vpch_ao(vo = vo[,i], cp = cp[,i],
+					  base_year = base_year, output = output)
+	}))
+	colnames(vol) <- colnames(cp)
+	vol
+}
+
+#'@export
+vo_cp2vpch_oqo <- function(vo, cp = NULL, base_year = NULL, output = c("index", "measure", "both")) {
+	UseMethod("vo_cp2vpch_oqo", vo)
+}
+#'@export
+vo_cp2vpch_oqo.ts <- function (vo, cp = NULL, base_year = NULL, output = c("index", "measure", "both")) {
+	output <- match.arg(output)
+	vo <- extend_ts(vo)
+	if (!is.null (cp)) {
+		cp <- extend_ts(cp)
+		cp_y <- aggregate.ts(cp, nfrequency = 1, FUN = sum)
+	}
+
+	if (missing(base_year)) {
+		base_year <- max(start(vo)[1] - 1, start(cp)[1])
+	}
+	annual_ch <- ts(vo[cycle(vo) == frequency(vo)] / 100,
+					start = start(vo)[1],
+					frequency = 1)
+	if (start(end(cp))[1] < start(annual_ch)[1]) {
+		# complete the first year with cp
+		previous_y <- start(annual_ch)[1] - 1
+		previous_p <- c(previous_y, frequency(vo))
+		annual_ch <- ts(
+			c(window(cp, start = previous_p, end = previous_p),
+			  annual_ch),
+			start = previous_y,
+			frequency = 1)
+	}
+	annual_ch <- ts(cumprod(annual_ch), start = start(annual_ch), frequency = 1)
+	annual_ch <- annual_ch / as.numeric(window(annual_ch, start = base_year, end = base_year)) * 100
+
+	annual_links_q <- ts(rep(annual_ch, each = frequency(vo)), start = start(annual_ch),
+						 frequency = frequency(vo))
+
+	ch_ind <- stats::lag(annual_links_q, - frequency(vo)) * vo / 100
+	if (output == 'index') {
+		return(ch_ind)
+	} else {
+		if (is.null(cp))
+			stop("cp variable must be defined")
+		cp_y_ref_base_year <- as.numeric(window(cp_y, start = base_year, end = base_year))
+		ch_m <- ch_ind * (cp_y_ref_base_year / (frequency(cp)) ) / 100
+		if (output == "measure") {
+			return(ch_m)
+		} else {
+			res <- cbind(ch_ind, ch_m)
+			colnames(res) <- c("Index", "Measure")
+			return (res)
+		}
+	}
+}
+#' @export
+vo_cp2vpch_oqo.mts <- function(vo, cp = NULL, base_year = NULL, output = c("index", "measure", "both")) {
+	if (is.null(cp) && ncol(cp) != ncol(vo))
+		stop("cp and vo must have the same number of variables")
+	vol <- do.call(cbind, lapply(1:ncol(vo), function(i){
+		vo_cp2vpch_oqo(vo = vo[,i], cp = cp[,i],
+					   base_year = base_year, output = output)
 	}))
 	colnames(vol) <- colnames(cp)
 	vol
