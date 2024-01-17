@@ -4,8 +4,13 @@
 # vo = cp_pi2vol(cp, pi)
 # # vo[1:4] <- 25
 # base_year <- 2010
+#'
 #'@export
-cp_vo2vpch_ao <- function (cp, vo, base_year, output = c("index", "measure", "both")) {
+cp_vo2vpch_ao <- function(cp, vo, base_year = NULL, output = c("index", "measure", "both")) {
+	UseMethod("cp_vo2vpch_ao", cp)
+}
+#'@export
+cp_vo2vpch_ao.ts <- function (cp, vo, base_year = NULL, output = c("index", "measure", "both")) {
 	output <- match.arg(output)
 	vo <- chainlink:::extend_ts(vo)
 	cp <- chainlink:::extend_ts(cp)
@@ -49,4 +54,14 @@ cp_vo2vpch_ao <- function (cp, vo, base_year, output = c("index", "measure", "bo
 			return (res)
 		}
 	}
+}
+#' @export
+cp_vo2vpch_ao.mts <- function(cp, vo, base_year = NULL, output = c("index", "measure", "both")) {
+	if (ncol(cp) != ncol(vo))
+		stop("cp and vo must have the same number of variables")
+	vol <- do.call(cbind, lapply(1:ncol(vo), function(i){
+		cp_vo2vpch_ao(cp[,i], vo[,i], base_year = base_year, output = output)
+	}))
+	colnames(vol) <- colnames(cp)
+	vol
 }
