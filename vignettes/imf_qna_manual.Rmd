@@ -137,6 +137,46 @@ cp_vo2vpch_ao(data8.6cp, data8.6vol,
 
 # Chain-Linking Annually-weighted Laspeyres-type Indices: the One-Quarter Overlap Technique (example 8.7)
 
+For consistency with previous example, we use the same current year price data than in the previous example.
+This is not the case with the QNA manual and explains some differences with the table 8.7
+
+Volume Measures (previous year = 100) :
+
+```{r}
+data8.7cp <- data8.2cp
+data8.7pi <- data8.2ep
+cp = data8.7cp[,1];pi = data8.7pi[,1] 
+reference_freq = 4; reference_cycle = 4
+data8.7vol <- cp_pi2vol(cp = data8.7cp, pi = data8.7pi, 
+						reference_freq = 4, reference_cycle = 4)
+data8.7vol.tot <- laspeyres(data8.7cp, data8.7pi, 
+						reference_freq = 4, reference_cycle = 4)
+data8.7cp.total <- ts(rowSums(data8.7cp), start = start(data8.7cp),
+					  frequency = frequency(data8.7cp))
+
+data8.7cp <- ts.union(data8.7cp,
+					  data8.7cp.total)
+data8.7vol <- ts.union(data8.7vol,
+					  data8.7vol.tot)
+colnames(data8.7cp) <- 
+	colnames(data8.7vol) <- 
+	c(colnames(data8.7pi), "Sum")
+data8.7vol
+```
+
+Chain-Indices with Annual Overlap (2010 =100)
+
+```{r}
+cp_vo2vpch_ao(data8.7cp, data8.7vol, 
+			  base_year = 2010, output = "index")
+```
+Chain Volume Measures with Annual Overlap in Monetary Terms
+
+```{r}
+cp_vo2vpch_ao(data8.7cp, data8.7vol, 
+			  base_year = 2010, output = "measure")
+```
+
 # Chain-Linking and Benchmarking Quarterly Fisher Indices (example 8.8)
 
 # Contributions to Percent Change from Annually-chained Laspeyres-type Volume Measures (example 8.9)

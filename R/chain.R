@@ -1,33 +1,40 @@
 
 #' @export
-cp_pi2vol <- function(cp, pi, reference_freq = 1) {
+cp_pi2vol <- function(cp, pi, reference_freq = 1, reference_cycle = NULL) {
 	UseMethod("cp_pi2vol", cp)
 }
 #' @export
-cp_pi2vol.ts <- function(cp, pi, reference_freq = 1) {
+cp_pi2vol.ts <- function(cp, pi, reference_freq = 1, reference_cycle = NULL) {
 	cp <- extend_ts(cp)
 	evm <- cp / pi * 100
 	cp_y <- stats:::aggregate.ts(cp,
 								 nfrequency = reference_freq,
 								 FUN = sum)
+	annual_freq <- reference_freq
+	if (!is.null(reference_cycle)) {
+		cp_y <- ts(cp_y[cycle(cp_y) %in% reference_cycle],
+				   start = start(cp_y)[1],
+				   frequency = 1)
+		annual_freq <- 1
+	}
 	cp_py <- stats::lag(cp_y, -1)
-	cp_y_trim_py <- ts(rep(cp_py, each = frequency(cp) / reference_freq),
+	cp_y_trim_py <- ts(rep(cp_py, each = frequency(cp) / annual_freq),
 					start = start(cp_py), frequency = frequency(cp))
 	vol <- evm / (cp_y_trim_py / (frequency(cp) / reference_freq) )* 100
 	vol
 }
 #' @export
-cp_pi2vol.mts <- function(cp, pi, reference_freq = 1) {
+cp_pi2vol.mts <- function(cp, pi, reference_freq = 1, reference_cycle = NULL) {
 	if (ncol(cp) != ncol(pi))
 		stop("cp and pi must have the same number of variables")
 	vol <- do.call(cbind, lapply(1:ncol(pi), function(i){
-		cp_pi2vol(cp[,i], pi[,i], reference_freq = reference_freq)
+		cp_pi2vol(cp[,i], pi[,i], reference_freq = reference_freq, reference_cycle = reference_cycle)
 	}))
 	colnames(vol) <- colnames(cp)
 	vol
 }
 #' @export
-laspeyres <- function(cp, pi, output = c("index", "measure", "both"), reference_freq = 1){
+laspeyres <- function(cp, pi, output = c("index", "measure", "both"), reference_freq = 1, reference_cycle = NULL){
 	output <- match.arg(output)
 	if (is.list(cp))
 		cp <- do.call(cbind, cp)
@@ -47,9 +54,16 @@ laspeyres <- function(cp, pi, output = c("index", "measure", "both"), reference_
 	cp_y <- stats:::aggregate.ts(cp,
 								 nfrequency = reference_freq,
 								 FUN = sum)
+	annual_freq <- reference_freq
+	if (!is.null(reference_cycle)) {
+		cp_y <- ts(cp_y[cycle(cp_y) %in% reference_cycle, ],
+				   start = start(cp_y)[1],
+				   frequency = 1)
+		annual_freq <- 1
+	}
 	cp_py <- stats::lag(cp_y, -1)
 	# Yearly current prices in a low frequency (for multiplications)
-	cp_y_trim_py <- ts(matrix(rep(cp_py, each = frequency(cp) / reference_freq), ncol = ncol(cp_y)),
+	cp_y_trim_py <- ts(matrix(rep(cp_py, each = frequency(cp) / annual_freq), ncol = ncol(cp_y)),
 					start = start(cp_py), frequency = frequency(cp))
 
 	evi <- evm / (cp_y_trim_py[,-ncol(cp_y_trim_py)] / (frequency(cp) / reference_freq) )* 100
@@ -76,7 +90,7 @@ laspeyres <- function(cp, pi, output = c("index", "measure", "both"), reference_
 	# 	   SIMPLIFY = FALSE)
 }
 #' @export
-paasche <- function(cp, pi, output = c("index", "measure", "both"), reference_freq = 1){
+paasche <- function(cp, pi, output = c("index", "measure", "both"), reference_freq = 1, reference_cycle = NULL){
 	output <- match.arg(output)
 	if (is.list(cp))
 		cp <- do.call(cbind, cp)
@@ -96,11 +110,18 @@ paasche <- function(cp, pi, output = c("index", "measure", "both"), reference_fr
 	cp_y <- stats:::aggregate.ts(cp,
 								 nfrequency = reference_freq,
 								 FUN = sum)
+	annual_freq <- reference_freq
+	if (!is.null(reference_cycle)) {
+		cp_y <- ts(cp_y[cycle(cp_y) %in% reference_cycle, ],
+				   start = start(cp_y)[1],
+				   frequency = 1)
+		annual_freq <- 1
+	}
 	cp_py <- stats::lag(cp_y, -1)
 	# Yearly current prices in a low frequency (for multiplications)
-	cp_y_trim_py <- ts(matrix(rep(cp_py, each = frequency(cp) / reference_freq), ncol = ncol(cp_py)),
+	cp_y_trim_py <- ts(matrix(rep(cp_py, each = frequency(cp) / annual_freq), ncol = ncol(cp_py)),
 					start = start(cp_py), frequency = frequency(cp))
-	cp_y_trim <- ts(matrix(rep(cp_y, each = frequency(cp) / reference_freq), ncol = ncol(cp_y)),
+	cp_y_trim <- ts(matrix(rep(cp_y, each = frequency(cp) / annual_freq), ncol = ncol(cp_y)),
 					start = start(cp_y), frequency = frequency(cp))
 	evi <- evm / (cp_y_trim_py[,-ncol(cp_y_trim_py)] / (frequency(cp) / reference_freq) )* 100
 
@@ -124,12 +145,10 @@ paasche <- function(cp, pi, output = c("index", "measure", "both"), reference_fr
 			return (res)
 		}
 	}
-	# mapply(cp_pi2vol, cp, pi,
-	# 	   SIMPLIFY = FALSE)
 }
 
 #' @export
-fisher <- function(cp, pi, output = c("index", "measure", "both"), all_index = FALSE, reference_freq = 1){
+fisher <- function(cp, pi, output = c("index", "measure", "both"), all_index = FALSE, reference_freq = 1, reference_cycle = NULL){
 	output <- match.arg(output)
 	if (is.list(cp))
 		cp <- do.call(cbind, cp)
@@ -149,11 +168,18 @@ fisher <- function(cp, pi, output = c("index", "measure", "both"), all_index = F
 	cp_y <- stats:::aggregate.ts(cp,
 								 nfrequency = reference_freq,
 								 FUN = sum)
+	annual_freq <- reference_freq
+	if (!is.null(reference_cycle)) {
+		cp_y <- ts(cp_y[cycle(cp_y) %in% reference_cycle, ],
+				   start = start(cp_y)[1],
+				   frequency = 1)
+		annual_freq <- 1
+	}
 	cp_py <- stats::lag(cp_y, -1)
 	# Yearly current prices in a low frequency (for multiplications)
-	cp_y_trim_py <- ts(matrix(rep(cp_py, each = frequency(cp) / reference_freq), ncol = ncol(cp_py)),
+	cp_y_trim_py <- ts(matrix(rep(cp_py, each = frequency(cp) / annual_freq), ncol = ncol(cp_py)),
 					   start = start(cp_py), frequency = frequency(cp))
-	cp_y_trim <- ts(matrix(rep(cp_y, each = frequency(cp) / reference_freq), ncol = ncol(cp_y)),
+	cp_y_trim <- ts(matrix(rep(cp_y, each = frequency(cp) / annual_freq), ncol = ncol(cp_y)),
 					start = start(cp_y), frequency = frequency(cp))
 	evi <- evm / (cp_y_trim_py[,-ncol(cp_y_trim_py)] / (frequency(cp) / reference_freq) )* 100
 	lvi <- evi *
@@ -201,6 +227,4 @@ fisher <- function(cp, pi, output = c("index", "measure", "both"), all_index = F
 			}
 		}
 	}
-	# mapply(cp_pi2vol, cp, pi,
-	# 	   SIMPLIFY = FALSE)
 }
