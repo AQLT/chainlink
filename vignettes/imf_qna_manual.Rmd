@@ -1,0 +1,120 @@
+---
+title: "imf_qna_manual"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{imf_qna_manual}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+# options(digits = 2)
+```
+
+```{r setup}
+library(chainlink)
+```
+
+# Deriving Annual and Quarterly Volume Measures using Laspeyres-type Formula (example 8.2)
+
+Elementary Volume Measures (in monetary terms)
+
+```{r}
+data8.2cp / data8.2ep * 100
+```
+Elementary Volume Indices (previous year = 100)
+```{r}
+cp_pi2vol(data8.2cp, data8.2ep)
+```
+
+Laspeyres Volume Index (previous year = 100)
+```{r}
+laspeyres(data8.2cp, data8.2ep, output = "index")
+```
+
+Laspeyres Volume Measure (in monetary terms)
+```{r}
+laspeyres(data8.2cp, data8.2ep, output = "measure")
+```
+
+Laspeyres Volume Index (previous year = 100) and Measure (in monetary terms)
+```{r}
+laspeyres(data8.2cp, data8.2ep, output = "both")
+```
+
+# Deriving Annual Volume Measures using Fisher Formula (example 8.3)
+
+Elementary Level Deflation
+
+```{r}
+data8.3cp.an <- stats::aggregate.ts(data8.2cp)
+data8.3ep.an <- stats::aggregate.ts(data8.2ep, FUN = "mean")
+
+data8.3cp.an / data8.3ep.an * 100
+```
+Elementary Volume Indices (year-on-year)
+```{r}
+cp_pi2vol(data8.3cp.an, data8.3ep.an)
+```
+
+Laspeyres Volume Index (previous year = 100)
+```{r}
+laspeyres(data8.3cp.an, data8.3ep.an, output = "index")
+```
+
+Paasche Volume Measure (previous year = 100)
+```{r}
+paasche(data8.3cp.an, data8.3ep.an, output = "index")
+```
+
+Fisher Volume Measure (previous year = 100)
+```{r}
+fisher(data8.3cp.an, data8.3ep.an, output = "index")
+```
+
+# Deriving Quarterly Volume Measures using Fisher Formula (example 8.4)
+
+
+Elementary Level Deflation
+
+```{r}
+data8.4cp / data8.4ep * 100
+```
+Elementary Volume Indices (quarter-to-quarter)
+```{r}
+cp_pi2vol(data8.4cp, data8.4ep, reference_freq = 4)
+```
+
+Laspeyres Volume Index (previous quarter = 100)
+```{r}
+laspeyres(data8.4cp, data8.4ep, output = "index", reference_freq = 4)
+```
+
+Paasche Volume Measure (previous quarter = 100)
+```{r}
+paasche(data8.4cp, data8.4ep, output = "index", reference_freq = 4)
+```
+
+# Chain-Linking Annually-weighted Laspeyres-type Indices: Annual Overlap Technique (example 8.6)
+
+# Chain-Linking Annually-weighted Laspeyres-type Indices: the One-Quarter Overlap Technique (example 8.7)
+
+# Chain-Linking and Benchmarking Quarterly Fisher Indices (example 8.8)
+
+# Contributions to Percent Change from Annually-chained Laspeyres-type Volume Measures (example 8.9)
+
+# Annually-weighted Laspeyres Indices: Annual Overlap and One-Quarter Overlap Techniques (figure 8.1)
+
+# Chain Laspeyres Volume Series and Chain Fisher Volume Series (figure 8.2)
+
+# Annual Overlap, One-Quarter Overlap and One-Quarter Overlap with Benchmarking (example 8.A1)
+
+# Effect of Benchmarking on the Chain Volume Series with QO technique (figure 8.A1)
+
+
+
+
