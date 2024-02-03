@@ -20,29 +20,32 @@ library(chainlink)
 
 # Deriving Annual and Quarterly Volume Measures using Laspeyres-type Formula (example 8.2)
 
+In the example 8.2 of the IMF Manual, the annual elementary price indices are not defined as the annual average of the quarterly indices (contrary to the example 8.3): this might cause some differences in annual quantities.
+
 Elementary Volume Measures (in monetary terms)
 
 ```{r}
-data8.2cp / data8.2ep * 100
+evm <- data8.2cp / data8.2ep * 100
+evm |> round(1)
 ```
 Elementary Volume Indices (previous year = 100)
 ```{r}
-cp_pi2vol(data8.2cp, data8.2ep)
+cp_pi2vol(data8.2cp, data8.2ep) |> round(1)
 ```
 
 Laspeyres Volume Index (previous year = 100)
 ```{r}
-laspeyres(data8.2cp, data8.2ep, output = "index")
+laspeyres(data8.2cp, data8.2ep, output = "index") |> round(1)
 ```
 
 Laspeyres Volume Measure (in monetary terms)
 ```{r}
-laspeyres(data8.2cp, data8.2ep, output = "measure")
+laspeyres(data8.2cp, data8.2ep, output = "measure") |> round(1)
 ```
 
 Laspeyres Volume Index (previous year = 100) and Measure (in monetary terms)
 ```{r}
-laspeyres(data8.2cp, data8.2ep, output = "both")
+laspeyres(data8.2cp, data8.2ep, output = "both") |> round(1)
 ```
 
 # Deriving Annual Volume Measures using Fisher Formula (example 8.3)
@@ -53,54 +56,59 @@ Elementary Level Deflation
 data8.3cp.an <- stats::aggregate.ts(data8.2cp)
 data8.3ep.an <- stats::aggregate.ts(data8.2ep, FUN = "mean")
 
-data8.3cp.an / data8.3ep.an * 100
+eld <- data8.3cp.an / data8.3ep.an * 100 
+eld |> round(1)
 ```
 Elementary Volume Indices (year-on-year)
 ```{r}
-cp_pi2vol(data8.3cp.an, data8.3ep.an)
+cp_pi2vol(data8.3cp.an, data8.3ep.an) |> round(2)
 ```
 
 Laspeyres Volume Index (previous year = 100)
 ```{r}
-laspeyres(data8.3cp.an, data8.3ep.an, output = "index")
+laspeyres(data8.3cp.an, data8.3ep.an, output = "index") |> round(2)
 ```
 
 Paasche Volume Measure (previous year = 100)
 ```{r}
-paasche(data8.3cp.an, data8.3ep.an, output = "index")
+paasche(data8.3cp.an, data8.3ep.an, output = "index") |> round(2)
 ```
 
 Fisher Volume Measure (previous year = 100)
 ```{r}
-fisher(data8.3cp.an, data8.3ep.an, output = "index")
+fisher(data8.3cp.an, data8.3ep.an, output = "index") |> round(2)
 ```
 
 # Deriving Quarterly Volume Measures using Fisher Formula (example 8.4)
 
+In the IMF manual, the elementary prices from example 8.4 are different from the one of example 8.2 and 8.3.
+This cause inconsistency between the different indices in example 8.8 (quarterly volume index derived using data from example 8.2 and annual volume index derived using data from example 8.4).
+Therefore, to be consistent between all the example, we here use only the data from example 8.2
 
 Elementary Level Deflation
 
 ```{r}
-data8.4cp / data8.4ep * 100
+eld <- data8.2cp / data8.2ep * 100 
+eld |> round(1)
 ```
 Elementary Volume Indices (quarter-to-quarter)
 ```{r}
-cp_pi2vol(data8.4cp, data8.4ep, reference_freq = 4)
+cp_pi2vol(data8.2cp, data8.2ep, reference_freq = 4) |> round(2)
 ```
 
 Laspeyres Volume Index (previous quarter = 100)
 ```{r}
-laspeyres(data8.4cp, data8.4ep, output = "index", reference_freq = 4)
+laspeyres(data8.2cp, data8.2ep, output = "index", reference_freq = 4) |> round(2)
 ```
 
 Paasche Volume Measure (previous quarter = 100)
 ```{r}
-paasche(data8.4cp, data8.4ep, output = "index", reference_freq = 4)
+paasche(data8.2cp, data8.2ep, output = "index", reference_freq = 4) |> round(2)
 ```
 
 Fisher Volume Index (previous quarter = 100)
 ```{r}
-fisher(data8.4cp, data8.4ep, output = "index", reference_freq = 4)
+fisher(data8.2cp, data8.2ep, output = "index", reference_freq = 4) |> round(2)
 ```
 
 # Chain-Linking Annually-weighted Laspeyres-type Indices: Annual Overlap Technique (example 8.6)
@@ -123,20 +131,20 @@ data8.6vol <- ts.union(data8.6vol,
 colnames(data8.6cp) <- 
 	colnames(data8.6vol) <- 
 	c(colnames(data8.6pi), "Sum")
-data8.6vol
+data8.6vol |> round(2)
 ```
 
 Chain-Indices with Annual Overlap (2010 =100)
 
 ```{r}
 vo_cp2vpch_ao(vo = data8.6vol, data8.6cp, 
-			  base_year = 2010, output = "index")
+			  base_year = 2010, output = "index") |> round(2)
 ```
 Chain Volume Measures with Annual Overlap in Monetary Terms
 
 ```{r}
 vo_cp2vpch_ao(data8.6vol, data8.6cp, 
-			  base_year = 2010, output = "measure")
+			  base_year = 2010, output = "measure") |> round(1)
 ```
 
 # Chain-Linking Annually-weighted Laspeyres-type Indices: the One-Quarter Overlap Technique (example 8.7)
@@ -164,28 +172,30 @@ data8.7vol <- ts.union(data8.7vol,
 colnames(data8.7cp) <- 
 	colnames(data8.7vol) <- 
 	c(colnames(data8.7pi), "Sum")
-data8.7vol
+data8.7vol |> round(2)
 ```
 
 Chain-Indices with One-Quarter Overlap (2010 = 100)
 
 ```{r}
 vo_cp2vpch_oqo(data8.7vol, data8.7cp, 
-			  base_year = 2010, output = "index")
+			  base_year = 2010, output = "index") |> round(2)
 ```
 Chain Volume Measures with One-Quarter Overlap in Monetary Terms
 
 ```{r}
 vo_cp2vpch_oqo(data8.7vol, data8.7cp, 
-			  base_year = 2010, output = "measure")
+			  base_year = 2010, output = "measure") |> round(1)
 ```
 
 # Chain-Linking and Benchmarking Quarterly Fisher Indices (example 8.8)
 
 ```{r}
-fisher8.8 <- na.omit(fisher(data8.4cp, data8.4ep, output = "index", reference_freq = 4))
-```
+fisher8.8 <- na.omit(fisher(data8.2cp, data8.2ep, output = "index", reference_freq = 4))
 
+annual_chain(fisher8.8)
+```
+Chain Fisher Volume Index is designated as chain-linked using the one-quarter overlap technique
 Not one-quarter overlap but quarterly chain
 
 # Contributions to Percent Change from Annually-chained Laspeyres-type Volume Measures (example 8.9)
