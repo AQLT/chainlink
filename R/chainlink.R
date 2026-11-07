@@ -1,4 +1,6 @@
+#' Chain-linking
 #'
+#' Chain-linking with annual overlap (ao), one-quarter overlap (oqo) and period-to-quarter (pq) methods.
 #'
 #'@export
 vo_cp2vpch_ao <- function(vo, cp = NULL, base_year = NULL, output = c("index", "measure", "both")) {
@@ -156,7 +158,7 @@ vo_cp2vpch_pq <- function(vo, cp = NULL, base_year = NULL, output = c("index", "
 	UseMethod("vo_cp2vpch_pq", vo)
 }
 #'@export
-vo_cp2vpch.ts <- function (vo, cp = NULL, base_year = NULL, output = c("index", "measure", "both")) {
+vo_cp2vpch_pq.ts <- function (vo, cp = NULL, base_year = NULL, output = c("index", "measure", "both")) {
 	output <- match.arg(output)
 	vo <- extend_ts(vo)
 	if (!is.null (cp)) {
@@ -213,4 +215,16 @@ auto_base_year <- function(vo, cp = NULL, base_year = NULL) {
 		}
 	}
 	base_year
+}
+
+
+contrib_qtq_ao <- function(x, z) {
+	x <- extend_ts(x)
+	z <- extend_ts(z)
+	dx <- aggregate.ts(x, nfrequency = 1, FUN = sum)
+	dz <- aggregate.ts(z, nfrequency = 1, FUN = sum)
+	dxdz <- ts(rep(dx / dz, each = frequency(x)),
+						 start = start(x),
+						 frequency = frequency(x))
+	100 * diff(x)/stats::lag(z-1) * (stats::lags(dxdz, - frequency(x)))
 }

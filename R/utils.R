@@ -1,4 +1,8 @@
-#'@export
+#' Extend series to the start and end of the year
+#'
+#' @param x Time series
+#' @param start Boolean indicating if the series must be extended at the start.
+#' @param end Boolean indicating if the series must be extended at the end.
 extend_ts <- function(x, start = TRUE, end = TRUE) {
 	first_date <- stats::start(x)
 	last_date <- stats::end(x)
