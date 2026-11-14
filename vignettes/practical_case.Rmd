@@ -1,0 +1,268 @@
+---
+title: "Practical case: from current prices to published contributions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Practical case: from current prices to published contributions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+# The benchmarking section uses the suggested package tempdisagg
+has_tempdisagg <- requireNamespace("tempdisagg", quietly = TRUE)
+```
+
+```{r setup}
+library(chainlink)
+```
+
+This vignette follows a complete workflow, from raw quarterly data to the series
+that are usually published: chain-linked volume series, growth rates and
+contributions to growth. It does not require to know the examples of the IMF
+manual (see the vignette `imf_qna_manual` for them).
+
+The data are those of the example 8.2 of the manual: two products, `A` and `B`,
+with their current prices and their price indices over the previous year
+(2010 is the reference year).
+
+# 1. Prepare the inputs
+
+The functions use `ts` objects. Raw data usually come as a table, with one row per
+quarter:
+
+```{r raw}
+raw <- data.frame(
+	year = rep(2010:2013, each = 4),
+	quarter = rep(1:4, times = 4),
+	A_cp = as.numeric(data8.2cp[, "A"]),
+	B_cp = as.numeric(data8.2cp[, "B"]),
+	A_pi = as.numeric(data8.2ep[, "A"]),
+	B_pi = as.numeric(data8.2ep[, "B"])
+)
+head(raw, 6)
+```
+
+```{r to-ts}
+to_ts <- function(df, columns, names) {
+	res <- ts(as.matrix(df[, columns]),
+			  start = c(df$year[1], df$quarter[1]), frequency = 4)
+	colnames(res) <- names
+	res
+}
+cp <- to_ts(raw, c("A_cp", "B_cp"), c("A", "B"))
+price_idx <- to_ts(raw, c("A_pi", "B_pi"), c("A", "B"))
+```
+
+What the functions expect:
+
+* `cp`: current prices of the components, without the total. They must cover the
+  reference year (2010 here), whose annual sum gives the level of the chain
+  measures;
+* `price_idx`: price indices over the previous year (average of the previous
+  year = 100). They are not needed in the reference year (here they are
+  missing in 2010).
+
+```{r check-inputs}
+window(price_idx, end = c(2011, 2))
+```
+
+If the price indices are given over the previous quarter (or month) instead,
+the quarter-to-quarter indices of `fisher()` or `laspeyres()` need
+`reference_freq = 4`, and `pi_py2pp()` converts price indices over the previous
+year to indices over the previous quarter.
+
+# 2. Chain-linked volume series
+
+With the annual overlap technique and 2010 as reference year, the chain-linked
+Laspeyres-type volume measures (in monetary terms) of the products and of
+their total are:
+
+```{r chain}
+x <- chain_laspeyres(cp, price_idx, method = "ao", base_year = 2010,
+					 output = "measure")
+round(x, 1)
+```
+
+The last column is the total. Chain volume measures are not additive: the
+total differs from the sum of the products, except in 2010 and 2011.
+
+```{r discrepancy}
+chain_discrepancy(x) |> round(2)
+```
+
+The same series as indices (2010 = 100):
+
+```{r index}
+idx <- chain_laspeyres(cp, price_idx, method = "ao", base_year = 2010,
+					   output = "index")
+round(idx, 2)
+```
+
+# 3. Growth rates and contributions
+
+Growth rates of the total, over the previous quarter and over the same quarter of
+the previous year:
+
+```{r growth}
+growth_qoq <- 100 * (x[, "Total"] / stats::lag(x[, "Total"], -1) - 1)
+growth_yoy <- 100 * (x[, "Total"] / stats::lag(x[, "Total"], -4) - 1)
+round(ts.union(`Quarter-to-quarter` = growth_qoq, `Year-on-year` = growth_yoy), 2)
+```
+
+Contributions of the products to these growth rates. `chain_contrib()` takes the
+output of `chain_laspeyres()` and the current prices of the components; `extra`
+adds the growth of the total and the residual (growth minus the sum of the
+contributions):
+
+```{r contrib}
+contrib_qoq <- chain_contrib(x, cp, method = "ao", type = "period",
+							 extra = c("total", "residual"))
+contrib_yoy <- chain_contrib(x, cp, method = "ao", type = "yoy",
+							 extra = c("total", "residual"))
+round(contrib_qoq, 3)
+round(contrib_yoy, 3)
+```
+
+The residual is zero if the data are fully consistent. Here it is not exactly
+zero (the annual price indices of the example are not exactly consistent with the
+quarterly data) but it is negligible: it must be reported rather than allocated.
+
+```{r residual}
+max(abs(contrib_qoq[, "Residual"]), na.rm = TRUE)
+max(abs(contrib_yoy[, "Residual"]), na.rm = TRUE)
+```
+
+# 4. A chart for the publication
+
+Stacked contributions and growth of the total (year-on-year):
+
+```{r chart, fig.width = 7, fig.height = 4}
+plot_contributions <- function(contrib, main) {
+	comp <- as.matrix(contrib[, c("A", "B")])
+	growth <- as.numeric(contrib[, "Total"])
+	labels <- paste0(floor(time(contrib)), "Q", cycle(contrib))
+	keep <- !is.na(comp[, 1])
+	bp <- barplot(t(comp[keep, ]), names.arg = labels[keep],
+				  col = c("grey35", "grey75"), las = 2, cex.names = 0.7,
+				  ylab = "Percentage points", main = main)
+	lines(bp, growth[keep], type = "b", pch = 19)
+	legend("topleft", legend = c("A", "B", "Total"),
+		   fill = c("grey35", "grey75", NA), border = c("black", "black", NA),
+		   pch = c(NA, NA, 19), lty = c(NA, NA, 1), bty = "n")
+}
+plot_contributions(contrib_yoy, "Contributions to year-on-year growth")
+```
+
+# 5. Annual series and change of the reference year
+
+Contributions to the growth of the annual sums:
+
+```{r annual}
+chain_contrib(x, cp, method = "ao", type = "annual", extra = "total") |>
+	round(3)
+```
+
+Indices are often published with a recent reference year. `chain_rebase()` changes
+it (the average of the new year is 100) without changing the growth rates:
+
+```{r rebase}
+chain_rebase(idx, base_year = 2012) |> round(2)
+```
+
+The contributions must be computed from the measures built with their original
+reference year (here 2010), before rebasing.
+
+# 6. One-quarter overlap and benchmarking
+
+With the one-quarter overlap technique, the quarterly series are linked on the last
+quarter of the year, so that the annual sums of the chain volume measures differ
+from those of the annual chain series (annual overlap). They can be benchmarked
+on them with the `tempdisagg` package (Denton, Cholette's variant), as in the
+vignette `imf_qna_manual`.
+
+```{r oqo}
+x_oqo <- chain_laspeyres(cp, price_idx, method = "oqo", base_year = 2010,
+						 output = "measure")
+contrib_oqo <- chain_contrib(x_oqo, cp, method = "oqo", type = "yoy", pi = price_idx,
+							 extra = c("total", "residual"))
+round(contrib_oqo, 3)
+```
+
+```{r benchmark, eval = has_tempdisagg}
+annual_ao <- aggregate(x[, "Total"], FUN = sum)
+x_oqo_total <- x_oqo[, "Total"]
+bench <- tempdisagg::td(annual_ao ~ 0 + x_oqo_total,
+						conversion = "sum", method = "denton-cholette")
+x_oqo_bench <- predict(bench)
+ts.union(`One-quarter overlap` = x_oqo_total,
+		 `Benchmarked` = x_oqo_bench) |> round(1)
+```
+
+The contributions above are those of the non-benchmarked one-quarter overlap
+series: benchmarking the total alone breaks the link between the total and its
+components, so the contributions of the benchmarked series are not available
+through `chain_contrib()`.
+
+# 7. Seasonal adjustment of chain-linked series
+
+Chain-linked volume series are often seasonally adjusted. The ESS Guidelines on
+Seasonal Adjustment (item 5.6) describe how to derive the seasonally adjusted
+aggregate of annually chain-linked Laspeyres-type components **indirectly**, that
+is by aggregating the seasonally adjusted components:
+
+1. seasonally adjust the chain volume measures of the components;
+2. un-chain them (`chain_unchain()`): the volume at the prices of the previous year
+   is additive within each year;
+3. aggregate them and chain-link the aggregate again, with the same technique;
+4. re-reference it to the reference year (the annual current prices of the
+   reference year are those of the unadjusted data).
+
+`chain_aggregate()` does the steps 2 to 4. Here the seasonal adjustment is an
+illustration with `stats::stl()` (the data of the example only have 12 quarters
+and no real seasonality, so that the adjustment is not meaningful in itself):
+
+```{r sa-stl}
+sa_stl <- function(s) {
+	fit <- stats::stl(s, s.window = "periodic")
+	fit$time.series[, "trend"] + fit$time.series[, "remainder"]
+}
+# Step 1: seasonally adjusted chain volume measures of the components
+x_sa <- ts.union(A = sa_stl(x[, "A"]), B = sa_stl(x[, "B"]))
+round(x_sa, 1)
+```
+
+Step 2: un-chained components, i.e. volumes at the prices of the previous year,
+that can be summed:
+
+```{r sa-unchain}
+chain_unchain(x_sa, cp, base_year = 2010) |> round(1)
+```
+
+Steps 3 and 4: the indirectly seasonally adjusted aggregate, compared to the direct
+adjustment of the aggregate and to the unadjusted data:
+
+```{r sa-aggregate}
+indirect <- chain_aggregate(x_sa, cp, base_year = 2010, output = "measure")
+direct <- sa_stl(x[, "Total"])
+sa <- ts.union(Unadjusted = x[, "Total"], `SA direct` = direct,
+			   `SA indirect` = indirect)
+round(sa, 1)
+```
+
+The two approaches give different seasonally adjusted aggregates. The annual
+totals of the seasonally adjusted series are not forced to be those of the
+unadjusted data:
+
+```{r sa-annual}
+aggregate(sa, FUN = sum) |> round(1)
+```
+
+If users require it and if the unadjusted data are additive, the guidelines
+suggest forcing the annual totals (for instance with the Denton method of the
+`tempdisagg` package, as in the vignette on the manual). The indirect approach
+only exists for Laspeyres-type series: for the other chain-linked indices, only
+the direct approach is feasible. With the one-quarter overlap technique, use
+`method = "oqo"` and the price indices `pi` (the overlap quarter is valued at the
+average prices of the year).
+

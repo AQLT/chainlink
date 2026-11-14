@@ -1,0 +1,229 @@
+---
+title: "Contributions to percent change of chain-linked volume measures"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Contributions to percent change of chain-linked volume measures}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+```{r setup}
+library(chainlink)
+```
+
+Chain-linked volume measures are not additive, so that the contribution of a
+component to the growth of the total cannot be read from the growth of the
+components. `chain_contrib()` computes exact contributions: they add up to the
+growth of the total (up to the inconsistencies of the data, see below).
+
+# Principle
+
+Let `x` be the chain volume measure (in monetary terms) of a component and `z`
+the one of the total. Within a year `y`, the chain volume measure of the total is
+exactly the sum of the chain volume measures of the components, valued at the
+relative prices `rho` of the previous year (`y - 1`):
+
+```
+z[t] = sum over the components i of rho[i, y - 1] * x[i, t]
+```
+
+* annual overlap (`method = "ao"`): `rho[i, y]` is the price of the component `i`
+  relative to the price of the total in year `y`, with annual sums
+  `(cp[i, y] / x[i, y]) / (cp[z, y] / z[y])`;
+* one-quarter overlap (`method = "oqo"`): `rho[i, y]` is the same ratio computed
+  on the overlap period (the last quarter, or the last month, of year `y`).
+
+The contribution of the component `i` to the growth between a period `s` and a
+period `t` (previous period, same period of the previous year, or previous year) is
+
+```
+100 * [ (x[t] - x[s]) * rho[y(t) - 1] / z[s]
+      + (x[s] / z[s] - a[y(t) - 1]) * (rho[y(t) - 1] - rho[y(s) - 1]) ]
+```
+
+where `a[y]` is the share of the component in the total (annual share for the annual
+overlap, share of the overlap period for the one-quarter overlap). The second term
+is zero if `s` and `t` are in the same year. For the annual overlap and the growth
+over the previous period, this is the formula of the example 8.9 of the manual.
+The formula for the one-quarter overlap, and for the growth over the same period of
+the previous year, derive from the same decomposition: they add up to the growth of the
+total exactly.
+
+The breakdown between the components is not unique, only its sum is: the second
+term (revaluation due to the change of relative prices) is allocated as in the
+manual.
+
+# Example
+
+`chain_laspeyres()` computes the chain volume measures of the components and of
+their total (last column):
+
+```{r}
+x <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+					 output = "measure")
+round(x, 3)
+```
+
+Contributions to the growth over the previous quarter (`type = "period"`, the
+default). `extra` adds the growth of the total and the residual (growth of the
+total minus the sum of the contributions):
+
+```{r}
+chain_contrib(x, data8.2cp, method = "ao", extra = c("total", "residual")) |>
+	round(3)
+```
+
+Contributions to the growth over the same quarter of the previous year:
+
+```{r}
+chain_contrib(x, data8.2cp, method = "ao", type = "yoy", extra = "total") |>
+	round(3)
+```
+
+Contributions to the growth of the annual sums:
+
+```{r}
+chain_contrib(x, data8.2cp, method = "ao", type = "annual", extra = "total") |>
+	round(3)
+```
+
+# One-quarter overlap
+
+```{r}
+x_oqo <- chain_laspeyres(data8.2cp, data8.2ep, method = "oqo", base_year = 2010,
+						 output = "measure")
+chain_contrib(x_oqo, data8.2cp, method = "oqo", type = "period", pi = data8.2ep,
+			  extra = c("total", "residual")) |>
+	round(3)
+```
+
+The overlap quarter is valued at the average prices of the year, as in the manual
+(`cp_pi2cy()`): `chain_contrib()` needs the price indices `pi` to do so (or `cp`
+already valued at these prices). With the one-quarter overlap technique, the
+contributions to the annual growth are only available from the second year (the
+annual sum of the base year is not defined).
+
+# Correspondence with the manual
+
+* annual overlap: `type = "period"` and `type = "annual"` are the equations (29)
+  (quarters 2 to 4 and annual data) and (30) (first quarter) of the paragraphs
+  8.86-8.87, and `type = "yoy"` is the equation (31) of the paragraph 8.88. The
+  example 8.9 is reproduced by the tests of the package;
+* one-quarter overlap: the manual (footnote 35) applies the same formulas with the
+  annual deflators, but the contributions are then not exactly additive. The
+  package provides this variant with `method = "ao"` applied to the one-quarter
+  overlap measures, and an exactly additive version with `method = "oqo"`:
+
+```{r oqo-manual}
+x_oqo <- chain_laspeyres(data8.2cp, data8.2ep, method = "oqo", base_year = 2010,
+						 output = "measure")
+# Formulas of the manual (annual deflators)
+chain_contrib(x_oqo, data8.2cp, method = "ao", extra = "residual") |> round(4)
+# Deflators of the overlap period (valued at the average prices of the year)
+chain_contrib(x_oqo, data8.2cp, method = "oqo", pi = data8.2ep,
+			  extra = "residual") |> round(4)
+```
+
+* a variable that can be negative, zero or positive (changes in inventories) is
+  treated residually (paragraph 8.90): its contribution is the difference between
+  the contribution of the aggregate that includes it and the contributions of the
+  other components.
+
+# Quarterly Fisher indices
+
+The paragraph 8.89 gives the contributions to the percent change of a quarterly
+Fisher index. `fisher_contrib()` takes the current prices of all the components and
+their price indices over the previous quarter (`pi_py2pp()` converts price
+indices over the previous year):
+
+```{r fisher}
+ep8.4 <- pi_py2pp(data8.2ep)
+fisher_contrib(data8.2cp, ep8.4, extra = c("total", "residual")) |> round(3)
+```
+
+This is the equation (32) of the manual. The decomposition is exact: the residual
+is zero up to numerical errors. As printed in the manual, the equation has the
+ratio `z[t-1] / z[t]` in the first term and `x[t-1] * p[t-1] / p[t]` in the second
+one; with these ratios, the contributions do not add up to the percent change.
+The version implemented uses `z[t] / z[t-1]` and `x[t-1] * p[t] / p[t-1]`
+(consistent with the price relative of the denominator). The
+adjustments that some countries add to the quarterly contributions (benchmarking
+of the quarterly indices, annual rates) are not done.
+
+# Non-additivity and residual
+
+Two different things must not be mixed up:
+
+* the chain volume measures are not additive: the chain measure of the total is not
+  the sum of the chain measures of the components (`chain_discrepancy()`). It is zero
+  in the base year and, with the annual overlap, in the year after;
+* the contributions take this into account and add up to the growth of the total. The
+  residual (`extra = "residual"`) is therefore zero if the data are fully
+  consistent, i.e. if the annual price indices are exactly those of the quarterly
+  data. In the example of the manual, they are not (the residual is small, below
+  0.001 percentage point).
+
+```{r}
+chain_discrepancy(x) |> round(3)
+chain_discrepancy(x, relative = TRUE) |> round(3)
+```
+
+# Monthly data
+
+The functions use the frequency of the series. As an illustration, each quarter of the
+data of the example is spread over three months (the contributions are then
+non-zero only for the first month of each quarter, when the quarter changes):
+
+```{r}
+spread <- function(a, scale = 1) {
+	m <- as.matrix(a)
+	res <- ts(m[rep(seq_len(nrow(m)), each = 3), , drop = FALSE] * scale,
+			  start = c(start(a)[1], 1), frequency = 12)
+	colnames(res) <- colnames(a)
+	res
+}
+cp_m <- spread(data8.2cp, 1 / 3)
+pi_m <- spread(data8.2ep)
+x_m <- chain_laspeyres(cp_m, pi_m, method = "ao", base_year = 2010,
+					   output = "measure")
+chain_contrib(x_m, cp_m, method = "ao") |>
+	window(start = c(2011, 1), end = c(2011, 8)) |>
+	round(3)
+```
+
+# Variables that change sign
+
+Growth rates and chain volume measures are meaningless for a variable that can be
+negative, zero or positive, such as changes in inventories (paragraph 8.56 of the
+manual). Two solutions:
+
+* contributions are calculated residually (paragraph 8.90): the contribution of
+  the variable is the difference between the contribution of the aggregate that
+  includes it and the contributions of the other components;
+* a pseudo chain volume series is derived (paragraphs 8.57-8.58): the variable is
+  written as the difference of two series that only take positive values (closing
+  minus opening inventories, exports minus imports), each of them is chain-linked
+  separately, and the chain volume series is their difference. `chain_pseudo()`
+  does it, from the current prices and the price indices of the two series
+  (the two products of the example below only stand in for them):
+
+```{r pseudo}
+chain_pseudo(data8.2cp[, "A"], data8.2ep[, "A"],
+			 data8.2cp[, "B"], data8.2ep[, "B"], base_year = 2010) |> round(1)
+```
+
+# Change of the reference year
+
+`chain_rebase()` changes the reference year of an index (the average of the new
+year is 100) or of a measure (the annual sum of the new year is its annual current
+prices). The growth rates are unchanged.
+
+```{r}
+chain_laspeyres(data8.2cp, data8.2ep, base_year = 2010) |>
+	chain_rebase(base_year = 2012) |>
+	round(2)
+```
