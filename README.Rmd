@@ -1,0 +1,93 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# chainlink
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/AQLT/chainlink/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AQLT/chainlink/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+`chainlink` derives price and volume measures of national accounts, following
+chapter 8 of the IMF *Quarterly National Accounts Manual*:
+
+- Laspeyres-type, Paasche-type and Fisher-type volume indices from current prices
+  and price indices (`cp_pi2vol()`, `laspeyres()`, `paasche()`, `fisher()`);
+- chain-linking of quarterly or monthly volume indices with the annual overlap
+  and the one-quarter overlap techniques (`chain_link()`, `chain_laspeyres()`,
+  `annual_chain()`);
+- exact contributions to percent change of chain-linked volume measures, over the
+  previous period, over the same period of the previous year or for the annual
+  growth (`chain_contrib()`);
+- non-additivity of chain-linked series (`chain_discrepancy()`), change of the
+  reference year (`chain_rebase()`) and pseudo chain series for variables that
+  change sign (`chain_pseudo()`);
+- un-chaining and aggregation of chain-linked series, for the indirect seasonal
+  adjustment of Laspeyres-type series (`chain_unchain()`, `chain_aggregate()`).
+
+All the functions use `ts` objects. The benchmarking of the quarterly series on
+annual data is not implemented: use for example the
+[`tempdisagg`](https://CRAN.R-project.org/package=tempdisagg) package (see the
+vignette `imf_qna_manual`).
+
+## Installation
+
+You can install the development version of `chainlink` from
+[GitHub](https://github.com/AQLT/chainlink) with:
+
+``` r
+# install.packages("pak")
+pak::pak("AQLT/chainlink")
+```
+
+## Example
+
+The data of the example 8.2 of the manual are two products, `A` and `B`, with
+current prices (`data8.2cp`) and price indices over the previous year
+(`data8.2ep`):
+
+```{r example}
+library(chainlink)
+data8.2cp
+```
+
+Chain-linked Laspeyres-type volume measures of the products and of the total,
+with the annual overlap technique and 2010 as reference year:
+
+```{r chain}
+x <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+                     output = "measure")
+round(x, 1)
+```
+
+Contributions of the products to the quarter-to-quarter growth of the total, and
+the non-additivity residual:
+
+```{r contrib}
+round(chain_contrib(x, data8.2cp, method = "ao", extra = c("total", "residual")), 3)
+```
+
+Contributions to the growth over the same quarter of the previous year:
+
+```{r contrib-yoy}
+round(chain_contrib(x, data8.2cp, method = "ao", type = "yoy"), 3)
+```
+
+## Vignettes
+
+- `vignette("imf_qna_manual")` reproduces the examples of the chapter 8 of the
+  manual and gives the correspondence between the examples and the functions;
+- `vignette("contributions")` details the contributions to percent change;
+- `vignette("practical_case")` follows a complete workflow, from raw quarterly data to
+  the published series and contributions.

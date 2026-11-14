@@ -1,0 +1,142 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# chainlink
+
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/AQLT/chainlink/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AQLT/chainlink/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+`chainlink` derives price and volume measures of national accounts,
+following chapter 8 of the IMF *Quarterly National Accounts Manual*:
+
+- Laspeyres-type, Paasche-type and Fisher-type volume indices from
+  current prices and price indices (`cp_pi2vol()`, `laspeyres()`,
+  `paasche()`, `fisher()`);
+- chain-linking of quarterly or monthly volume indices with the annual
+  overlap and the one-quarter overlap techniques (`chain_link()`,
+  `chain_laspeyres()`, `annual_chain()`);
+- exact contributions to percent change of chain-linked volume measures,
+  over the previous period, over the same period of the previous year or
+  for the annual growth (`chain_contrib()`);
+- non-additivity of chain-linked series (`chain_discrepancy()`), change
+  of the reference year (`chain_rebase()`) and pseudo chain series for
+  variables that change sign (`chain_pseudo()`);
+- un-chaining and aggregation of chain-linked series, for the indirect
+  seasonal adjustment of Laspeyres-type series (`chain_unchain()`,
+  `chain_aggregate()`).
+
+All the functions use `ts` objects. The benchmarking of the quarterly
+series on annual data is not implemented: use for example the
+[`tempdisagg`](https://CRAN.R-project.org/package=tempdisagg) package
+(see the vignette `imf_qna_manual`).
+
+## Installation
+
+You can install the development version of `chainlink` from
+[GitHub](https://github.com/AQLT/chainlink) with:
+
+``` r
+# install.packages("pak")
+pak::pak("AQLT/chainlink")
+```
+
+## Example
+
+The data of the example 8.2 of the manual are two products, `A` and `B`,
+with current prices (`data8.2cp`) and price indices over the previous
+year (`data8.2ep`):
+
+``` r
+library(chainlink)
+data8.2cp
+#>             A     B
+#> 2010 Q1 150.0 225.0
+#> 2010 Q2 150.0 225.0
+#> 2010 Q3 150.0 225.0
+#> 2010 Q4 150.0 225.0
+#> 2011 Q1 159.7 218.9
+#> 2011 Q2 163.2 213.7
+#> 2011 Q3 167.4 210.6
+#> 2011 Q4 169.7 211.7
+#> 2012 Q1 174.2 204.1
+#> 2012 Q2 180.4 201.4
+#> 2012 Q3 188.9 192.3
+#> 2012 Q4 215.5 171.7
+#> 2013 Q1 224.7 166.0
+#> 2013 Q2 235.8 156.3
+#> 2013 Q3 242.9 148.5
+#> 2013 Q4 245.4 144.8
+```
+
+Chain-linked Laspeyres-type volume measures of the products and of the
+total, with the annual overlap technique and 2010 as reference year:
+
+``` r
+x <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+                     output = "measure")
+round(x, 1)
+#>             A     B Total
+#> 2011 Q1 156.6 221.1 377.7
+#> 2011 Q2 159.2 218.1 377.3
+#> 2011 Q3 162.5 214.9 377.4
+#> 2011 Q4 164.8 213.8 378.6
+#> 2012 Q1 165.6 213.6 379.4
+#> 2012 Q2 172.3 206.5 379.3
+#> 2012 Q3 182.2 198.2 381.3
+#> 2012 Q4 206.9 176.1 384.8
+#> 2013 Q1 214.2 171.4 388.6
+#> 2013 Q2 227.0 159.8 390.8
+#> 2013 Q3 235.0 151.0 390.7
+#> 2013 Q4 238.6 146.6 390.1
+```
+
+Contributions of the products to the quarter-to-quarter growth of the
+total, and the non-additivity residual:
+
+``` r
+round(chain_contrib(x, data8.2cp, method = "ao", extra = c("total", "residual")), 3)
+#>             A      B  Total Residual
+#> 2011 Q1    NA     NA     NA       NA
+#> 2011 Q2 0.702 -0.808 -0.106        0
+#> 2011 Q3 0.876 -0.838  0.038        0
+#> 2011 Q4 0.592 -0.281  0.311        0
+#> 2012 Q1 0.248 -0.041  0.207        0
+#> 2012 Q2 1.817 -1.835 -0.017        0
+#> 2012 Q3 2.673 -2.158  0.516        0
+#> 2012 Q4 6.615 -5.701  0.913        0
+#> 2013 Q1 2.082 -1.077  1.005        0
+#> 2013 Q2 3.440 -2.887  0.553        0
+#> 2013 Q3 2.136 -2.156 -0.020        0
+#> 2013 Q4 0.966 -1.109 -0.143        0
+```
+
+Contributions to the growth over the same quarter of the previous year:
+
+``` r
+round(chain_contrib(x, data8.2cp, method = "ao", type = "yoy"), 3)
+#>              A       B
+#> 2011 Q1     NA      NA
+#> 2011 Q2     NA      NA
+#> 2011 Q3     NA      NA
+#> 2011 Q4     NA      NA
+#> 2012 Q1  2.419  -1.970
+#> 2012 Q2  3.548  -3.009
+#> 2012 Q3  5.357  -4.338
+#> 2012 Q4 11.409  -9.783
+#> 2013 Q1 13.261 -10.826
+#> 2013 Q2 14.971 -11.951
+#> 2013 Q3 14.419 -11.949
+#> 2013 Q4  8.707  -7.310
+```
+
+## Vignettes
+
+- `vignette("imf_qna_manual")` reproduces the examples of the chapter 8
+  of the manual and gives the correspondence between the examples and
+  the functions;
+- `vignette("contributions")` details the contributions to percent
+  change;
+- `vignette("practical_case")` follows a complete workflow, from raw
+  quarterly data to the published series and contributions.
