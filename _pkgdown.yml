@@ -2,3 +2,36 @@ url: https://aqlt.github.io/chainlink/
 template:
   bootstrap: 5
 
+reference:
+- title: Volume indices from current prices and price indices
+  contents:
+  - cp_pi2vol
+  - cp_pi2cy
+  - laspeyres
+  - paasche
+  - fisher
+  - pi_py2pp
+- title: Chain-linking
+  contents:
+  - chain_laspeyres
+  - chain_link
+  - annual_chain
+  - chain_rebase
+  - chain_pseudo
+  - chain_unchain
+- title: Contributions and non-additivity
+  contents:
+  - chain_contrib
+  - chain_discrepancy
+  - fisher_contrib
+- title: Data
+  contents:
+  - data_manual
+
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - imf_qna_manual
+  - contributions
+  - practical_case
