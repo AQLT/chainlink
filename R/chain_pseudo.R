@@ -34,16 +34,14 @@
 #' 			 data8.2cp[, "B"], data8.2ep[, "B"], base_year = 2010)
 #' @seealso [chain_laspeyres()], [chain_contrib()]
 #' @export
-chain_pseudo <- function(cp_pos, pi_pos, cp_neg, pi_neg,
-						 method = c("ao", "oqo"), base_year = NULL) {
-	method <- match.arg(method)
-	check_ts(cp_pos, "cp_pos")
-	check_ts(cp_neg, "cp_neg")
-	check_same_frequency(cp_pos = cp_pos, cp_neg = cp_neg)
-	chain_total <- function(cp, pi) {
-		x <- chain_laspeyres(cp, pi, method = method, base_year = base_year,
-							 output = "measure")
-		x[, ncol(x)]   # the last column is the total
-	}
-	chain_total(cp_pos, pi_pos) - chain_total(cp_neg, pi_neg)
+chain_pseudo <- function(cp_pos, pi_pos, cp_neg, pi_neg, method = c("ao", "oqo"), base_year = NULL) {
+    method <- match.arg(method)
+    check_ts(cp_pos, "cp_pos")
+    check_ts(cp_neg, "cp_neg")
+    check_same_frequency(cp_pos = cp_pos, cp_neg = cp_neg)
+    chain_total <- function(cp, pi) {
+        x <- chain_laspeyres(cp, pi, method = method, base_year = base_year, output = "measure")
+        x[, ncol(x)] # the last column is the total
+    }
+    chain_total(cp_pos, pi_pos) - chain_total(cp_neg, pi_neg)
 }

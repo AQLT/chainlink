@@ -52,47 +52,50 @@
 #' @seealso [fisher()], [chain_contrib()]
 #' @export
 fisher_contrib <- function(cp, pi, extra = NULL) {
-	check_ts(cp, "cp")
-	check_ts(pi, "pi")
-	if (!is.null(extra))
-		extra <- match.arg(extra, c("total", "residual"), several.ok = TRUE)
-	cp <- as_mts(cp)
-	pi <- as_mts(pi)
-	check_same_ncol(cp, pi, "cp", "pi")
-	f <- check_same_frequency(cp = cp, pi = pi)
-	# same span as cp (no extension to complete years: it is not needed here)
-	pi <- shift_ts(pi, 0, cp)
-	n <- nrow(cp)
-	k <- ncol(cp)
-	if (n < 2L)
-		stop("At least two periods are needed", call. = FALSE)
+    check_ts(cp, "cp")
+    check_ts(pi, "pi")
+    if (!is.null(extra)) {
+        extra <- match.arg(extra, c("total", "residual"), several.ok = TRUE)
+    }
+    cp <- as_mts(cp)
+    pi <- as_mts(pi)
+    check_same_ncol(cp, pi, "cp", "pi")
+    f <- check_same_frequency(cp = cp, pi = pi)
+    # same span as cp (no extension to complete years: it is not needed here)
+    pi <- shift_ts(pi, 0, cp)
+    n <- nrow(cp)
+    k <- ncol(cp)
+    if (n < 2L) {
+        stop("At least two periods are needed", call. = FALSE)
+    }
 
-	cur <- plain_matrix(cp)
-	prev <- rbind(rep(NA_real_, k), cur[-n, , drop = FALSE])
-	r <- plain_matrix(pi) / 100
-	z_cur <- rowSums(cur)
-	z_prev <- rowSums(prev)
+    cur <- plain_matrix(cp)
+    prev <- rbind(rep(NA_real_, k), cur[-n, , drop = FALSE])
+    r <- plain_matrix(pi) / 100
+    z_cur <- rowSums(cur)
+    z_prev <- rowSums(prev)
 
-	laspeyres_idx <- rowSums(cur / r) / z_prev   # sum(p0 q1) / sum(p0 q0)
-	s10 <- rowSums(prev * r)                     # sum(p1 q0)
-	paasche_idx <- z_cur / s10                   # sum(p1 q1) / sum(p1 q0)
-	fisher_idx <- sqrt(laspeyres_idx * paasche_idx)
+    laspeyres_idx <- rowSums(cur / r) / z_prev # sum(p0 q1) / sum(p0 q0)
+    s10 <- rowSums(prev * r) # sum(p1 q0)
+    paasche_idx <- z_cur / s10 # sum(p1 q1) / sum(p1 q0)
+    fisher_idx <- sqrt(laspeyres_idx * paasche_idx)
 
-	a <- cur / r - prev    # x^t p^{t-1} / p^t - x^{t-1}
-	b <- cur - prev * r    # x^t - x^{t-1} p^t / p^{t-1}
-	# equation (32) of the manual
-	contrib <- 100 * ((z_cur / z_prev) * a + fisher_idx * b) / (z_cur + fisher_idx * s10)
-	colnames(contrib) <- colnames(cp)
+    a <- cur / r - prev # x^t p^{t-1} / p^t - x^{t-1}
+    b <- cur - prev * r # x^t - x^{t-1} p^t / p^{t-1}
+    # equation (32) of the manual
+    contrib <- 100 * ((z_cur / z_prev) * a + fisher_idx * b) / (z_cur + fisher_idx * s10)
+    colnames(contrib) <- colnames(cp)
 
-	if (!is.null(extra)) {
-		if ("total" %in% extra)
-			contrib <- cbind(contrib, Total = 100 * (fisher_idx - 1))
-		if ("residual" %in% extra) {
-			comp <- contrib[, seq_len(k), drop = FALSE]
-			contrib <- cbind(contrib, Residual = 100 * (fisher_idx - 1) - rowSums(comp))
-		}
-	} else if (k == 1L) {
-		return(stats::ts(contrib[, 1L], start = stats::start(cp), frequency = f))
-	}
-	stats::ts(contrib, start = stats::start(cp), frequency = f)
+    if (!is.null(extra)) {
+        if ("total" %in% extra) {
+            contrib <- cbind(contrib, Total = 100 * (fisher_idx - 1))
+        }
+        if ("residual" %in% extra) {
+            comp <- contrib[, seq_len(k), drop = FALSE]
+            contrib <- cbind(contrib, Residual = 100 * (fisher_idx - 1) - rowSums(comp))
+        }
+    } else if (k == 1L) {
+        return(stats::ts(contrib[, 1L], start = stats::start(cp), frequency = f))
+    }
+    stats::ts(contrib, start = stats::start(cp), frequency = f)
 }
