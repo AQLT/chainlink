@@ -58,16 +58,15 @@ To compute the volume indices of a total from its components, see
 }
 \examples{
 # Annual overlap: volume indices over the previous year
-vo <- cp_pi2vol(data8.2cp, data8.2ep)
-chain_link(vo, data8.2cp, method = "ao", base_year = 2010)
-chain_link(vo, data8.2cp, method = "ao", base_year = 2010, output = "measure")
+vo <- cp_pi2vol(imf_cp, imf_pi)
+chain_link(vo, imf_cp, method = "ao", base_year = 2010)
+chain_link(vo, imf_cp, method = "ao", base_year = 2010, output = "measure")
 
 # One-quarter overlap: the volume indices over the overlap quarter are built by
 # chain_laspeyres(), which also chains them
-chain_laspeyres(data8.2cp, data8.2ep, method = "oqo", base_year = 2010)
+chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010)
 
 # Annual chain index from annual Fisher indices
-fis <- fisher(stats::aggregate(data8.2cp),
-			  stats::aggregate(data8.2ep, FUN = "mean"))
+fis <- fisher(stats::aggregate(imf_cp), pi_annual(imf_pi, imf_cp))
 annual_chain(fis, base_year = 2010)
 }

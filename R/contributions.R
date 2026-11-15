@@ -62,6 +62,11 @@
 #' average = 100), needed for `method = "oqo"` to value the overlap period at the
 #' average prices of the year (see [cp_pi2cy()]). If `NULL`, `cp` must already be
 #' valued at the average prices of the year (`cp_pi2cy()`).
+#' @param overlap_prices Only for `method = "oqo"`: prices used to value the
+#' overlap period when `vo` was computed, `"year_prices"` (average prices of the
+#' year, default) or `"current_prices"` (own current prices): see
+#' [chain_laspeyres()]. With `"current_prices"`, `cp` is used as it is and `pi`
+#' is not needed.
 #' @param method Chain-linking technique used to compute `vo` and `vo_total`:
 #' `"ao"` (annual overlap) or `"oqo"` (one-quarter overlap, built as in the
 #' manual: see [chain_laspeyres()]).
@@ -82,19 +87,26 @@
 #' computed (e.g. the first periods).
 #' @examples
 #' # Chain volume measures of the components and of the total (last column)
-#' x <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+#' x <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,
 #' 					 output = "measure")
 #' # Contributions to the growth over the previous quarter
-#' chain_contrib(x, data8.2cp, method = "ao", extra = c("total", "residual"))
+#' chain_contrib(x, imf_cp, method = "ao", extra = c("total", "residual"))
 #' # Contributions to the growth over the same quarter of the previous year
-#' chain_contrib(x, data8.2cp, method = "ao", type = "yoy")
+#' chain_contrib(x, imf_cp, method = "ao", type = "yoy")
 #' # Contributions to the growth of the annual sums
-#' chain_contrib(x, data8.2cp, method = "ao", type = "annual")
+#' chain_contrib(x, imf_cp, method = "ao", type = "annual")
 #'
 #' # One-quarter overlap
-#' x_oqo <- chain_laspeyres(data8.2cp, data8.2ep, method = "oqo", base_year = 2010,
+#' x_oqo <- chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010,
 #' 						 output = "measure")
-#' chain_contrib(x_oqo, data8.2cp, method = "oqo", type = "yoy", pi = data8.2ep)
+#' chain_contrib(x_oqo, imf_cp, method = "oqo", type = "yoy", pi = imf_pi)
+#' # One-quarter overlap, overlap quarter at its own current prices
+#' x_cp <- chain_laspeyres(
+#'   imf_cp, imf_pi, method = "oqo", base_year = 2010,
+#' 	 overlap_prices = "current_prices", output = "measure"
+#' )
+#' chain_contrib(x_cp, imf_cp, method = "oqo", type = "yoy",
+#' 			  overlap_prices = "current_prices")
 #' @seealso [chain_laspeyres()], [chain_link()], [chain_discrepancy()],
 #' [fisher_contrib()]
 #' @export
@@ -107,9 +119,11 @@ chain_contrib <- function(
     type = c("period", "yoy", "annual"),
     base_year = NULL,
     extra = NULL,
-    pi = NULL
+    pi = NULL,
+    overlap_prices = c("year_prices", "current_prices")
 ) {
     method <- match.arg(method)
+    overlap_prices <- match.arg(overlap_prices)
     type <- match.arg(type)
     if (!is.null(extra)) {
         extra <- match.arg(extra, c("total", "residual"), several.ok = TRUE)
@@ -134,7 +148,7 @@ chain_contrib <- function(
     }
     check_ts(vo_total, "vo_total")
     check_same_ncol(vo, cp, "vo", "cp")
-    if (method == "oqo" && !is.null(pi)) {
+    if (method == "oqo" && overlap_prices == "year_prices" && !is.null(pi)) {
         # Values at the average prices of the year; the reference year (no price
         # index) keeps the current prices, only its annual sum is used
         check_ts(pi, "pi")

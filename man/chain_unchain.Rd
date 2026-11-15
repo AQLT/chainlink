@@ -5,7 +5,14 @@
 \alias{chain_aggregate}
 \title{Un-chain and aggregate chain-linked volume measures}
 \usage{
-chain_unchain(x, cp, method = c("ao", "oqo"), base_year = NULL, pi = NULL)
+chain_unchain(
+  x,
+  cp,
+  method = c("ao", "oqo"),
+  base_year = NULL,
+  pi = NULL,
+  overlap_prices = c("year_prices", "current_prices")
+)
 
 chain_aggregate(
   x,
@@ -14,7 +21,8 @@ chain_aggregate(
   base_year = NULL,
   output = c("index", "measure", "both"),
   pi = NULL,
-  cp_total = NULL
+  cp_total = NULL,
+  overlap_prices = c("year_prices", "current_prices")
 )
 }
 \arguments{
@@ -31,7 +39,11 @@ It must cover the reference year.}
 before the start of \code{x} (or the first year of \code{cp}, if later).}
 
 \item{pi}{Price indices of the components over the previous year (previous year
-average = 100), needed for \code{method = "oqo"}.}
+average = 100), needed for \code{method = "oqo"} with \code{overlap_prices = "year_prices"}.}
+
+\item{overlap_prices}{Only for \code{method = "oqo"}: prices used to value the
+overlap period, \code{"year_prices"} (default) or \code{"current_prices"}; it must be
+the one used to compute \code{x} (see \code{\link[=chain_laspeyres]{chain_laspeyres()}}).}
 
 \item{output}{(\code{chain_aggregate()} only) Chain index (the default), chain
 volume measure or both (see \code{\link[=chain_link]{chain_link()}}).}
@@ -82,17 +94,19 @@ Laspeyres-type series: for other chain-linked indices, only the direct approach
 is feasible.
 
 With the one-quarter overlap technique, the overlap period is valued at the
-average prices of the year (see \code{\link[=cp_pi2cy]{cp_pi2cy()}}), hence the price indices \code{pi}. The
+average prices of the year (see \code{\link[=cp_pi2cy]{cp_pi2cy()}}), hence the price indices \code{pi}, or
+at its own current prices (\code{overlap_prices = "current_prices"}, \code{pi} is then
+not needed). The
 un-chaining of the first year after the reference year (or of the first year of
 \code{x} if the reference year is not before it) needs the level of the previous
 year: if the reference year is inside the series, the first year is \code{NA}.
 }
 \examples{
-x <- chain_laspeyres(data8.2cp, data8.2ep, base_year = 2010, output = "measure")
+x <- chain_laspeyres(imf_cp, imf_pi, base_year = 2010, output = "measure")
 # Volumes at the prices of the previous year (additive within each year)
-chain_unchain(x[, c("A", "B")], data8.2cp, base_year = 2010)
+chain_unchain(x[, c("A", "B")], imf_cp, base_year = 2010)
 # Aggregate of the components: the chain volume measure of the total
-chain_aggregate(x[, c("A", "B")], data8.2cp, base_year = 2010, output = "measure")
+chain_aggregate(x[, c("A", "B")], imf_cp, base_year = 2010, output = "measure")
 }
 \seealso{
 \code{\link[=chain_link]{chain_link()}}, \code{\link[=chain_laspeyres]{chain_laspeyres()}}

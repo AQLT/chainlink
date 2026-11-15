@@ -32,8 +32,8 @@ prices of the previous year), so that the annual sum is the annual current
 price value.
 }
 \examples{
-cp_pi2cy(data8.2cp, data8.2ep)
+cp_pi2cy(imf_cp, imf_pi)
 }
 \seealso{
-\code{\link[=chain_laspeyres]{chain_laspeyres()}}, \code{\link[=chain_contrib]{chain_contrib()}}
+\code{\link[=chain_laspeyres]{chain_laspeyres()}}, \code{\link[=chain_contrib]{chain_contrib()}}, \code{\link[=pi_annual]{pi_annual()}}
 }

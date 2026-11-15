@@ -13,16 +13,16 @@ test_that("chain_discrepancy", {
 })
 
 test_that("chain_contrib accepts the output of chain_laspeyres", {
-	x <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+	x <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,
 						 output = "measure")
-	res <- chain_contrib(x, data8.2cp, method = "ao")
-	exp <- chain_contrib(x[, c("A", "B")], data8.2cp, vo_total = x[, "Total"],
+	res <- chain_contrib(x, imf_cp, method = "ao")
+	exp <- chain_contrib(x[, c("A", "B")], imf_cp, vo_total = x[, "Total"],
 						 method = "ao")
 	expect_equal(res, exp)
 	expect_equal(colnames(res), c("A", "B"))
 	# the total of cp can be in cp
-	cp_all <- ts(cbind(as.matrix(data8.2cp), Total = rowSums(data8.2cp)),
-				 start = start(data8.2cp), frequency = 4)
+	cp_all <- ts(cbind(as.matrix(imf_cp), Total = rowSums(imf_cp)),
+				 start = start(imf_cp), frequency = 4)
 	expect_equal(chain_contrib(x, cp_all, method = "ao"), res)
 })
 

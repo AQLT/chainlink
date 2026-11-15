@@ -8,8 +8,9 @@
 # measures in monetary terms, the current prices, the values at the average prices
 # of the year (cy) and the price indices over the previous year.
 make_chain <- function(method = c("ao", "oqo"), f = 4, years = 2010:2014,
-					   seed = 1) {
+					   seed = 1, overlap = c("year_prices", "current_prices")) {
 	method <- match.arg(method)
+	overlap <- match.arg(overlap)
 	set.seed(seed)
 	n <- length(years) * f
 	I <- 3
@@ -38,7 +39,8 @@ make_chain <- function(method = c("ao", "oqo"), f = 4, years = 2010:2014,
 		if (method == "ao" || y == years[2]) {
 			den <- colSums(cp[prev, , drop = FALSE]) / f   # annual overlap
 		} else {
-			den <- pyp[prev[f], ]    # overlap period at the average prices of y - 1
+			# overlap period at the average prices of y - 1 or at its current prices
+			den <- if (overlap == "year_prices") pyp[prev[f], ] else cp[prev[f], ]
 		}
 		for (t in cur) {
 			vo[t, ] <- 100 * pyp[t, ] / den

@@ -29,7 +29,7 @@ the column "Discrepancies" of the examples 8.6 and 8.7 of the manual: the sum of
 the components minus the total.
 }
 \examples{
-x <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+x <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,
 					 output = "measure")
 chain_discrepancy(x)
 chain_discrepancy(x, relative = TRUE)

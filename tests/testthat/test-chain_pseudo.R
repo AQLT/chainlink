@@ -1,7 +1,7 @@
-cp_a <- data8.2cp[, "A"]
-cp_b <- data8.2cp[, "B"]
-pi_a <- data8.2ep[, "A"]
-pi_b <- data8.2ep[, "B"]
+cp_a <- imf_cp[, "A"]
+cp_b <- imf_cp[, "B"]
+pi_a <- imf_pi[, "A"]
+pi_b <- imf_pi[, "B"]
 
 test_that("chain_pseudo is the difference of the two chain volume measures", {
 	for (method in c("ao", "oqo")) {
@@ -26,8 +26,8 @@ test_that("chain_pseudo: first year after the reference year", {
 })
 
 test_that("chain_pseudo with aggregates", {
-	cp_pos <- data8.2cp
-	pi_pos <- data8.2ep
+	cp_pos <- imf_cp
+	pi_pos <- imf_pi
 	res <- chain_pseudo(cp_pos, pi_pos, cp_b, pi_b, base_year = 2010)
 	tot <- chain_laspeyres(cp_pos, pi_pos, base_year = 2010, output = "measure")[, "Total"]
 	neg <- chain_laspeyres(cp_b, pi_b, base_year = 2010, output = "measure")[, "Total"]

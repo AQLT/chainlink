@@ -30,11 +30,11 @@ whose reference year is the one used to build them (the year before the
 start of the series, by default).
 }
 \examples{
-x <- chain_laspeyres(data8.2cp, data8.2ep, base_year = 2010)
+x <- chain_laspeyres(imf_cp, imf_pi, base_year = 2010)
 chain_rebase(x, base_year = 2012)
-x_measure <- chain_laspeyres(data8.2cp, data8.2ep, base_year = 2010,
+x_measure <- chain_laspeyres(imf_cp, imf_pi, base_year = 2010,
 							 output = "measure")
-cp_all <- ts(cbind(as.matrix(data8.2cp), Total = rowSums(data8.2cp)),
-			 start = start(data8.2cp), frequency = frequency(data8.2cp))
+cp_all <- ts(cbind(as.matrix(imf_cp), Total = rowSums(imf_cp)),
+			 start = start(imf_cp), frequency = frequency(imf_cp))
 chain_rebase(x_measure, base_year = 2012, cp = cp_all)
 }

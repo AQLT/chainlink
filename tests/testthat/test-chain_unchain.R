@@ -1,30 +1,30 @@
 test_that("chain_unchain is the inverse of chain_link: volumes at the prices of the previous year", {
-	evm <- window(data8.2cp / data8.2ep * 100, start = c(2011, 1))
+	evm <- window(imf_cp / imf_pi * 100, start = c(2011, 1))
 	for (method in c("ao", "oqo")) {
-		x <- chain_laspeyres(data8.2cp, data8.2ep, method = method, base_year = 2010,
+		x <- chain_laspeyres(imf_cp, imf_pi, method = method, base_year = 2010,
 							 output = "measure")[, c("A", "B")]
-		res <- chain_unchain(x, data8.2cp, method = method, base_year = 2010,
-							 pi = data8.2ep)
+		res <- chain_unchain(x, imf_cp, method = method, base_year = 2010,
+							 pi = imf_pi)
 		expect_equal(colnames(res), c("A", "B"))
 		expect_equal(as.numeric(as.matrix(res)), as.numeric(as.matrix(evm)))
 	}
 	# a single series
-	x <- chain_laspeyres(data8.2cp, data8.2ep, base_year = 2010, output = "measure")
-	res <- chain_unchain(x[, "A"], data8.2cp[, "A"], base_year = 2010)
+	x <- chain_laspeyres(imf_cp, imf_pi, base_year = 2010, output = "measure")
+	res <- chain_unchain(x[, "A"], imf_cp[, "A"], base_year = 2010)
 	expect_s3_class(res, "ts")
 	expect_equal(as.numeric(res), as.numeric(evm[, 1]))
 })
 
 test_that("chain_aggregate of the unadjusted components is the chain measure of the total", {
 	for (method in c("ao", "oqo")) {
-		x <- chain_laspeyres(data8.2cp, data8.2ep, method = method, base_year = 2010,
+		x <- chain_laspeyres(imf_cp, imf_pi, method = method, base_year = 2010,
 							 output = "measure")
-		tot <- chain_aggregate(x[, c("A", "B")], data8.2cp, method = method,
-							   base_year = 2010, output = "measure", pi = data8.2ep)
+		tot <- chain_aggregate(x[, c("A", "B")], imf_cp, method = method,
+							   base_year = 2010, output = "measure", pi = imf_pi)
 		expect_equal(as.numeric(tot), as.numeric(x[, "Total"]))
-		idx <- chain_laspeyres(data8.2cp, data8.2ep, method = method, base_year = 2010)
-		tot_idx <- chain_aggregate(x[, c("A", "B")], data8.2cp, method = method,
-								   base_year = 2010, pi = data8.2ep)
+		idx <- chain_laspeyres(imf_cp, imf_pi, method = method, base_year = 2010)
+		tot_idx <- chain_aggregate(x[, c("A", "B")], imf_cp, method = method,
+								   base_year = 2010, pi = imf_pi)
 		expect_equal(as.numeric(tot_idx), as.numeric(idx[, "Total"]))
 	}
 })
@@ -63,16 +63,31 @@ test_that("chain_aggregate on synthetic data, monthly data and output = 'both'",
 							   output = "measure", pi = d$pi)
 		expect_equal(as.numeric(tot), as.numeric(d$z))
 	}
-	x <- chain_laspeyres(data8.2cp, data8.2ep, base_year = 2010, output = "measure")
-	both <- chain_aggregate(x[, c("A", "B")], data8.2cp, base_year = 2010, output = "both")
+	x <- chain_laspeyres(imf_cp, imf_pi, base_year = 2010, output = "measure")
+	both <- chain_aggregate(x[, c("A", "B")], imf_cp, base_year = 2010, output = "both")
 	expect_equal(colnames(both), c("Index", "Measure"))
 })
 
 test_that("chain_unchain and chain_aggregate check their inputs", {
-	x <- chain_laspeyres(data8.2cp, data8.2ep, method = "oqo", base_year = 2010,
+	x <- chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010,
 						 output = "measure")[, c("A", "B")]
-	expect_error(chain_unchain(x, data8.2cp, method = "oqo"), "`pi` is needed")
-	expect_error(chain_aggregate(x, data8.2cp, method = "oqo"), "`pi` is needed")
-	expect_error(chain_unchain(1:10, data8.2cp), "must be a time series")
-	expect_error(chain_unchain(x[, "A"], data8.2cp), "same number of variables")
+	expect_error(chain_unchain(x, imf_cp, method = "oqo"), "`pi` is needed")
+	expect_error(chain_aggregate(x, imf_cp, method = "oqo"), "`pi` is needed")
+	expect_error(chain_unchain(1:10, imf_cp), "must be a time series")
+	expect_error(chain_unchain(x[, "A"], imf_cp), "same number of variables")
+})
+
+test_that("chain_unchain and chain_aggregate with the overlap period at its current prices", {
+	evm <- window(imf_cp / imf_pi * 100, start = c(2011, 1))
+	x <- chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010,
+						 overlap_prices = "current_prices", output = "measure")
+	res <- chain_unchain(x[, c("A", "B")], imf_cp, method = "oqo", base_year = 2010,
+						 overlap_prices = "current_prices")
+	expect_equal(as.numeric(as.matrix(res)), as.numeric(as.matrix(evm)))
+	tot <- chain_aggregate(x[, c("A", "B")], imf_cp, method = "oqo", base_year = 2010,
+						   output = "measure", overlap_prices = "current_prices")
+	expect_equal(as.numeric(tot), as.numeric(x[, "Total"]))
+	# pi is not needed in this case
+	expect_error(chain_unchain(x[, c("A", "B")], imf_cp, method = "oqo",
+							   overlap_prices = "year_prices"), "`pi` is needed")
 })

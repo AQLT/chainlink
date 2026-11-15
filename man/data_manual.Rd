@@ -3,8 +3,8 @@
 \docType{data}
 \name{data_manual}
 \alias{data_manual}
-\alias{data8.2cp}
-\alias{data8.2ep}
+\alias{imf_cp}
+\alias{imf_pi}
 \title{Data of the IMF Quarterly National Accounts Manual (chapter 8)}
 \format{
 Quarterly \code{mts} from 2010Q1 to 2013Q4 with two columns (\code{A} and \code{B}).
@@ -16,20 +16,20 @@ IMF, Quarterly National Accounts Manual, chapter 8 (Price and Volume
 Measures), tables and charts of the examples.
 }
 \usage{
-data8.2cp
+imf_cp
 
-data8.2ep
+imf_pi
 }
 \description{
 Current prices and price indices of two products (\code{A} and \code{B}) used in the
 examples of the chapter 8 (price and volume measures) of the IMF \emph{Quarterly
 National Accounts Manual}.
-\code{data8.2cp} and \code{data8.2ep}are current prices and elementary price indices
+\code{imf_cp} and \code{imf_pi} are current prices and elementary price indices
 over the previous year (average of the previous year = 100) of the example
 8.2. The price indices are not available in 2010 (reference year).
 }
 \examples{
-data8.2cp
-data8.2ep
+imf_cp
+imf_pi
 }
 \keyword{datasets}

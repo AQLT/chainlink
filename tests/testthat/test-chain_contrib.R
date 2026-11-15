@@ -211,3 +211,23 @@ test_that("yoy contributions follow the equation (31) of the manual", {
 	}
 	expect_lt(max(abs(as.matrix(res)[5:12, ] - expected[5:12, ])), 1e-8)
 })
+
+test_that("oqo with the overlap period at its current prices: exactly additive", {
+	for (f in c(4, 12)) {
+		d <- make_chain("oqo", f = f, overlap = "current_prices")
+		for (type in c("period", "yoy", "annual")) {
+			res <- chain_contrib(d$x, d$cp, d$z, method = "oqo", type = type,
+								 base_year = d$base_year, extra = "residual",
+								 overlap_prices = "current_prices")
+			r <- as.numeric(res[, "Residual"])
+			r <- r[!is.na(r)]
+			expect_gt(length(r), 0)
+			expect_lt(max(abs(r)), 1e-8)
+		}
+	}
+	x <- chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010,
+						 overlap_prices = "current_prices", output = "measure")
+	res <- chain_contrib(x, imf_cp, method = "oqo", type = "yoy",
+						 overlap_prices = "current_prices", extra = "residual")
+	expect_lt(max(abs(res[, "Residual"]), na.rm = TRUE), 1e-8)
+})

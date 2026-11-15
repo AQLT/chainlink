@@ -64,11 +64,11 @@ total from the current prices and the price indices of its components.
 }
 \examples{
 # Laspeyres-type volume index over the previous year
-laspeyres(data8.2cp, data8.2ep)
+laspeyres(imf_cp, imf_pi)
 # Volume index and measure (in monetary terms)
-paasche(data8.2cp, data8.2ep, output = "both")
+paasche(imf_cp, imf_pi, output = "both")
 # The three indices
-fisher(data8.2cp, data8.2ep, all_index = TRUE)
+fisher(imf_cp, imf_pi, all_index = TRUE)
 # Quarter-to-quarter indices need price indices over the previous quarter
-fisher(data8.2cp, pi_py2pp(data8.2ep), reference_freq = 4)
+fisher(imf_cp, pi_py2pp(imf_pi), reference_freq = 4)
 }

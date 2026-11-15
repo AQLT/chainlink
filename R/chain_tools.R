@@ -17,7 +17,7 @@
 #' @return A `ts`: sum of the chain volume measures of the components minus the
 #' chain volume measure of the total.
 #' @examples
-#' x <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+#' x <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,
 #' 					 output = "measure")
 #' chain_discrepancy(x)
 #' chain_discrepancy(x, relative = TRUE)
@@ -62,12 +62,12 @@ chain_discrepancy <- function(vo, vo_total = NULL, relative = FALSE) {
 #'
 #' @return A `ts` (or `mts`) with the same structure as `x`.
 #' @examples
-#' x <- chain_laspeyres(data8.2cp, data8.2ep, base_year = 2010)
+#' x <- chain_laspeyres(imf_cp, imf_pi, base_year = 2010)
 #' chain_rebase(x, base_year = 2012)
-#' x_measure <- chain_laspeyres(data8.2cp, data8.2ep, base_year = 2010,
+#' x_measure <- chain_laspeyres(imf_cp, imf_pi, base_year = 2010,
 #' 							 output = "measure")
-#' cp_all <- ts(cbind(as.matrix(data8.2cp), Total = rowSums(data8.2cp)),
-#' 			 start = start(data8.2cp), frequency = frequency(data8.2cp))
+#' cp_all <- ts(cbind(as.matrix(imf_cp), Total = rowSums(imf_cp)),
+#' 			 start = start(imf_cp), frequency = frequency(imf_cp))
 #' chain_rebase(x_measure, base_year = 2012, cp = cp_all)
 #' @export
 chain_rebase <- function(x, base_year, cp = NULL) {

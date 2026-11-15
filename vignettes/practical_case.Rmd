@@ -35,10 +35,10 @@ quarter:
 raw <- data.frame(
 	year = rep(2010:2013, each = 4),
 	quarter = rep(1:4, times = 4),
-	A_cp = as.numeric(data8.2cp[, "A"]),
-	B_cp = as.numeric(data8.2cp[, "B"]),
-	A_pi = as.numeric(data8.2ep[, "A"]),
-	B_pi = as.numeric(data8.2ep[, "B"])
+	A_cp = as.numeric(imf_cp[, "A"]),
+	B_cp = as.numeric(imf_cp[, "B"]),
+	A_pi = as.numeric(imf_pi[, "A"]),
+	B_pi = as.numeric(imf_pi[, "B"])
 )
 head(raw, 6)
 ```

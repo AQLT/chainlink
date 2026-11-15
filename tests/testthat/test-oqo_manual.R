@@ -11,26 +11,26 @@ measure_pdf <- cbind(A = c(156.6, 159.2, 162.5, 164.8, 165.6, 172.3, 182.2, 206.
 discrepancy_pdf <- c(0, 0, 0, 0, 0, -0.3, -0.7, -1.7, -2.1, -3.0, -3.7, -4.0)
 
 test_that("cp_pi2cy: current year's prices of the example 8.7", {
-	cy <- cp_pi2cy(data8.2cp, data8.2ep)
+	cy <- cp_pi2cy(imf_cp, imf_pi)
 	expect_equal(colnames(cy), c("A", "B"))
 	expect_true(all(is.na(window(cy, end = c(2010, 4)))))
 	got <- as.matrix(window(cy, start = c(2011, 1)))[1:12, ]
 	expect_lt(max(abs(got - cy_pdf)), 0.06)
 	# the annual sums are the annual current prices
 	ann <- stats::aggregate(window(cy, start = c(2011, 1)), FUN = sum)
-	cp_ann <- stats::aggregate(window(data8.2cp, start = c(2011, 1)), FUN = sum)
+	cp_ann <- stats::aggregate(window(imf_cp, start = c(2011, 1)), FUN = sum)
 	expect_equal(as.numeric(ann), as.numeric(cp_ann))
 	# single series
-	expect_equal(as.numeric(cp_pi2cy(data8.2cp[, "A"], data8.2ep[, "A"])),
+	expect_equal(as.numeric(cp_pi2cy(imf_cp[, "A"], imf_pi[, "A"])),
 				 as.numeric(cy[, "A"]))
 })
 
 test_that("one-quarter overlap: chain indices and measures of the example 8.7", {
-	idx <- chain_laspeyres(data8.2cp, data8.2ep, method = "oqo", base_year = 2010)
+	idx <- chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010)
 	expect_equal(colnames(idx), c("A", "B", "Total"))
 	expect_equal(start(idx), c(2011, 1))
 	expect_lt(max(abs(as.matrix(idx) - index_pdf)), 0.01)
-	mea <- chain_laspeyres(data8.2cp, data8.2ep, method = "oqo", base_year = 2010,
+	mea <- chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010,
 						   output = "measure")
 	expect_lt(max(abs(as.matrix(mea) - measure_pdf)), 0.06)
 	# sum of the quarterly values of the total: 1511.0, 1524.1 and 1556.3
@@ -42,9 +42,9 @@ test_that("one-quarter overlap: chain indices and measures of the example 8.7", 
 })
 
 test_that("annex 8.1: ratio between the annual overlap and one-quarter overlap series", {
-	ao <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+	ao <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,
 						  output = "measure")[, "Total"]
-	qo <- chain_laspeyres(data8.2cp, data8.2ep, method = "oqo", base_year = 2010,
+	qo <- chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010,
 						  output = "measure")[, "Total"]
 	ratio <- as.numeric(ao / qo)
 	expect_equal(ratio[1:4], rep(1, 4), tolerance = 1e-8)         # 2011
@@ -53,14 +53,14 @@ test_that("annex 8.1: ratio between the annual overlap and one-quarter overlap s
 })
 
 test_that("contributions of the one-quarter overlap add up exactly on the data of the manual", {
-	x <- chain_laspeyres(data8.2cp, data8.2ep, method = "oqo", base_year = 2010,
+	x <- chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010,
 						 output = "measure")
 	for (type in c("period", "yoy")) {
-		res <- chain_contrib(x, data8.2cp, method = "oqo", type = type, pi = data8.2ep,
+		res <- chain_contrib(x, imf_cp, method = "oqo", type = type, pi = imf_pi,
 							 extra = "residual")
 		expect_lt(max(abs(res[, "Residual"]), na.rm = TRUE), 1e-8)
 	}
 	# the formulas with the annual deflators (footnote 35) are only approximately additive
-	res_ao <- chain_contrib(x, data8.2cp, method = "ao", extra = "residual")
+	res_ao <- chain_contrib(x, imf_cp, method = "ao", extra = "residual")
 	expect_gt(max(abs(res_ao[, "Residual"]), na.rm = TRUE), 1e-6)
 })

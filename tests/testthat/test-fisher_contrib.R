@@ -47,7 +47,7 @@ test_that("fisher_contrib is the equation (32) of the manual", {
 })
 
 test_that("fisher_contrib matches the Fisher index of example 8.4", {
-    res <- fisher_contrib(data8.2cp, pi_py2pp(data8.2ep), extra = c("total", "residual"))
+    res <- fisher_contrib(imf_cp, pi_py2pp(imf_pi), extra = c("total", "residual"))
     res <- window(res, start = c(2011, 1))
     expect_lt(max(abs(res[, "Residual"])), 1e-10)
     # Fisher volume index of the example 8.4 (percent change)

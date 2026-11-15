@@ -28,9 +28,14 @@ frequency of the data.
 With \eqn{i_t} the index over the previous year, the index over the previous
 period is \eqn{100 i_t / i_{t-1}} within a year, and
 \eqn{i_t / i_{t-1} \times \bar{i}_{y-1}} for the first period of year \eqn{y}
-(\eqn{\bar{i}_{y-1}} is the average of the indices of the previous year, which
-is the annual price index of year \eqn{y-1}).
+(\eqn{\bar{i}_{y-1}} is the simple average of the indices of the previous year,
+on which the indices of year \eqn{y-1} are normalised). This simple average is
+the normalisation of the indices, not the annual price index used to deflate
+annual data, which is by default their weighted average (see \code{\link[=pi_annual]{pi_annual()}}).
 }
 \examples{
-pi_py2pp(data8.2ep)
+pi_py2pp(imf_pi)
+}
+\seealso{
+\code{\link[=pi_annual]{pi_annual()}}
 }

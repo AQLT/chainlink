@@ -57,8 +57,8 @@ contributions of the other components.
 }
 \examples{
 # Price indices over the previous quarter (example 8.4)
-ep <- pi_py2pp(data8.2ep)
-fisher_contrib(data8.2cp, ep, extra = c("total", "residual"))
+ep <- pi_py2pp(imf_pi)
+fisher_contrib(imf_cp, ep, extra = c("total", "residual"))
 }
 \references{
 Chevalier, M. (2003), "Chain Fisher Volume Index Methodology", Statistics

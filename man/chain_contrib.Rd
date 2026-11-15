@@ -13,7 +13,8 @@ chain_contrib(
   type = c("period", "yoy", "annual"),
   base_year = NULL,
   extra = NULL,
-  pi = NULL
+  pi = NULL,
+  overlap_prices = c("year_prices", "current_prices")
 )
 }
 \arguments{
@@ -54,6 +55,12 @@ contributions (non-additivity). Default: none.}
 average = 100), needed for \code{method = "oqo"} to value the overlap period at the
 average prices of the year (see \code{\link[=cp_pi2cy]{cp_pi2cy()}}). If \code{NULL}, \code{cp} must already be
 valued at the average prices of the year (\code{cp_pi2cy()}).}
+
+\item{overlap_prices}{Only for \code{method = "oqo"}: prices used to value the
+overlap period when \code{vo} was computed, \code{"year_prices"} (average prices of the
+year, default) or \code{"current_prices"} (own current prices): see
+\code{\link[=chain_laspeyres]{chain_laspeyres()}}. With \code{"current_prices"}, \code{cp} is used as it is and \code{pi}
+is not needed.}
 }
 \value{
 A \code{ts} (or \code{mts}) of contributions, in percentage points, with the
@@ -113,19 +120,26 @@ year.
 }
 \examples{
 # Chain volume measures of the components and of the total (last column)
-x <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+x <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,
 					 output = "measure")
 # Contributions to the growth over the previous quarter
-chain_contrib(x, data8.2cp, method = "ao", extra = c("total", "residual"))
+chain_contrib(x, imf_cp, method = "ao", extra = c("total", "residual"))
 # Contributions to the growth over the same quarter of the previous year
-chain_contrib(x, data8.2cp, method = "ao", type = "yoy")
+chain_contrib(x, imf_cp, method = "ao", type = "yoy")
 # Contributions to the growth of the annual sums
-chain_contrib(x, data8.2cp, method = "ao", type = "annual")
+chain_contrib(x, imf_cp, method = "ao", type = "annual")
 
 # One-quarter overlap
-x_oqo <- chain_laspeyres(data8.2cp, data8.2ep, method = "oqo", base_year = 2010,
+x_oqo <- chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010,
 						 output = "measure")
-chain_contrib(x_oqo, data8.2cp, method = "oqo", type = "yoy", pi = data8.2ep)
+chain_contrib(x_oqo, imf_cp, method = "oqo", type = "yoy", pi = imf_pi)
+# One-quarter overlap, overlap quarter at its own current prices
+x_cp <- chain_laspeyres(
+  imf_cp, imf_pi, method = "oqo", base_year = 2010,
+	 overlap_prices = "current_prices", output = "measure"
+)
+chain_contrib(x_cp, imf_cp, method = "oqo", type = "yoy",
+			  overlap_prices = "current_prices")
 }
 \seealso{
 \code{\link[=chain_laspeyres]{chain_laspeyres()}}, \code{\link[=chain_link]{chain_link()}}, \code{\link[=chain_discrepancy]{chain_discrepancy()}},

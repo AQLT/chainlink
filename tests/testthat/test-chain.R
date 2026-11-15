@@ -52,10 +52,19 @@ test_that("annual_chain matches example 8.6 (annual part)", {
 })
 
 test_that("chain_laspeyres matches example 8.6", {
-	res <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010)
+	res <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010)
 	expect_equal(colnames(res), c("A", "B", "Total"))
 	expect_lt(max(abs(as.matrix(res) - as.matrix(idx_ao))), tol)
-	res <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+	res <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,
 						   output = "measure")
 	expect_lt(max(abs(as.matrix(res) - as.matrix(mea_ao))), tol)
+})
+
+test_that("chain_laspeyres(oqo, current prices) reproduces the spreadsheet of example 8.7", {
+	idx <- chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010,
+						   overlap_prices = "current_prices")
+	expect_lt(max(abs(unname(as.matrix(idx)) - unname(as.matrix(idx_oqo)))), 0.002)
+	mea <- chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010,
+						   overlap_prices = "current_prices", output = "measure")
+	expect_lt(max(abs(unname(as.matrix(mea)) - unname(as.matrix(mea_oqo)))), 0.002)
 })

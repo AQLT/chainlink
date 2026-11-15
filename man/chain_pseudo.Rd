@@ -56,8 +56,8 @@ reference year), their simple difference is the pseudo chain volume series.
 \examples{
 # Illustration: the two products of the example 8.2 stand in for closing and
 # opening inventories
-chain_pseudo(data8.2cp[, "A"], data8.2ep[, "A"],
-			 data8.2cp[, "B"], data8.2ep[, "B"], base_year = 2010)
+chain_pseudo(imf_cp[, "A"], imf_pi[, "A"],
+			 imf_cp[, "B"], imf_pi[, "B"], base_year = 2010)
 }
 \seealso{
 \code{\link[=chain_laspeyres]{chain_laspeyres()}}, \code{\link[=chain_contrib]{chain_contrib()}}

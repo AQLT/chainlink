@@ -34,9 +34,9 @@ period of the previous year).
 }
 \examples{
 # Volume indices over the previous year (previous-year prices)
-cp_pi2vol(data8.2cp, data8.2ep)
+cp_pi2vol(imf_cp, imf_pi)
 # Volume indices over the previous quarter (price indices over the previous quarter)
-cp_pi2vol(data8.2cp, pi_py2pp(data8.2ep), reference_freq = 4)
+cp_pi2vol(imf_cp, pi_py2pp(imf_pi), reference_freq = 4)
 # Volume indices over the last quarter of the previous year
-cp_pi2vol(data8.2cp, data8.2ep, reference_freq = 4, reference_cycle = 4)
+cp_pi2vol(imf_cp, imf_pi, reference_freq = 4, reference_cycle = 4)
 }

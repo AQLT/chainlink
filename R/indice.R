@@ -20,11 +20,11 @@
 #' @return A `ts` (or `mts`) of volume indices (reference period = 100).
 #' @examples
 #' # Volume indices over the previous year (previous-year prices)
-#' cp_pi2vol(data8.2cp, data8.2ep)
+#' cp_pi2vol(imf_cp, imf_pi)
 #' # Volume indices over the previous quarter (price indices over the previous quarter)
-#' cp_pi2vol(data8.2cp, pi_py2pp(data8.2ep), reference_freq = 4)
+#' cp_pi2vol(imf_cp, pi_py2pp(imf_pi), reference_freq = 4)
 #' # Volume indices over the last quarter of the previous year
-#' cp_pi2vol(data8.2cp, data8.2ep, reference_freq = 4, reference_cycle = 4)
+#' cp_pi2vol(imf_cp, imf_pi, reference_freq = 4, reference_cycle = 4)
 #' @export
 cp_pi2vol <- function(cp, pi, reference_freq = 1, reference_cycle = NULL) {
     UseMethod("cp_pi2vol", cp)
@@ -72,13 +72,13 @@ cp_pi2vol.mts <- function(cp, pi, reference_freq = 1, reference_cycle = NULL) {
 #' @return A `ts` (or `mts`).
 #' @examples
 #' # Laspeyres-type volume index over the previous year
-#' laspeyres(data8.2cp, data8.2ep)
+#' laspeyres(imf_cp, imf_pi)
 #' # Volume index and measure (in monetary terms)
-#' paasche(data8.2cp, data8.2ep, output = "both")
+#' paasche(imf_cp, imf_pi, output = "both")
 #' # The three indices
-#' fisher(data8.2cp, data8.2ep, all_index = TRUE)
+#' fisher(imf_cp, imf_pi, all_index = TRUE)
 #' # Quarter-to-quarter indices need price indices over the previous quarter
-#' fisher(data8.2cp, pi_py2pp(data8.2ep), reference_freq = 4)
+#' fisher(imf_cp, pi_py2pp(imf_pi), reference_freq = 4)
 #' @rdname fixed_weight_indices
 #' @name fixed_weight_indices
 #' @export
@@ -291,8 +291,10 @@ fisher <- function(
 #' With \eqn{i_t} the index over the previous year, the index over the previous
 #' period is \eqn{100 i_t / i_{t-1}} within a year, and
 #' \eqn{i_t / i_{t-1} \times \bar{i}_{y-1}} for the first period of year \eqn{y}
-#' (\eqn{\bar{i}_{y-1}} is the average of the indices of the previous year, which
-#' is the annual price index of year \eqn{y-1}).
+#' (\eqn{\bar{i}_{y-1}} is the simple average of the indices of the previous year,
+#' on which the indices of year \eqn{y-1} are normalised). This simple average is
+#' the normalisation of the indices, not the annual price index used to deflate
+#' annual data, which is by default their weighted average (see [pi_annual()]).
 #'
 #' @param pi Price indices over the previous year (`ts` or `mts`, quarterly or
 #' monthly). Leading and trailing missing values are ignored.
@@ -300,8 +302,9 @@ fisher <- function(
 #' the first one (default: 100, i.e. the prices of that period are those of the
 #' average of its year).
 #' @return A `ts` (or `mts`) of price indices (previous period = 100).
+#' @seealso [pi_annual()]
 #' @examples
-#' pi_py2pp(data8.2ep)
+#' pi_py2pp(imf_pi)
 #' @export
 pi_py2pp <- function(pi, previous = 100) {
     check_ts(pi, "pi")

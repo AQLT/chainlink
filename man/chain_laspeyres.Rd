@@ -9,7 +9,8 @@ chain_laspeyres(
   pi,
   method = c("ao", "oqo"),
   base_year = NULL,
-  output = c("index", "measure", "both")
+  output = c("index", "measure", "both"),
+  overlap_prices = c("year_prices", "current_prices")
 )
 }
 \arguments{
@@ -28,6 +29,10 @@ start of \code{vo} (or the first year of \code{cp}, if later).}
 
 \item{output}{Chain index (the default), chain volume measure (in monetary
 terms, i.e. the index times the base-year current prices) or both.}
+
+\item{overlap_prices}{Only for \code{method = "oqo"}: prices used to value the
+overlap period, \code{"year_prices"} (average prices of the year, default) or
+\code{"current_prices"} (own current prices). See details.}
 }
 \value{
 A \code{ts} (\code{mts}): the columns of \code{cp} and a column \code{Total}. With
@@ -45,25 +50,36 @@ the annual overlap or the one-quarter overlap technique.
 With the annual overlap technique (\code{method = "ao"}), the volume indices are
 those of \code{\link[=cp_pi2vol]{cp_pi2vol()}} and \code{\link[=laspeyres]{laspeyres()}} (previous year average = 100).
 
-With the one-quarter overlap technique (\code{method = "oqo"}), as in the manual
-(paragraph 8.72 and example 8.7), the volume at the prices of the previous year
-of each period is divided by the value of the last period (quarter or month) of
-the previous year \strong{at the average prices of the previous year} (see
-\code{\link[=cp_pi2cy]{cp_pi2cy()}}), and not at its own current prices. As there are no price indices
-in the reference year, the first year is linked with the annual overlap
-technique (footnote 32 of the manual).
+With the one-quarter overlap technique (\code{method = "oqo"}), the volume at the
+prices of the previous year of each period is divided by the value of the last
+period (quarter or month) of the previous year. This overlap period can be
+valued in two ways (\code{overlap_prices}):
+\itemize{
+\item \code{"year_prices"} (default), as printed in the manual (paragraph 8.72 and
+example 8.7): at the \strong{average prices of the year} (see \code{\link[=cp_pi2cy]{cp_pi2cy()}});
+\item \code{"current_prices"}, as in the spreadsheet of the manual: at its \strong{own current
+prices}. The volume indices are then those of \code{\link[=cp_pi2vol]{cp_pi2vol()}} with
+\code{reference_freq = f} and \code{reference_cycle = f} (\code{f} = 4 or 12), the
+"q4 previous year = 100" volume measures.
+}
+
+As there are no price indices in the reference year, the first year is linked
+with the annual overlap technique (footnote 32 of the manual).
 
 The result with \code{output = "measure"} can be used directly in
 \code{\link[=chain_contrib]{chain_contrib()}} and \code{\link[=chain_discrepancy]{chain_discrepancy()}}.
 }
 \examples{
 # Annual overlap
-chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010)
-chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010)
+chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,
 				output = "measure")
 # One-quarter overlap (example 8.7 of the manual)
-chain_laspeyres(data8.2cp, data8.2ep, method = "oqo", base_year = 2010,
+chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010,
 				output = "measure")
+# Overlap quarter valued at its own current prices
+chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010,
+				overlap_prices = "current_prices", output = "measure")
 }
 \seealso{
 \code{\link[=chain_contrib]{chain_contrib()}}, \code{\link[=chain_discrepancy]{chain_discrepancy()}}, \code{\link[=cp_pi2cy]{cp_pi2cy()}}

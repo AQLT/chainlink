@@ -4,7 +4,7 @@ test_that("inputs are checked", {
 	expect_error(chain_contrib(unclass(d$x), d$cp, d$z), "must be a time series")
 	expect_error(pi_py2pp(1:10), "must be a time series")
 	# different number of variables
-	expect_error(chain_laspeyres(data8.2cp, data8.2ep[, "A"]), "same number of variables")
+	expect_error(chain_laspeyres(imf_cp, imf_pi[, "A"]), "same number of variables")
 	expect_error(chain_link(d$vo, d$cp[, 1:2], method = "ao"), "same number of variables")
 	# different frequencies
 	z_year <- stats::aggregate(d$z, FUN = sum)
