@@ -54,19 +54,19 @@ pak::pak("AQLT/chainlink")
 ## Example
 
 The data of the example 8.2 of the manual are two products, `A` and `B`, with
-current prices (`data8.2cp`) and price indices over the previous year
-(`data8.2ep`):
+current prices (`imf_cp`) and price indices over the previous year
+(`imf_pi`):
 
 ```{r example}
 library(chainlink)
-data8.2cp
+imf_cp
 ```
 
 Chain-linked Laspeyres-type volume measures of the products and of the total,
 with the annual overlap technique and 2010 as reference year:
 
 ```{r chain}
-x <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+x <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,
                      output = "measure")
 round(x, 1)
 ```
@@ -75,13 +75,13 @@ Contributions of the products to the quarter-to-quarter growth of the total, and
 the non-additivity residual:
 
 ```{r contrib}
-round(chain_contrib(x, data8.2cp, method = "ao", extra = c("total", "residual")), 3)
+round(chain_contrib(x, imf_cp, method = "ao", extra = c("total", "residual")), 3)
 ```
 
 Contributions to the growth over the same quarter of the previous year:
 
 ```{r contrib-yoy}
-round(chain_contrib(x, data8.2cp, method = "ao", type = "yoy"), 3)
+round(chain_contrib(x, imf_cp, method = "ao", type = "yoy"), 3)
 ```
 
 ## Vignettes

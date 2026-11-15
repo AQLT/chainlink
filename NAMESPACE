@@ -17,6 +17,7 @@ export(fisher)
 export(fisher_contrib)
 export(laspeyres)
 export(paasche)
+export(pi_annual)
 export(pi_py2pp)
 importFrom(stats,
   aggregate,

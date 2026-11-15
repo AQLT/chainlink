@@ -45,12 +45,12 @@ pak::pak("AQLT/chainlink")
 ## Example
 
 The data of the example 8.2 of the manual are two products, `A` and `B`,
-with current prices (`data8.2cp`) and price indices over the previous
-year (`data8.2ep`):
+with current prices (`imf_cp`) and price indices over the previous
+year (`imf_pi`):
 
 ``` r
 library(chainlink)
-data8.2cp
+imf_cp
 #>             A     B
 #> 2010 Q1 150.0 225.0
 #> 2010 Q2 150.0 225.0
@@ -74,7 +74,7 @@ Chain-linked Laspeyres-type volume measures of the products and of the
 total, with the annual overlap technique and 2010 as reference year:
 
 ``` r
-x <- chain_laspeyres(data8.2cp, data8.2ep, method = "ao", base_year = 2010,
+x <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,
                      output = "measure")
 round(x, 1)
 #>             A     B Total
@@ -96,7 +96,7 @@ Contributions of the products to the quarter-to-quarter growth of the
 total, and the non-additivity residual:
 
 ``` r
-round(chain_contrib(x, data8.2cp, method = "ao", extra = c("total", "residual")), 3)
+round(chain_contrib(x, imf_cp, method = "ao", extra = c("total", "residual")), 3)
 #>             A      B  Total Residual
 #> 2011 Q1    NA     NA     NA       NA
 #> 2011 Q2 0.702 -0.808 -0.106        0
@@ -115,7 +115,7 @@ round(chain_contrib(x, data8.2cp, method = "ao", extra = c("total", "residual"))
 Contributions to the growth over the same quarter of the previous year:
 
 ``` r
-round(chain_contrib(x, data8.2cp, method = "ao", type = "yoy"), 3)
+round(chain_contrib(x, imf_cp, method = "ao", type = "yoy"), 3)
 #>              A       B
 #> 2011 Q1     NA      NA
 #> 2011 Q2     NA      NA

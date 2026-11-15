@@ -11,6 +11,7 @@ reference:
   - paasche
   - fisher
   - pi_py2pp
+  - pi_annual
 - title: Chain-linking
   contents:
   - chain_laspeyres

@@ -31,6 +31,11 @@
 * `pi_py2pp()` converts price indices over the previous year into price indices
   over the previous period, as needed for quarter-to-quarter (or month-to-month)
   Fisher indices.
+* `pi_annual()` derives annual price indices from quarterly (or monthly) ones: by
+  default their weighted average (annual current prices over the annual sum of the
+  volumes at the prices of the previous year), consistent with the quarterly data
+  as in the examples 8.3, 8.8 and 8.9 of the manual, or their simple average
+  (`method = "mean"`).
 * `chain_laspeyres(method = "oqo")` follows the manual: the overlap quarter is
   valued at the average prices of the previous year (not at its current prices) and
   the first year is linked with the annual overlap technique. The printed example
@@ -43,6 +48,7 @@
 ## Other changes
 
 * `cp_py2vol()` is removed (identical to `cp_pi2vol()`).
+* The datasets `data8.2cp` and `data8.2ep` are renamed `imf_cp` and `imf_pi`.
 * The quarterly chain (`"pq"`) is not implemented. The benchmarking of the quarterly
   series is done with the `tempdisagg` package (see the vignette).
 * Fixes in `laspeyres()`, `paasche()` and `fisher()` (typo in the `output`
