@@ -6,11 +6,11 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
+  
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+collapse = TRUE,
+comment = "#>"
 )
 ```
 
@@ -33,11 +33,11 @@ The table gives the function(s) used for each example. The paragraph numbers are
 |---|---|---|---|
 | Example 8.1 | 8.24-8.26 | Weighted and unweighted annual averages of prices | base R | 
 | Example 8.2 | 8.35-8.39 | Annual and quarterly volume measures, Laspeyres-type | `cp_pi2vol()`, `laspeyres()` | 
-| Example 8.3 | 8.40-8.46 | Annual volume measures, Fisher | `laspeyres()`, `paasche()`, `fisher()` on annual data | 
+| Example 8.3 | 8.40-8.46 | Annual volume measures, Fisher | `pi_annual()`, `laspeyres()`, `paasche()`, `fisher()` on annual data | 
 | Example 8.4 | 8.44-8.46 | Quarterly volume measures, Fisher | `pi_py2pp()`, `fisher(reference_freq = 4)` | 
 | Example 8.5 | 8.59-8.60 | Frequency of chain-linking and drift | `laspeyres()`, `paasche()`, `fisher()` with `reference_freq = 4` | 
 | Example 8.6 | 8.71 | Annual overlap | `chain_link(method = "ao")`, `annual_chain()` | 
-| Example 8.7 | 8.72 | One-quarter overlap | `chain_laspeyres(method = "oqo")`, `chain_link()`, `cp_pi2cy()` | 
+| Example 8.7 | 8.72 | One-quarter overlap | `chain_laspeyres(method = "oqo", overlap_prices = "current_prices")`, `chain_discrepancy()`, `cp_pi2cy()` | 
 | Example 8.8 | 8.46, 8.74-8.76 | Chain-linking and benchmarking of quarterly Fisher indices | `fisher(reference_freq = 4)`, `annual_chain()`, `tempdisagg::td()` (suggested) | 
 | Example 8.9 | 8.85-8.88 | Contributions to percent change, annually chained Laspeyres-type | `chain_contrib(method = "ao")` | 
 | | 8.89 | Contributions to percent change, quarterly Fisher | `fisher_contrib()` | 
@@ -51,6 +51,7 @@ Additions to the manual:
 | Function | Purpose |
 |---|---|
 | `pi_py2pp()` | Price indices over the previous year converted to price indices over the previous period (needed for quarterly or monthly Fisher indices) |
+| `pi_annual()` | Annual price indices from quarterly or monthly ones (weighted or simple averages) |
 | `chain_laspeyres()` | Chain-linked volume indices or measures of the components and of the total in one step |
 | `cp_pi2cy()` | Quarterly values at the average prices of the year (overlap quarter of the one-quarter overlap technique) |
 | `chain_discrepancy()` | Non-additivity of the chain volume measures |
@@ -133,46 +134,44 @@ the rates of change.
 
 # Deriving Annual and Quarterly Volume Measures using Laspeyres-type Formula (example 8.2)
 
-In the example 8.2 of the IMF Manual, the annual elementary price indices are not defined as the annual average of the quarterly indices: this might cause some differences in annual quantities.
-
 Elementary Volume Measures (in monetary terms)
 
 ```{r}
-evm <- data8.2cp / data8.2ep * 100
+evm <- imf_cp / imf_pi * 100
 evm |> round(1)
 ```
 Elementary Volume Indices (previous year = 100)
 ```{r}
-cp_pi2vol(data8.2cp, data8.2ep) |> round(1)
+cp_pi2vol(imf_cp, imf_pi) |> round(1)
 ```
 
 Laspeyres Volume Index (previous year = 100)
 ```{r}
-laspeyres(data8.2cp, data8.2ep, output = "index") |> round(1)
+laspeyres(imf_cp, imf_pi, output = "index") |> round(1)
 ```
 
 Laspeyres Volume Measure (in monetary terms)
 ```{r}
-laspeyres(data8.2cp, data8.2ep, output = "measure") |> round(1)
+laspeyres(imf_cp, imf_pi, output = "measure") |> round(1)
 ```
 
 Laspeyres Volume Index (previous year = 100) and Measure (in monetary terms)
 ```{r}
-laspeyres(data8.2cp, data8.2ep, output = "both") |> round(1)
+laspeyres(imf_cp, imf_pi, output = "both") |> round(1)
 ```
 
 Summary table :
 ```{r}
 table_8.2 <- 
 	ts.union(
-		data8.2cp,
-		data8.2cp[,"A"] +  data8.2cp[,"B"],
-		data8.2ep,
+		imf_cp,
+		imf_cp[,"A"] +  imf_cp[,"B"],
+		imf_pi,
 		evm,
 		evm[,1] + evm[,2],
-		cp_pi2vol(data8.2cp, data8.2ep),
-		laspeyres(data8.2cp, data8.2ep, output = "index"),
-		laspeyres(data8.2cp, data8.2ep, output = "measure")
+		cp_pi2vol(imf_cp, imf_pi),
+		laspeyres(imf_cp, imf_pi, output = "index"),
+		laspeyres(imf_cp, imf_pi, output = "measure")
 	)
 colnames(table_8.2) <- c(
 	paste("Current Prices", c("A", "B", "Total")),
@@ -188,50 +187,59 @@ round(table_8.2, 2)
 
 # Deriving Annual Volume Measures using Fisher Formula (example 8.3)
 
-In the example 8.3 of the IMF Manual, the annual elementary price indices are the ones of the example 8.2 which are not defined as the annual average of the quarterly indices: this might cause some differences in annual quantities.
-To be consistent between all the examples, we use here the data of the example 8.2.
+The annual data are derived from the quarterly data of example 8.2. As in the
+manual, the annual price indices are the weighted averages of the quarterly ones
+(`pi_annual()`, as the unit value of example 8.1): the annual volumes at the
+prices of the previous year are then the annual sums of the quarterly ones, which
+is not the case with the simple averages (`method = "mean"`).
+
+Annual Elementary Price Indices (weighted and simple averages)
+
+```{r}
+imf_cp_an <- stats::aggregate.ts(imf_cp)
+imf_pi_an <- pi_annual(imf_pi, imf_cp)
+ts.union(Weighted = imf_pi_an,
+		 Simple = pi_annual(imf_pi, method = "mean")) |> round(2)
+```
 
 Elementary Level Deflation
 
 ```{r}
-data8.3cp.an <- stats::aggregate.ts(data8.2cp)
-data8.3ep.an <- stats::aggregate.ts(data8.2ep, FUN = "mean")
-
-eld <- data8.3cp.an / data8.3ep.an * 100 
+eld <- imf_cp_an / imf_pi_an * 100 
 eld |> round(1)
 ```
 Elementary Volume Indices (year-on-year)
 ```{r}
-cp_pi2vol(data8.3cp.an, data8.3ep.an) |> round(2)
+cp_pi2vol(imf_cp_an, imf_pi_an) |> round(2)
 ```
 
 Laspeyres Volume Index (previous year = 100)
 ```{r}
-laspeyres(data8.3cp.an, data8.3ep.an, output = "index") |> round(2)
+laspeyres(imf_cp_an, imf_pi_an, output = "index") |> round(2)
 ```
 
 Paasche Volume Measure (previous year = 100)
 ```{r}
-paasche(data8.3cp.an, data8.3ep.an, output = "index") |> round(2)
+paasche(imf_cp_an, imf_pi_an, output = "index") |> round(2)
 ```
 
 Fisher Volume Measure (previous year = 100)
 ```{r}
-fisher(data8.3cp.an, data8.3ep.an, output = "index") |> round(2)
+fisher(imf_cp_an, imf_pi_an, output = "index") |> round(2)
 ```
 
 Summary Table
 ```{r}
 table_8.3 <- 
 	ts.union(
-		data8.3cp.an,
-		data8.3cp.an[,"A"] +  data8.3cp.an[,"B"],
-		data8.3ep.an,
-		eld,
-		cp_pi2vol(data8.3cp.an, data8.3ep.an),
-		laspeyres(data8.3cp.an, data8.3ep.an, output = "index"),
-		paasche(data8.3cp.an, data8.3ep.an, output = "index"),
-		fisher(data8.3cp.an, data8.3ep.an, output = "index")
+		imf_cp_an,
+		imf_cp_an[,"A"] +  imf_cp_an[,"B"],
+		imf_pi_an,
+		imf_cp_an / imf_pi_an * 100,
+		cp_pi2vol(imf_cp_an, imf_pi_an),
+		laspeyres(imf_cp_an, imf_pi_an, output = "index"),
+		paasche(imf_cp_an, imf_pi_an, output = "index"),
+		fisher(imf_cp_an, imf_pi_an, output = "index")
 	)
 colnames(table_8.3) <- c(
 	paste("Current Prices", c("A", "B", "Total")),
@@ -248,59 +256,54 @@ round(table_8.3, 2)
 
 # Deriving Quarterly Volume Measures using Fisher Formula (example 8.4)
 
-The elementary price indices of the example 8.4 are expressed over the previous
-quarter, whereas those of the examples 8.2 and 8.3 are expressed over the previous
-year. They are the same prices: `pi_py2pp()` converts the latter into the former
-(the price indices of the example 8.4 are recovered exactly). To be consistent
-between all the examples, we use here the data of the example 8.2.
+With `reference_freq = 4`, the volume indices are computed over the previous
+quarter: they need price indices over the previous quarter, whereas those of
+example 8.2 are over the previous year. `pi_py2pp()` converts them (these are the
+price indices of example 8.4).
 
 ```{r}
-ep8.4 <- pi_py2pp(data8.2ep)
+ep8.4 <- pi_py2pp(imf_pi)
 ep8.4 |> round(2)
 ```
-
-Using the price indices over the previous year with `reference_freq = 4` would
-be wrong: the quarterly volume indices must be computed with prices over the
-previous quarter.
 
 Elementary Level Deflation
 
 ```{r}
-eld <- data8.2cp / ep8.4 * 100
+eld <- imf_cp / ep8.4 * 100
 eld |> round(1)
 ```
 Elementary Volume Indices (quarter-to-quarter)
 ```{r}
-cp_pi2vol(data8.2cp, ep8.4, reference_freq = 4) |> round(2)
+cp_pi2vol(imf_cp, ep8.4, reference_freq = 4) |> round(2)
 ```
 
 Laspeyres Volume Index (previous quarter = 100)
 ```{r}
-laspeyres(data8.2cp, ep8.4, output = "index", reference_freq = 4) |> round(2)
+laspeyres(imf_cp, ep8.4, output = "index", reference_freq = 4) |> round(2)
 ```
 
 Paasche Volume Measure (previous quarter = 100)
 ```{r}
-paasche(data8.2cp, ep8.4, output = "index", reference_freq = 4) |> round(2)
+paasche(imf_cp, ep8.4, output = "index", reference_freq = 4) |> round(2)
 ```
 
 Fisher Volume Index (previous quarter = 100)
 ```{r}
-fisher(data8.2cp, ep8.4, output = "index", reference_freq = 4) |> round(2)
+fisher(imf_cp, ep8.4, output = "index", reference_freq = 4) |> round(2)
 ```
 
 Summary Table
 ```{r}
 table_8.4 <- 
 	ts.union(
-		data8.2cp,
-		data8.2cp[,"A"] +  data8.2cp[,"B"],
+		imf_cp,
+		imf_cp[,"A"] +  imf_cp[,"B"],
 		ep8.4,
 		eld,
-		cp_pi2vol(data8.2cp, ep8.4, reference_freq = 4),
-		laspeyres(data8.2cp, ep8.4, output = "index", reference_freq = 4),
-		paasche(data8.2cp, ep8.4, output = "index", reference_freq = 4),
-		fisher(data8.2cp, ep8.4, output = "index", reference_freq = 4)
+		cp_pi2vol(imf_cp, ep8.4, reference_freq = 4),
+		laspeyres(imf_cp, ep8.4, output = "index", reference_freq = 4),
+		paasche(imf_cp, ep8.4, output = "index", reference_freq = 4),
+		fisher(imf_cp, ep8.4, output = "index", reference_freq = 4)
 	)
 colnames(table_8.4) <- c(
 	paste("Current Prices", c("A", "B", "Total")),
@@ -347,7 +350,7 @@ fixed_8.5 <- ts(cbind(Laspeyres = fixed_l,
 					  Paasche = fixed_p,
 					  Fisher = sqrt(fixed_l * fixed_p)),
 				start = c(2011, 1), frequency = 4)
-round(fixed_8.5, 3)
+round(fixed_8.5, 2)
 ```
 
 Quarterly chain-linked indices: the quarter-to-quarter indices (computed with
@@ -362,7 +365,7 @@ chained_8.5 <- ts.union(
 	Paasche = chain_8.5(paasche(cp_8.5, pi_8.5, reference_freq = 4)),
 	Fisher = chain_8.5(fisher(cp_8.5, pi_8.5, reference_freq = 4))
 )
-round(chained_8.5, 3)
+round(chained_8.5, 2)
 ```
 
 Although the prices and the quantities of the fourth quarter are those of the first
@@ -396,57 +399,51 @@ round(table_8.5, 2)
 Volume Measures (previous year = 100)
 
 ```{r}
-data8.6cp <- data8.2cp
-data8.6pi <- data8.2ep
-
-data8.6vol <- cp_pi2vol(cp = data8.6cp,pi = data8.6pi)
-data8.6vol.tot <- laspeyres(data8.6cp, data8.6pi)
-data8.6cp.total <- ts(rowSums(data8.6cp), start = start(data8.6cp),
-					  frequency = frequency(data8.6cp))
-
-data8.6cp <- ts.union(data8.6cp,
-					  data8.6cp.total)
-data8.6vol <- ts.union(data8.6vol,
-					   data8.6vol.tot)
-colnames(data8.6cp) <- 
-	colnames(data8.6vol) <- 
-	c(colnames(data8.6pi), "Sum")
-data8.6vol |> round(2)
+# Current prices and volume indices of the components and of their sum
+imf_cp_sum <- ts.union(imf_cp, imf_cp[, "A"] + imf_cp[, "B"])
+vol8.6 <- ts.union(cp_pi2vol(imf_cp, imf_pi), laspeyres(imf_cp, imf_pi))
+colnames(imf_cp_sum) <- colnames(vol8.6) <- c("A", "B", "Sum")
+vol8.6 |> round(2)
 ```
 
 Chain-Indices with Annual Overlap (2010 =100)
 
 ```{r}
-chain_link(method = "ao", vo = data8.6vol, data8.6cp, 
-			  base_year = 2010, output = "index") |> round(2)
+chain_link(method = "ao", vo = vol8.6, imf_cp_sum, 
+		   base_year = 2010, output = "index") |> round(2)
 ```
 Chain Volume Measures with Annual Overlap in Monetary Terms
 
 ```{r}
-chain_link(method = "ao", data8.6vol, data8.6cp, 
-			  base_year = 2010, output = "measure") |> round(1)
+chain_link(method = "ao", vol8.6, imf_cp_sum, 
+		   base_year = 2010, output = "measure") |> round(1)
 ```
 
 Summary table 
 ```{r}
 table_8.6 <- 
 	ts.union(
-		data8.6cp,
-		data8.6cp[, c("A", "B")]/data8.6pi*100,
-		(data8.6cp[, "A"]/data8.6pi[, "A"] +
-		 	data8.6cp[, "B"]/data8.6pi[, "B"])*100,
-		data8.6vol,
-		chain_link(method = "ao", data8.6vol, data8.6cp, 
-					  base_year = 2010, output = "index"),
-		chain_link(method = "ao", data8.6vol, data8.6cp, 
-					  base_year = 2010, output = "measure")
+		imf_cp_sum,
+		imf_cp/imf_pi*100,
+		(imf_cp_sum[, "A"]/imf_pi[, "A"] +
+		 	imf_cp_sum[, "B"]/imf_pi[, "B"])*100,
+		vol8.6,
+		chain_link(method = "ao", vol8.6, imf_cp_sum, 
+				   base_year = 2010, output = "index"),
+		chain_link(method = "ao", vol8.6, imf_cp_sum, 
+				   base_year = 2010, output = "measure"),
+		chain_discrepancy(
+			chain_link(method = "ao", vol8.6, imf_cp_sum, 
+				   base_year = 2010, output = "measure")
+		)
 	)
 colnames(table_8.6) <- c(
 	paste("Current Prices", c("A", "B", "Sum")),
 	paste("Previous Year's Prices", c("A", "B", "Sum")),
 	paste("Volume Measures", c("A", "B", "Sum")),
 	paste("Chain-Indices with Annual Overlap", c("A", "B", "Sum")),
-	paste("Chain Volume Measures with Annual Overlap", c("A", "B", "Sum"))
+	paste("Chain Volume Measures with Annual Overlap", c("A", "B", "Sum")),
+	"Discrepancies"
 )
 round(table_8.6, 2)
 ```
@@ -454,53 +451,95 @@ round(table_8.6, 2)
 # Chain-Linking Annually-weighted Laspeyres-type Indices: the One-Quarter Overlap Technique (example 8.7)
 
 With the one-quarter overlap technique, the volume indices are computed with the
-overlap quarter (q4) of the previous year as base period. As in the manual
-(paragraph 8.72), this quarter is valued at the weighted average prices of the
-previous year, and not at its own current prices. Besides, as there are no price
-indices in the reference year, the first year is linked with the annual overlap
-technique (footnote 32 of the manual). `chain_laspeyres(method = "oqo")` does it.
+overlap quarter (q4) of the previous year as base period. As in the spreadsheet of
+the manual, this quarter is valued here at its own current prices
+(`overlap_prices = "current_prices"`): the volume measures are then expressed
+with q4 of the previous year = 100. The text of the manual (paragraph 8.72) values
+it instead at the weighted average prices of the previous year (see `cp_pi2cy()`):
+this is the default of `chain_laspeyres()` (`overlap_prices = "year_prices"`).
+In both cases, as there are no price indices in the reference year, the first year
+is linked with the annual overlap technique (footnote 32 of the manual).
 
-Current Year's Prices (column 1 of the table of the manual): the quarterly values
-at the weighted average prices of the year.
+Volume Measures (q4 previous year = 100)
 
 ```{r}
-data8.7cy <- cp_pi2cy(data8.2cp, data8.2ep)
-data8.7cy |> window(start = c(2011, 1)) |> round(1)
+cp_pi2vol(imf_cp, imf_pi, reference_freq = 4, reference_cycle = 4) |> round(2)
 ```
 
 Chain-Indices with One-Quarter Overlap (2010 = 100)
-
 ```{r}
-chain_laspeyres(data8.2cp, data8.2ep, method = "oqo",
-				base_year = 2010, output = "index") |> round(2)
+chain_laspeyres(imf_cp, imf_pi, method = "oqo",
+				base_year = 2010, output = "index",
+				overlap_prices = "current_prices") |> round(2)
 ```
 
 Chain Volume Measures with One-Quarter Overlap in Monetary Terms, and
 discrepancies (sum of the components minus the total)
 
 ```{r}
-data8.7chain <- chain_laspeyres(data8.2cp, data8.2ep, method = "oqo",
-								base_year = 2010, output = "measure")
-cbind(data8.7chain, Discrepancies = chain_discrepancy(data8.7chain)) |>
-	round(1)
+chain8.7 <- chain_laspeyres(imf_cp, imf_pi, method = "oqo",
+								base_year = 2010, output = "measure",
+								overlap_prices = "current_prices")
+cbind(chain8.7, Discrepancies = chain_discrepancy(chain8.7)) |>
+	round(2)
 ```
 
 With this technique, the sum of the quarterly chain volume data of a year does not
-match the annual chain volume data (1,524.7 and 1,560.2 in example 8.6):
+match the annual chain volume data (1,517.4 and 1,546.8 instead of 1,524.7 and
+1,560.2 with the annual overlap technique of example 8.6):
 
 ```{r}
-aggregate(data8.7chain[, "Total"], FUN = sum) |> round(1)
+aggregate(chain8.7, FUN = sum) |> round(2)
+```
+
+With the overlap quarter valued at the average prices of the year (text of the
+manual), the results are slightly different from 2012 onwards:
+
+```{r}
+chain_laspeyres(imf_cp, imf_pi, method = "oqo",
+				base_year = 2010, output = "measure") |> round(2)
+```
+
+Summary table
+
+```{r}
+table_8.7 <- ts.union(
+	imf_cp,
+	imf_cp[, 1] + imf_cp[, 2],
+	imf_cp[, c("A", "B")]/imf_pi*100,
+	(imf_cp[, "A"]/imf_pi[, "A"] +
+	 	imf_cp[, "B"]/imf_pi[, "B"])*100,
+	cp_pi2vol(imf_cp, imf_pi, reference_freq = 4, reference_cycle = 4),
+	laspeyres(imf_cp, imf_pi, output = "index",
+			  reference_freq = 4, reference_cycle = 4),
+	chain_laspeyres(
+		imf_cp, imf_pi, method = "oqo",
+		base_year = 2010, output = "index",
+		overlap_prices = "current_prices"
+	),
+	chain8.7,
+	chain_discrepancy(chain8.7)
+)
+
+colnames(table_8.7) <- c(
+	paste("Current Year's Prices", c("A", "B", "Sum")),
+	paste("Previous Year's Prices", c("A", "B", "Sum")),
+	paste("Volume Measures (q4 previous year = 100)", c("A", "B", "Sum")),
+	paste("Chain-Indices with One-Quarter Overlap", c("A", "B", "Sum")),
+	paste("Chain Volume Measures with One-Quarter Overlap", c("A", "B", "Sum")),
+	"Discrepancies"
+)
+round(table_8.7, 2)
 ```
 
 
 # Chain-Linking and Benchmarking Quarterly Fisher Indices (example 8.8)
 
-The quarterly Fisher indices are those of example 8.4, and the annual ones those
-of example 8.3 (derived from the same data).
+The quarterly Fisher indices are those of example 8.4.
 
 ```{r}
-fisher8.8 <- fisher(data8.2cp, ep8.4, output = "index", reference_freq = 4)
-fisher8.8 |> round(3)
+fisher8.8 <- fisher(imf_cp, ep8.4, output = "index", reference_freq = 4)
+fisher8.8 |> round(2)
 ```
 
 Quarterly Chain Fisher Volume Index: as in the manual, the quarter-to-quarter
@@ -508,56 +547,71 @@ indices (the first one compares 2011q1 with 2010q4) are chained, and the four
 quarters of 2010 are set to 100 (2010 = 100).
 
 ```{r}
-stopifnot(isTRUE(all.equal(start(fisher8.8), c(2011, 1))))
 chain_q <- ts(c(rep(100, 4), cumprod(as.numeric(fisher8.8) / 100) * 100),
 			  start = c(2010, 1), frequency = 4)
-chain_q |> round(3)
+chain_q |> round(2)
 ```
 
 Annual Chain Fisher Volume Index (2010 = 100): the annual Fisher indices of
 example 8.3 (previous year = 100) are chained.
 
 ```{r}
-fisher8.3 <- fisher(data8.3cp.an, data8.3ep.an, output = "index")
+fisher8.3 <- fisher(imf_cp_an, imf_pi_an, output = "index")
 chain_a <- annual_chain(fisher8.3, base_year = 2010)
-chain_a |> round(3)
-```
-
-The average of the quarterly chain index differs from the annual chain index:
-
-```{r}
-(aggregate(chain_q, FUN = mean) - chain_a) |> round(3)
+chain_a |> round(2)
 ```
 
 Benchmarked Chain Fisher Volume Index: the quarterly index is benchmarked on the
 annual one with the proportional first-difference Denton method (Cholette's
-variant) of the `tempdisagg` package. The annual averages of the benchmarked
-series are those of the annual chain index.
+variant) of the `tempdisagg` package, from 2011 onwards (the quarters of the
+reference year 2010 stay equal to 100). The annual averages of the quarterly
+chain index differ from the annual chain index (column "Difference" of the annual
+summary table): the benchmarking distributes these discrepancies smoothly over the
+quarters.
 
 ```{r, eval = has_tempdisagg}
-bench_8.8 <- tempdisagg::td(chain_a ~ 0 + chain_q,
-							conversion = "average",
-							method = "denton-cholette")
-chain_q_bench <- predict(bench_8.8)
-
-table_8.8 <- ts.union(fisher8.8, chain_q, chain_q_bench)
-colnames(table_8.8) <- c("Fisher (previous quarter = 100)",
-						 "Chain Fisher (2010 = 100)",
-						 "Benchmarked chain Fisher (2010 = 100)")
-round(table_8.8, 3)
-
-# Check: annual averages
-ts.union(`Annual chain` = chain_a,
-		 `Average of the benchmarked series` = aggregate(chain_q_bench, FUN = mean)) |>
-	round(3)
+bench_8.8 <- tempdisagg::td(
+	window(chain_a, start = 2011) ~
+		0 + window(chain_q, start = c(2011, 1)),
+	conversion = "average",
+	method = "denton-cholette")
+chain_q_bench <- ts(c(rep(100, 4), predict(bench_8.8)),
+					start = c(2010, 1), frequency = 4)
+chain_q_bench |> round(2)
 ```
 
-The quarterly and annual chain indices are those of the manual (100.801, 101.861
-and 104.106 for the annual averages of the quarterly chain index; 100.789,
-101.761 and 103.989 for the annual chain index). The benchmarked series of the
-manual (column 5 of the example) are however not reproduced exactly: they are
-hard-coded in the spreadsheet and their annual averages are not those of the
-annual chain index (e.g. 104.058 instead of 103.989 in 2013).
+Summary tables (quarterly and annual data):
+
+```{r, eval = has_tempdisagg}
+table_8.8q <- ts.union(fisher8.8, chain_q, chain_q_bench)
+colnames(table_8.8q) <- c(
+	"Quarterly Fisher Volume Index (previous quarter = 100)",
+	"Quarterly Chain Fisher Volume Index (2010 = 100)",
+	"Benchmarked Chain Fisher Volume Index (2010 = 100)"
+)
+round(table_8.8q, 2)
+
+table_8.8a <- ts.union(
+	aggregate(chain_q, FUN = mean),
+	fisher8.3,
+	chain_a,
+	aggregate(chain_q, FUN = mean) - chain_a,
+	aggregate(chain_q_bench, FUN = mean)
+)
+colnames(table_8.8a) <- c(
+	"Quarterly Chain Fisher Volume Index (2010 = 100), annual average",
+	"Annual Fisher Volume Index (previous year = 100)",
+	"Annual Chain Fisher Volume Index (2010 = 100)",
+	"Difference Q Chain Fisher - A Chain Fisher",
+	"Benchmarked Chain Fisher Volume Index (2010 = 100), annual average"
+)
+round(table_8.8a, 2)
+```
+
+The results are those of the manual. With the simple averages of the quarterly
+price indices (`pi_annual(method = "mean")`), the annual chain index would be
+slightly different (100.79, 101.76 and 103.99), and so would the benchmarked
+series.
 
 # Contributions to Percent Change from Annually-chained Laspeyres-type Volume Measures (example 8.9)
 
@@ -569,37 +623,106 @@ chain measures are not additive.
 Contributions to the growth over the previous quarter, with annual overlap:
 
 ```{r}
-x_ao <- chain_link(data8.6vol, data8.6cp, method = "ao",
+x_ao <- chain_link(vol8.6, imf_cp_sum, method = "ao",
 				   base_year = 2010, output = "measure")
-chain_contrib(x_ao[, c("A", "B")], data8.6cp[, c("A", "B")],
-			  vo_total = x_ao[, "Sum"], cp_total = data8.6cp[, "Sum"],
-			  method = "ao", type = "period",
-			  extra = c("total", "residual")) |> round(3)
+contrib_8.9q <- chain_contrib(x_ao[, c("A", "B")], imf_cp,
+							  vo_total = x_ao[, "Sum"], cp_total = imf_cp_sum[, "Sum"],
+							  method = "ao", type = "period",
+							  extra = c("total", "residual"))
+contrib_8.9q |> round(2)
 ```
 
-The non-additivity residual comes from the data: the elementary price indices of
-the example are not exactly consistent with the annual ones.
+The contributions add up to the growth of the total: the non-additivity residual
+is zero.
 
-Contributions to the growth of the annual sums:
+Annual data: as in the manual, the annual chain volume measures are derived from
+the annual data (annual sums of the current prices and weighted annual averages
+of the price indices, as in example 8.3) and the chain deflator is the ratio of
+the current prices to the chain volume measures.
 
 ```{r}
-chain_contrib(x_ao[, c("A", "B")], data8.6cp[, c("A", "B")],
-			  vo_total = x_ao[, "Sum"], cp_total = data8.6cp[, "Sum"],
-			  method = "ao", type = "annual", extra = "total") |> round(3)
+imf_cp_an_sum <- ts.union(imf_cp_an, rowSums(imf_cp_an))
+vol8.9_an <- ts.union(cp_pi2vol(imf_cp_an, imf_pi_an),
+						  laspeyres(imf_cp_an, imf_pi_an))
+colnames(imf_cp_an_sum) <- colnames(vol8.9_an) <- c("A", "B", "Sum")
+x_ao.an <- chain_link(vol8.9_an, imf_cp_an_sum, method = "ao",
+					  base_year = 2010, output = "measure")
+contrib_8.9a <- chain_contrib(
+	x_ao.an[, c("A", "B")], imf_cp_an_sum[, c("A", "B")],
+	vo_total = x_ao.an[, "Sum"],
+	cp_total = imf_cp_an_sum[, "Sum"],
+	method = "ao", type = "period",
+	extra = c("total", "residual"))
+contrib_8.9a |> round(2)
+```
+
+Summary tables (annual and quarterly data):
+
+```{r}
+table_8.9a <- ts.union(
+	imf_cp_an_sum,
+	x_ao.an,
+	imf_cp_an_sum / x_ao.an * 100,
+	contrib_8.9a[, c("A", "B")],
+	contrib_8.9a[, "A"] + contrib_8.9a[, "B"],
+	contrib_8.9a[, "Total"]
+)
+colnames(table_8.9a) <- c(
+	paste("Current Prices", c("A", "B", "Sum")),
+	paste("Chain Volume Measures (Annual Overlap)", c("A", "B", "Sum")),
+	paste("Chain Deflator", c("A", "B", "Sum")),
+	paste("Contribution to Total Growth (%)", c("A", "B", "Sum")),
+	"Total Growth (%)"
+)
+round(table_8.9a, 2)
+
+table_8.9q <- ts.union(
+	imf_cp_sum,
+	x_ao,
+	contrib_8.9q[, c("A", "B")],
+	contrib_8.9q[, "A"] + contrib_8.9q[, "B"],
+	contrib_8.9q[, "Total"]
+)
+colnames(table_8.9q) <- c(
+	paste("Current Prices", c("A", "B", "Sum")),
+	paste("Chain Volume Measures (Annual Overlap)", c("A", "B", "Sum")),
+	paste("Contribution to Total Growth (%)", c("A", "B", "Sum")),
+	"Total Growth (%)"
+)
+round(table_8.9q, 2)
+```
+
+As the annual price indices are the weighted averages of the quarterly ones, the
+annual chain volume measures are the annual sums of the quarterly ones, and the
+annual contributions are also given by `type = "annual"` from the quarterly data:
+
+```{r}
+chain_contrib(x_ao[, c("A", "B")], imf_cp,
+			  vo_total = x_ao[, "Sum"], cp_total = imf_cp_sum[, "Sum"],
+			  method = "ao", type = "annual", extra = "total") |> round(2)
 ```
 
 ## Beyond the manual: year-on-year growth and one-quarter overlap
 
 The same function gives the contributions to the growth over the same quarter of
 the previous year, and for chain measures obtained with the one-quarter overlap
-technique (the overlap quarter is valued at the average prices of the year, hence
-the price indices `pi`):
+technique (with the same `overlap_prices` as the one used to compute the chain
+measures):
 
 ```{r}
-x_oqo <- chain_laspeyres(data8.2cp, data8.2ep, method = "oqo",
+chain_contrib(chain8.7, imf_cp, method = "oqo", type = "yoy",
+			  overlap_prices = "current_prices",
+			  extra = c("total", "residual")) |> round(2)
+```
+
+With the overlap quarter valued at the average prices of the year (default), the
+price indices `pi` are needed:
+
+```{r}
+x_oqo <- chain_laspeyres(imf_cp, imf_pi, method = "oqo",
 						 base_year = 2010, output = "measure")
-chain_contrib(x_oqo, data8.2cp, method = "oqo", type = "yoy", pi = data8.2ep,
-			  extra = c("total", "residual")) |> round(3)
+chain_contrib(x_oqo, imf_cp, method = "oqo", type = "yoy", pi = imf_pi,
+			  extra = c("total", "residual")) |> round(2)
 ```
 
 Monthly series work the same way (the overlap period of the one-quarter overlap
@@ -608,16 +731,16 @@ technique is then the last month of the year).
 
 # Annually-weighted Laspeyres Indices: Annual Overlap and One-Quarter Overlap Techniques (figure 8.1)
 
-Total chain volume series in monetary terms with the annual overlap (AO), the
-one-quarter overlap (QO) and the one-quarter overlap with benchmarking (QOB)
-techniques. The QO series is benchmarked (proportional first-difference Denton,
-Cholette's variant) so that its annual sums are those of the AO series.
+Total chain volume series in monetary terms with the annual overlap (AO, example
+8.6), the one-quarter overlap (QO, example 8.7) and the one-quarter overlap with
+benchmarking (QOB) techniques. The QO series is benchmarked (proportional
+first-difference Denton, Cholette's variant) so that its annual sums are those of
+the AO series.
 
 ```{r fig81-data, eval = has_tempdisagg}
-x_ao <- chain_link(data8.6vol, data8.6cp, method = "ao",
+x_ao <- chain_link(vol8.6, imf_cp_sum, method = "ao",
 				   base_year = 2010, output = "measure")[, "Sum"]
-x_oqo <- chain_laspeyres(data8.2cp, data8.2ep, method = "oqo",
-						 base_year = 2010, output = "measure")[, "Total"]
+x_oqo <- chain8.7[, "Total"]
 annual_ao <- aggregate(x_ao, FUN = sum)
 
 bench_a81 <- tempdisagg::td(annual_ao ~ 0 + x_oqo,
@@ -627,6 +750,22 @@ x_qob <- predict(bench_a81)
 
 series_8.1 <- ts.union(AO = x_ao, QO = x_oqo, QOB = x_qob)
 ```
+
+Summary table (levels and percent changes over the previous quarter):
+
+```{r, eval = has_tempdisagg}
+table_f8.1 <- ts.union(series_8.1, growth_rate(series_8.1))
+colnames(table_f8.1) <- c(paste("Level", colnames(series_8.1)),
+						  paste("Growth rate", colnames(series_8.1)))
+round(table_f8.1, 2)
+```
+
+The AO and QO series are those of the manual. The QOB series has the same annual
+sums as the one of the manual, but its quarterly path differs (377.33 instead of
+377.69 in 2011q1, 378.63 instead of 379.21 in 2012q1): the benchmarked series
+of the manual is hard-coded in the spreadsheet and stays very close to the QO
+series in 2011, whereas the Denton method spreads the adjustment over all the
+quarters.
 
 ```{r fig81-levels, eval = has_tempdisagg, fig.width = 7, fig.height = 4}
 cols_8.1 <- c("black", "firebrick", "steelblue")
@@ -652,10 +791,21 @@ Fisher volume series (F, example 8.8) in monetary terms: the Fisher index
 (2010 = 100) is multiplied by the current prices of 2010 divided by 4.
 
 ```{r fig82-data, eval = has_tempdisagg}
-cp_2010 <- sum(window(data8.2cp, end = c(2010, 4)))
+cp_2010 <- sum(window(imf_cp, end = c(2010, 4)))
 x_fisher <- window(chain_q_bench, start = c(2011, 1)) * (cp_2010 / 4) / 100
 series_8.2 <- ts.union(AO = x_ao, F = x_fisher)
 ```
+
+Summary table (levels and percent changes over the previous quarter):
+
+```{r, eval = has_tempdisagg}
+table_f8.2 <- ts.union(series_8.2, growth_rate(series_8.2))
+colnames(table_f8.2) <- c(paste("Level", colnames(series_8.2)),
+						  paste("Growth rate", colnames(series_8.2)))
+round(table_f8.2, 2)
+```
+
+The AO and F series are those of the manual.
 
 ```{r fig82-levels, eval = has_tempdisagg, fig.width = 7, fig.height = 4}
 cols_8.2 <- c("black", "steelblue")
@@ -680,18 +830,34 @@ The series are those computed for figure 8.1. The annual sums of the QOB series
 are those of the AO series.
 
 ```{r, eval = has_tempdisagg}
+summary_8.A1 <- function(x) {
+	res <- ts.union(
+		x[, "AO"], growth_rate(x[, "AO"]),
+		x[, "QO"], growth_rate(x[, "QO"]),
+		x[, "AO"] / x[, "QO"],
+		x[, "QOB"], growth_rate(x[, "QOB"]),
+		x[, "QOB"] / x[, "QO"],
+		growth_rate(x[, "QOB"]) - growth_rate(x[, "AO"])
+	)
+	colnames(res) <- c(
+		paste("Chain Volume Series with Annual Overlap", c("Level", "Percent change")),
+		paste("Chain Volume Series with One-Quarter Overlap", c("Level", "Percent change")),
+		"Ratio AO/QO",
+		paste("Chain Volume Series with One-Quarter Overlap and Benchmarking",
+			  c("Level", "Percent change")),
+		"Ratio QOB/QO",
+		"Differences between AO and QOB (percent change)"
+	)
+	res
+}
 annual <- ts.union(AO = annual_ao,
 				   QO = aggregate(x_oqo, FUN = sum),
 				   QOB = aggregate(x_qob, FUN = sum))
-annual |> round(3)
-# Annual percent changes
-(100 * (annual[-1, ] / annual[-nrow(annual), ] - 1)) |> round(3)
-```
+table_8.A1a <- summary_8.A1(annual)
+round(table_8.A1a, 2)
 
-Quarterly series:
-
-```{r, eval = has_tempdisagg}
-series_8.1 |> round(3)
+table_8.A1q <- summary_8.A1(series_8.1)
+round(table_8.A1q, 2)
 ```
 
 # Effect of Benchmarking on the Chain Volume Series with QO technique (figure 8.A1)
@@ -701,7 +867,3 @@ ratio <- ts.union(`QOB / QO` = x_qob / x_oqo, `AO / QO` = x_ao / x_oqo)
 plot(ratio, plot.type = "single", lty = 1:2, ylab = "Ratio", main = "Effect of the benchmarking")
 legend("topleft", legend = colnames(ratio), lty = 1:2, bty = "n")
 ```
-
-
-
-
