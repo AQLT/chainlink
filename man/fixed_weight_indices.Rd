@@ -62,6 +62,17 @@ A \code{ts} (or \code{mts}).
 Derive the Laspeyres-type, Paasche-type or Fisher-type volume indices of the
 total from the current prices and the price indices of its components.
 }
+\details{
+With \eqn{v_{i,t}} the elementary volume index of the component \eqn{i}
+(\code{\link[=cp_pi2vol]{cp_pi2vol()}}), \eqn{w_{i,r}} its share in the current prices of the total in
+the reference period \eqn{r} (the previous year, by default) and \eqn{w_{i,c}}
+its share in the current period \eqn{c} (the current year, by default):
+\deqn{L_t = \sum_i w_{i,r}\, v_{i,t}, \qquad
+P_t = \left(\sum_i \frac{w_{i,c}}{v_{i,t}}\right)^{-1}, \qquad
+F_t = \sqrt{L_t P_t}.}
+The volume measure is the index times the value per period of the total in
+the reference period, divided by 100.
+}
 \examples{
 # Laspeyres-type volume index over the previous year
 laspeyres(imf_cp, imf_pi)

@@ -10,7 +10,7 @@
 #' \eqn{F} the Fisher volume index of the aggregate (previous period = 1), the
 #' contribution of the component \eqn{x} is
 #' \deqn{100 \frac{\frac{z^t}{z^{t-1}} \left(x^t / r_x - x^{t-1}\right) +
-#' F \left(x^t - x^{t-1} r_x\right)}{z^t + F \sum_j c_j^{t-1} r_j}.}
+#' F \left(x^t - x^{t-1} r_x\right)}{z^t + F \sum_j x_j^{t-1} r_j}.}
 #' Contributions add up exactly to the percent change of the Fisher index,
 #' whatever the number of components.
 #'

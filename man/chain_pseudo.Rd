@@ -45,6 +45,10 @@ For instance, changes in inventories are closing inventories minus opening
 inventories, and the trade balance is exports minus imports.
 }
 \details{
+With \eqn{x^{+}_t} and \eqn{x^{-}_t} the chain volume measures of the two
+series (\code{\link[=chain_laspeyres]{chain_laspeyres()}}), the pseudo chain volume series is
+\eqn{x^{+}_t - x^{-}_t}.
+
 The result is a pseudo chain volume series: it is the difference of two chained
 components, which are not additive by construction. It is expressed in monetary
 terms (its growth rates are meaningless). The measure of each series is that of

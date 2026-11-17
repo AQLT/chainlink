@@ -21,7 +21,11 @@ A \code{ts} (or \code{mts}) with the same structure as \code{x}.
 \description{
 Rescale a chain index so that the average of the new reference year is 100, or
 a chain volume measure so that the annual sum of the new reference year is its
-annual current prices.
+annual current prices. With \eqn{b} the new reference year,
+\deqn{I'_t = 100\, \frac{I_t}{\bar{I}_b}, \qquad x'_t = x_t\, \frac{cp_b}{x_b},}
+where \eqn{\bar{I}_b} is the average of the index over the periods of year
+\eqn{b}, and \eqn{cp_b} and \eqn{x_b} the annual sums of the current prices and
+of the measure.
 }
 \details{
 The series must cover all the periods of the new reference year. The

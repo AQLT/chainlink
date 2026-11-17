@@ -78,6 +78,17 @@ previous year);
 \item re-reference it to the reference year.
 }
 
+With \eqn{x_t} the chain volume measure of a component, \eqn{b} the reference
+year, \eqn{f} the frequency and \eqn{\Lambda_y} the chain level of year \eqn{y}
+(see \code{\link[=chain_link]{chain_link()}}), the volume at the prices of the previous year is
+\deqn{x^{py}_t = \frac{x_t}{cp_b / f} \times
+\frac{o_{y(t)-1}}{\Lambda_{y(t)-1}},}
+where \eqn{o_y} is the value of the reference of year \eqn{y}: the annual
+current prices divided by \eqn{f} (annual overlap) or the value of the overlap
+period (one-quarter overlap). The volume index of the aggregate is then
+\eqn{100 \sum_i x^{py}_{i,t} / \sum_i o_{i,y(t)-1}}, chain-linked with
+\code{\link[=chain_link]{chain_link()}}.
+
 \code{chain_aggregate()} does the steps 2 to 4. The reference year of the result is
 \code{base_year} and its annual current prices are those of \code{cp}, so that the
 seasonally adjusted aggregate is normalised to the unadjusted data of the

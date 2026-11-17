@@ -26,7 +26,10 @@ total differs from the sum of the chain volume measures of its components
 (except in the base year and, with the annual overlap technique, in the year
 after the base year). This function returns the difference, with the sign of
 the column "Discrepancies" of the examples 8.6 and 8.7 of the manual: the sum of
-the components minus the total.
+the components minus the total,
+\deqn{D_t = \sum_i x_{i,t} - z_t,}
+with \eqn{x_{i,t}} the chain volume measures of the components and \eqn{z_t}
+the one of the total (\eqn{100\, D_t / z_t} with \code{relative = TRUE}).
 }
 \examples{
 x <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,

@@ -32,6 +32,16 @@ elementary volume measures (\code{cp / pi * 100}) divided by the current prices 
 the reference period (the previous year, the previous period or a given
 period of the previous year).
 }
+\details{
+With \eqn{cp_t} the current prices and \eqn{pi_t} the price index of period
+\eqn{t}, the volume index is
+\deqn{v_t = 100 \times \frac{100\, cp_t / pi_t}{\overline{cp}_{r(t)}}}
+where \eqn{\overline{cp}_{r(t)}} is the value per period of the reference
+period \eqn{r(t)}: the annual sum of the previous year divided by the frequency
+\eqn{f} (\code{reference_freq = 1}), the value of the previous period
+(\code{reference_freq = f}) or the value of the period \code{reference_cycle} of the
+previous year.
+}
 \examples{
 # Volume indices over the previous year (previous-year prices)
 cp_pi2vol(imf_cp, imf_pi)

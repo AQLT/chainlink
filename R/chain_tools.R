@@ -5,7 +5,10 @@
 #' (except in the base year and, with the annual overlap technique, in the year
 #' after the base year). This function returns the difference, with the sign of
 #' the column "Discrepancies" of the examples 8.6 and 8.7 of the manual: the sum of
-#' the components minus the total.
+#' the components minus the total,
+#' \deqn{D_t = \sum_i x_{i,t} - z_t,}
+#' with \eqn{x_{i,t}} the chain volume measures of the components and \eqn{z_t}
+#' the one of the total (\eqn{100\, D_t / z_t} with `relative = TRUE`).
 #'
 #' @param vo Chain volume measures (in monetary terms) of the components (`ts`
 #' or `mts`). If `vo_total` is `NULL`, the last column is the total (as returned
@@ -47,7 +50,11 @@ chain_discrepancy <- function(vo, vo_total = NULL, relative = FALSE) {
 #'
 #' Rescale a chain index so that the average of the new reference year is 100, or
 #' a chain volume measure so that the annual sum of the new reference year is its
-#' annual current prices.
+#' annual current prices. With \eqn{b} the new reference year,
+#' \deqn{I'_t = 100\, \frac{I_t}{\bar{I}_b}, \qquad x'_t = x_t\, \frac{cp_b}{x_b},}
+#' where \eqn{\bar{I}_b} is the average of the index over the periods of year
+#' \eqn{b}, and \eqn{cp_b} and \eqn{x_b} the annual sums of the current prices and
+#' of the measure.
 #'
 #' The series must cover all the periods of the new reference year. The
 #' contributions computed by [chain_contrib()] must be computed from series

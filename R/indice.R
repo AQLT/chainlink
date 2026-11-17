@@ -5,6 +5,15 @@
 #' the reference period (the previous year, the previous period or a given
 #' period of the previous year).
 #'
+#' With \eqn{cp_t} the current prices and \eqn{pi_t} the price index of period
+#' \eqn{t}, the volume index is
+#' \deqn{v_t = 100 \times \frac{100\, cp_t / pi_t}{\overline{cp}_{r(t)}}}
+#' where \eqn{\overline{cp}_{r(t)}} is the value per period of the reference
+#' period \eqn{r(t)}: the annual sum of the previous year divided by the frequency
+#' \eqn{f} (`reference_freq = 1`), the value of the previous period
+#' (`reference_freq = f`) or the value of the period `reference_cycle` of the
+#' previous year.
+#'
 #' @param cp Current prices (`ts` or `mts`).
 #' @param pi Price indices (previous reference period = 100), same structure as `cp`.
 #' @param reference_freq Frequency of the reference period: 1 (default) for the
@@ -63,6 +72,16 @@ cp_pi2vol.mts <- function(cp, pi, reference_freq = 1, reference_cycle = NULL) {
 #'
 #' Derive the Laspeyres-type, Paasche-type or Fisher-type volume indices of the
 #' total from the current prices and the price indices of its components.
+#'
+#' With \eqn{v_{i,t}} the elementary volume index of the component \eqn{i}
+#' ([cp_pi2vol()]), \eqn{w_{i,r}} its share in the current prices of the total in
+#' the reference period \eqn{r} (the previous year, by default) and \eqn{w_{i,c}}
+#' its share in the current period \eqn{c} (the current year, by default):
+#' \deqn{L_t = \sum_i w_{i,r}\, v_{i,t}, \qquad
+#' P_t = \left(\sum_i \frac{w_{i,c}}{v_{i,t}}\right)^{-1}, \qquad
+#' F_t = \sqrt{L_t P_t}.}
+#' The volume measure is the index times the value per period of the total in
+#' the reference period, divided by 100.
 #'
 #' @inheritParams cp_pi2vol
 #' @param output Character if the output should be the volume index (the

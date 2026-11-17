@@ -26,10 +26,12 @@ current prices.
 }
 \details{
 The value is the volume measure at the prices of the previous year,
-\eqn{cp / pi \times 100}, multiplied by the annual price index of the year (the
-annual current prices divided by the annual sum of the volume measures at the
-prices of the previous year), so that the annual sum is the annual current
-price value.
+multiplied by the annual price index of the year \eqn{y} (the annual current
+prices divided by the annual sum of the volume measures at the prices of the
+previous year, see \code{\link[=pi_annual]{pi_annual()}}):
+\deqn{cy_t = \frac{100\, cp_t}{pi_t} \times \frac{pi_y}{100}, \qquad
+pi_y = 100 \times \frac{\sum_{q \in y} cp_q}{\sum_{q \in y} 100\, cp_q / pi_q},}
+so that the annual sum of \eqn{cy_t} is the annual current price value.
 }
 \examples{
 cp_pi2cy(imf_cp, imf_pi)

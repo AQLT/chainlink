@@ -52,8 +52,10 @@ those of \code{\link[=cp_pi2vol]{cp_pi2vol()}} and \code{\link[=laspeyres]{laspe
 
 With the one-quarter overlap technique (\code{method = "oqo"}), the volume at the
 prices of the previous year of each period is divided by the value of the last
-period (quarter or month) of the previous year. This overlap period can be
-valued in two ways (\code{overlap_prices}):
+period (quarter or month) of the previous year:
+\deqn{v_t = 100 \times \frac{100\, cp_t / pi_t}{cy_{y(t)-1, f}}}
+where \eqn{cy_{y,f}} is the value of the last period \eqn{f} of year \eqn{y}.
+This overlap period can be valued in two ways (\code{overlap_prices}):
 \itemize{
 \item \code{"year_prices"} (default), as printed in the manual (paragraph 8.72 and
 example 8.7): at the \strong{average prices of the year} (see \code{\link[=cp_pi2cy]{cp_pi2cy()}});

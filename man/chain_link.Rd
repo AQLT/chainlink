@@ -53,6 +53,20 @@ indices then the measures of each variable.
 Chain-linking of volume indices. \code{chain_link()} links sub-annual (quarterly or
 monthly) volume indices with the annual overlap (\code{"ao"}) or the one-quarter
 overlap (\code{"oqo"}) technique; \code{annual_chain()} chains annual links.
+}
+\details{
+With \eqn{v_t} the volume index of period \eqn{t} (year \eqn{y(t)}) over the
+reference of the previous year, the annual link of year \eqn{y} is
+\eqn{\lambda_y = \bar{v}_y / 100} (annual average, \code{"ao"} and \code{annual_chain()})
+or \eqn{\lambda_y = v_{y,f} / 100} (overlap period, the last one of the year,
+\code{"oqo"}). With the reference year \eqn{b}, the chain level of year \eqn{y} is
+\eqn{\Lambda_y = \prod_{k=b+1}^{y} \lambda_k} (\eqn{\Lambda_b = 1}) and the
+chain index is
+\deqn{I_t = \Lambda_{y(t)-1}\, v_t}
+for sub-annual series (\code{chain_link()}) and \eqn{I_y = 100\, \Lambda_y} for
+annual series (\code{annual_chain()}). The chain volume measure is
+\eqn{I_t\, cp_b / (100 f)}, with \eqn{cp_b} the annual current prices of the
+reference year and \eqn{f} the frequency (1 for \code{annual_chain()}).
 To compute the volume indices of a total from its components, see
 \code{\link[=chain_laspeyres]{chain_laspeyres()}}.
 }
