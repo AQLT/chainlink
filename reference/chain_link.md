@@ -89,6 +89,13 @@ prices of the reference year and \\f\\ the frequency (1 for
 components, see
 [`chain_laspeyres()`](https://aqlt.github.io/chainlink/reference/chain_laspeyres.md).
 
+## References
+
+International Monetary Fund (2018), *Quarterly National Accounts Manual
+(2017 Edition)*, chapter 8 "Price and Volume Measures", Washington, DC.
+[doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069)
+.
+
 ## Examples
 
 ``` r

@@ -45,6 +45,13 @@ used to deflate annual data, which is by default their weighted average
 (see
 [`pi_annual()`](https://aqlt.github.io/chainlink/reference/pi_annual.md)).
 
+## References
+
+International Monetary Fund (2018), *Quarterly National Accounts Manual
+(2017 Edition)*, chapter 8 "Price and Volume Measures", Washington, DC.
+[doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069)
+.
+
 ## See also
 
 [`pi_annual()`](https://aqlt.github.io/chainlink/reference/pi_annual.md)

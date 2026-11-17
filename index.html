@@ -58,13 +58,13 @@
 </h1></div>
 <!-- badges: start -->
 
-<p><code>chainlink</code> derives price and volume measures of national accounts, following chapter 8 of the IMF <em>Quarterly National Accounts Manual</em>:</p>
+<p><code>chainlink</code> derives price and volume measures of national accounts, following chapter 8 of the IMF <a href="https://doi.org/10.5089/9781475589870.069" class="external-link"><em>Quarterly National Accounts Manual (2017 Edition)</em></a>:</p>
 <ul>
-<li>Laspeyres-type, Paasche-type and Fisher-type volume indices from current prices and price indices (<code><a href="reference/cp_pi2vol.html">cp_pi2vol()</a></code>, <code><a href="reference/fixed_weight_indices.html">laspeyres()</a></code>, <code><a href="reference/fixed_weight_indices.html">paasche()</a></code>, <code><a href="reference/fixed_weight_indices.html">fisher()</a></code>);</li>
+<li>Laspeyres-type, Paasche-type and Fisher-type volume indices from current prices and price indices (<code><a href="reference/cp_pi2vol.html">cp_pi2vol()</a></code>, <code><a href="reference/fixed_weight_indices.html">laspeyres()</a></code>, <code><a href="reference/fixed_weight_indices.html">paasche()</a></code>, <code><a href="reference/fixed_weight_indices.html">fisher()</a></code>), and conversion of price indices: over the previous period (<code><a href="reference/pi_py2pp.html">pi_py2pp()</a></code>), annual (<code><a href="reference/pi_annual.html">pi_annual()</a></code>), values at the average prices of the year (<code><a href="reference/cp_pi2cy.html">cp_pi2cy()</a></code>);</li>
 <li>chain-linking of quarterly or monthly volume indices with the annual overlap and the one-quarter overlap techniques (<code><a href="reference/chain_link.html">chain_link()</a></code>, <code><a href="reference/chain_laspeyres.html">chain_laspeyres()</a></code>, <code><a href="reference/chain_link.html">annual_chain()</a></code>);</li>
-<li>exact contributions to percent change of chain-linked volume measures, over the previous period, over the same period of the previous year or for the annual growth (<code><a href="reference/chain_contrib.html">chain_contrib()</a></code>);</li>
+<li>exact contributions to percent change of chain-linked volume measures, over the previous period, over the same period of the previous year or for the annual growth (<code><a href="reference/chain_contrib.html">chain_contrib()</a></code>), and contributions to percent change of Fisher indices (<code><a href="reference/fisher_contrib.html">fisher_contrib()</a></code>);</li>
 <li>non-additivity of chain-linked series (<code><a href="reference/chain_discrepancy.html">chain_discrepancy()</a></code>), change of the reference year (<code><a href="reference/chain_rebase.html">chain_rebase()</a></code>) and pseudo chain series for variables that change sign (<code><a href="reference/chain_pseudo.html">chain_pseudo()</a></code>);</li>
-<li>un-chaining and aggregation of chain-linked series, for the indirect seasonal adjustment of Laspeyres-type series (<code><a href="reference/chain_unchain.html">chain_unchain()</a></code>, <code><a href="reference/chain_unchain.html">chain_aggregate()</a></code>).</li>
+<li>un-chaining and aggregation of chain-linked series, for the indirect seasonal adjustment of Laspeyres-type series (<code><a href="reference/chain_unchain.html">chain_unchain()</a></code>, <code><a href="reference/chain_unchain.html">chain_aggregate()</a></code>), following the <a href="https://doi.org/10.2785/317290" class="external-link">ESS Guidelines on Seasonal Adjustment</a>.</li>
 </ul>
 <p>All the functions use <code>ts</code> objects. The benchmarking of the quarterly series on annual data is not implemented: use for example the <a href="https://CRAN.R-project.org/package=tempdisagg" class="external-link"><code>tempdisagg</code></a> package (see the vignette <code>imf_qna_manual</code>).</p>
 <div class="section level2">
@@ -159,7 +159,7 @@
 <li>
 <code><a href="articles/contributions.html">vignette("contributions")</a></code> details the contributions to percent change;</li>
 <li>
-<code><a href="articles/practical_case.html">vignette("practical_case")</a></code> follows a complete workflow, from raw quarterly data to the published series and contributions.</li>
+<code><a href="articles/practical_case.html">vignette("practical_case")</a></code> follows a complete workflow, from raw quarterly data to chain-linked series and contributions to growth.</li>
 </ul>
 </div>
 </div>

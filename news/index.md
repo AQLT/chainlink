@@ -59,6 +59,16 @@
   its current prices) and the first year is linked with the annual
   overlap technique. The printed example 8.7 and the annex 8.1 are
   reproduced.
+- The argument `overlap_prices = "current_prices"` of
+  [`chain_laspeyres()`](https://aqlt.github.io/chainlink/reference/chain_laspeyres.md)
+  values the overlap quarter at its own current prices instead, as in
+  the spreadsheet of the manual (the “q4 previous year = 100” volume
+  measures).
+  [`chain_contrib()`](https://aqlt.github.io/chainlink/reference/chain_contrib.md),
+  [`chain_unchain()`](https://aqlt.github.io/chainlink/reference/chain_unchain.md)
+  and
+  [`chain_aggregate()`](https://aqlt.github.io/chainlink/reference/chain_unchain.md)
+  have the same argument.
 - `chain_contrib(method = "oqo")` has a `pi` argument (see
   [`cp_pi2cy()`](https://aqlt.github.io/chainlink/reference/cp_pi2cy.md)).
 - [`chain_discrepancy()`](https://aqlt.github.io/chainlink/reference/chain_discrepancy.md)

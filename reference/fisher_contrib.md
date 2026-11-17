@@ -72,6 +72,11 @@ components.
 Chevalier, M. (2003), "Chain Fisher Volume Index Methodology",
 Statistics Canada (formula drawn from the appendix II).
 
+International Monetary Fund (2018), *Quarterly National Accounts Manual
+(2017 Edition)*, chapter 8 "Price and Volume Measures", Washington, DC.
+[doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069)
+.
+
 ## See also
 
 [`fisher()`](https://aqlt.github.io/chainlink/reference/fixed_weight_indices.md),

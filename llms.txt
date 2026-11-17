@@ -1,14 +1,21 @@
 # chainlink
 
 `chainlink` derives price and volume measures of national accounts,
-following chapter 8 of the IMF *Quarterly National Accounts Manual*:
+following chapter 8 of the IMF [*Quarterly National Accounts Manual
+(2017 Edition)*](https://doi.org/10.5089/9781475589870.069):
 
 - Laspeyres-type, Paasche-type and Fisher-type volume indices from
   current prices and price indices
   ([`cp_pi2vol()`](https://aqlt.github.io/chainlink/reference/cp_pi2vol.md),
   [`laspeyres()`](https://aqlt.github.io/chainlink/reference/fixed_weight_indices.md),
   [`paasche()`](https://aqlt.github.io/chainlink/reference/fixed_weight_indices.md),
-  [`fisher()`](https://aqlt.github.io/chainlink/reference/fixed_weight_indices.md));
+  [`fisher()`](https://aqlt.github.io/chainlink/reference/fixed_weight_indices.md)),
+  and conversion of price indices: over the previous period
+  ([`pi_py2pp()`](https://aqlt.github.io/chainlink/reference/pi_py2pp.md)),
+  annual
+  ([`pi_annual()`](https://aqlt.github.io/chainlink/reference/pi_annual.md)),
+  values at the average prices of the year
+  ([`cp_pi2cy()`](https://aqlt.github.io/chainlink/reference/cp_pi2cy.md));
 - chain-linking of quarterly or monthly volume indices with the annual
   overlap and the one-quarter overlap techniques
   ([`chain_link()`](https://aqlt.github.io/chainlink/reference/chain_link.md),
@@ -17,7 +24,9 @@ following chapter 8 of the IMF *Quarterly National Accounts Manual*:
 - exact contributions to percent change of chain-linked volume measures,
   over the previous period, over the same period of the previous year or
   for the annual growth
-  ([`chain_contrib()`](https://aqlt.github.io/chainlink/reference/chain_contrib.md));
+  ([`chain_contrib()`](https://aqlt.github.io/chainlink/reference/chain_contrib.md)),
+  and contributions to percent change of Fisher indices
+  ([`fisher_contrib()`](https://aqlt.github.io/chainlink/reference/fisher_contrib.md));
 - non-additivity of chain-linked series
   ([`chain_discrepancy()`](https://aqlt.github.io/chainlink/reference/chain_discrepancy.md)),
   change of the reference year
@@ -27,7 +36,9 @@ following chapter 8 of the IMF *Quarterly National Accounts Manual*:
 - un-chaining and aggregation of chain-linked series, for the indirect
   seasonal adjustment of Laspeyres-type series
   ([`chain_unchain()`](https://aqlt.github.io/chainlink/reference/chain_unchain.md),
-  [`chain_aggregate()`](https://aqlt.github.io/chainlink/reference/chain_unchain.md)).
+  [`chain_aggregate()`](https://aqlt.github.io/chainlink/reference/chain_unchain.md)),
+  following the [ESS Guidelines on Seasonal
+  Adjustment](https://doi.org/10.2785/317290).
 
 All the functions use `ts` objects. The benchmarking of the quarterly
 series on annual data is not implemented: use for example the
@@ -146,8 +157,8 @@ round(chain_contrib(x, imf_cp, method = "ao", type = "yoy"), 3)
 - [`vignette("contributions")`](https://aqlt.github.io/chainlink/articles/contributions.md)
   details the contributions to percent change;
 - [`vignette("practical_case")`](https://aqlt.github.io/chainlink/articles/practical_case.md)
-  follows a complete workflow, from raw quarterly data to the published
-  series and contributions.
+  follows a complete workflow, from raw quarterly data to chain-linked
+  series and contributions to growth.
 
 # Package index
 

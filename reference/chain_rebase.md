@@ -42,6 +42,13 @@ contributions computed by
 must be computed from series whose reference year is the one used to
 build them (the year before the start of the series, by default).
 
+## References
+
+International Monetary Fund (2018), *Quarterly National Accounts Manual
+(2017 Edition)*, chapter 8 "Price and Volume Measures", Washington, DC.
+[doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069)
+.
+
 ## Examples
 
 ``` r

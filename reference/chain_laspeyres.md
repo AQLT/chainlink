@@ -94,6 +94,13 @@ The result with `output = "measure"` can be used directly in
 and
 [`chain_discrepancy()`](https://aqlt.github.io/chainlink/reference/chain_discrepancy.md).
 
+## References
+
+International Monetary Fund (2018), *Quarterly National Accounts Manual
+(2017 Edition)*, chapter 8 "Price and Volume Measures", Washington, DC.
+[doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069)
+.
+
 ## See also
 
 [`chain_contrib()`](https://aqlt.github.io/chainlink/reference/chain_contrib.md),

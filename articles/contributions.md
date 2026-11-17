@@ -10,7 +10,10 @@ of a component to the growth of the total cannot be read from the growth
 of the components.
 [`chain_contrib()`](https://aqlt.github.io/chainlink/reference/chain_contrib.md)
 computes exact contributions: they add up to the growth of the total (up
-to the inconsistencies of the data, see below).
+to the inconsistencies of the data, see below). The formulas follow the
+chapter 8 of the IMF [*Quarterly National Accounts
+Manual*](https://doi.org/10.5089/9781475589870.069) (paragraphs
+8.86-8.90).
 
 ## Principle
 
@@ -411,3 +414,12 @@ chain_laspeyres(imf_cp, imf_pi, base_year = 2010) |>
 #> 2013 Q3 129.30  76.05 102.49
 #> 2013 Q4 131.30  73.79 102.35
 ```
+
+## References
+
+- Chevalier, M. (2003), “Chain Fisher Volume Index Methodology”,
+  Statistics Canada.
+
+- International Monetary Fund (2018), *Quarterly National Accounts
+  Manual (2017 Edition)*, Washington, DC.
+  [doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069).

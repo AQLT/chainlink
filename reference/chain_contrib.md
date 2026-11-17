@@ -155,6 +155,13 @@ the other components.
 Series can be monthly: the "overlap period" is then the last month of
 the year.
 
+## References
+
+International Monetary Fund (2018), *Quarterly National Accounts Manual
+(2017 Edition)*, chapter 8 "Price and Volume Measures", Washington, DC.
+[doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069)
+.
+
 ## See also
 
 [`chain_laspeyres()`](https://aqlt.github.io/chainlink/reference/chain_laspeyres.md),

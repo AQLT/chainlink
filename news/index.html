@@ -64,6 +64,7 @@
 <code><a href="../reference/pi_annual.html">pi_annual()</a></code> derives annual price indices from quarterly (or monthly) ones: by default their weighted average (annual current prices over the annual sum of the volumes at the prices of the previous year), consistent with the quarterly data as in the examples 8.3, 8.8 and 8.9 of the manual, or their simple average (<code>method = "mean"</code>).</li>
 <li>
 <code>chain_laspeyres(method = "oqo")</code> follows the manual: the overlap quarter is valued at the average prices of the previous year (not at its current prices) and the first year is linked with the annual overlap technique. The printed example 8.7 and the annex 8.1 are reproduced.</li>
+<li>The argument <code>overlap_prices = "current_prices"</code> of <code><a href="../reference/chain_laspeyres.html">chain_laspeyres()</a></code> values the overlap quarter at its own current prices instead, as in the spreadsheet of the manual (the “q4 previous year = 100” volume measures). <code><a href="../reference/chain_contrib.html">chain_contrib()</a></code>, <code><a href="../reference/chain_unchain.html">chain_unchain()</a></code> and <code><a href="../reference/chain_unchain.html">chain_aggregate()</a></code> have the same argument.</li>
 <li>
 <code>chain_contrib(method = "oqo")</code> has a <code>pi</code> argument (see <code><a href="../reference/cp_pi2cy.html">cp_pi2cy()</a></code>).</li>
 <li>

@@ -24,8 +24,18 @@ An object of class `mts` (inherits from `ts`, `matrix`) with 16 rows and
 
 ## Source
 
-IMF, Quarterly National Accounts Manual, chapter 8 (Price and Volume
-Measures), tables and charts of the examples.
+Tables and charts of the examples of the chapter 8 (Price and Volume
+Measures) of the IMF *Quarterly National Accounts Manual (2017
+Edition)*,
+[doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069)
+.
+
+## References
+
+International Monetary Fund (2018), *Quarterly National Accounts Manual
+(2017 Edition)*, chapter 8 "Price and Volume Measures", Washington, DC.
+[doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069)
+.
 
 ## Examples
 

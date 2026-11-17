@@ -148,6 +148,17 @@ year of `x` if the reference year is not before it) needs the level of
 the previous year: if the reference year is inside the series, the first
 year is `NA`.
 
+## References
+
+International Monetary Fund (2018), *Quarterly National Accounts Manual
+(2017 Edition)*, chapter 8 "Price and Volume Measures", Washington, DC.
+[doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069)
+.
+
+Eurostat (2015), *ESS Guidelines on Seasonal Adjustment (2015 Edition)*,
+Luxembourg, Publications Office of the European Union.
+[doi:10.2785/317290](https://doi.org/10.2785/317290) .
+
 ## See also
 
 [`chain_link()`](https://aqlt.github.io/chainlink/reference/chain_link.md),

@@ -55,6 +55,13 @@ previous year divided by the frequency \\f\\ (`reference_freq = 1`), the
 value of the previous period (`reference_freq = f`) or the value of the
 period `reference_cycle` of the previous year.
 
+## References
+
+International Monetary Fund (2018), *Quarterly National Accounts Manual
+(2017 Edition)*, chapter 8 "Price and Volume Measures", Washington, DC.
+[doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069)
+.
+
 ## Examples
 
 ``` r
