@@ -1,4 +1,4 @@
-# Practical case: from current prices to published contributions
+# Practical case: from current prices to contributions to growth
 
 ``` r
 
@@ -6,10 +6,9 @@ library(chainlink)
 ```
 
 This vignette follows a complete workflow, from raw quarterly data to
-the series that are usually published: chain-linked volume series,
-growth rates and contributions to growth. It does not require to know
-the examples of the IMF manual (see the vignette `imf_qna_manual` for
-them).
+chain-linked volume series, growth rates and contributions to growth. It
+does not require to know the examples of the IMF manual (see the
+vignette `imf_qna_manual` for them).
 
 The data are those of the example 8.2 of the manual: two products, `A`
 and `B`, with their current prices and their price indices over the
@@ -42,14 +41,11 @@ head(raw, 6)
 
 ``` r
 
-to_ts <- function(df, columns, names) {
-    res <- ts(as.matrix(df[, columns]),
-              start = c(df$year[1], df$quarter[1]), frequency = 4)
-    colnames(res) <- names
-    res
-}
-cp <- to_ts(raw, c("A_cp", "B_cp"), c("A", "B"))
-price_idx <- to_ts(raw, c("A_pi", "B_pi"), c("A", "B"))
+raw_ts <- ts(raw[, c("A_cp", "B_cp", "A_pi", "B_pi")],
+             start = c(raw$year[1], raw$quarter[1]), frequency = 4)
+cp <- raw_ts[, c("A_cp", "B_cp")]
+price_idx <- raw_ts[, c("A_pi", "B_pi")]
+colnames(cp) <- colnames(price_idx) <- c("A", "B")
 ```
 
 What the functions expect:
@@ -212,8 +208,7 @@ round(contrib_yoy, 3)
 
 The residual is zero if the data are fully consistent. Here it is not
 exactly zero (the annual price indices of the example are not exactly
-consistent with the quarterly data) but it is negligible: it must be
-reported rather than allocated.
+consistent with the quarterly data) but it is negligible.
 
 ``` r
 
@@ -223,26 +218,25 @@ max(abs(contrib_yoy[, "Residual"]), na.rm = TRUE)
 #> [1] 4.52971e-14
 ```
 
-## 4. A chart for the publication
+## 4. Chart of the contributions
 
-Stacked contributions and growth of the total (year-on-year):
+Contributions of the products (side by side, as they can be negative)
+and growth of the total (year-on-year):
 
 ``` r
 
-plot_contributions <- function(contrib, main) {
-    comp <- as.matrix(contrib[, c("A", "B")])
-    growth <- as.numeric(contrib[, "Total"])
-    labels <- paste0(floor(time(contrib)), "Q", cycle(contrib))
-    keep <- !is.na(comp[, 1])
-    bp <- barplot(t(comp[keep, ]), names.arg = labels[keep],
-                  col = c("grey35", "grey75"), las = 2, cex.names = 0.7,
-                  ylab = "Percentage points", main = main)
-    lines(bp, growth[keep], type = "b", pch = 19)
-    legend("topleft", legend = c("A", "B", "Total"),
-           fill = c("grey35", "grey75", NA), border = c("black", "black", NA),
-           pch = c(NA, NA, 19), lty = c(NA, NA, 1), bty = "n")
-}
-plot_contributions(contrib_yoy, "Contributions to year-on-year growth")
+contrib_plot <- window(contrib_yoy, start = c(2012, 1))
+bp <- barplot(t(contrib_plot[, c("A", "B")]), beside = TRUE,
+              names.arg = paste0(floor(time(contrib_plot)), "Q", cycle(contrib_plot)),
+              col = c("grey35", "grey75"), las = 2, cex.names = 0.7,
+              ylim = range(contrib_plot[, c("A", "B", "Total")]) * 1.1,
+              ylab = "Percentage points",
+              main = "Contributions to year-on-year growth")
+abline(h = 0)
+lines(colMeans(bp), contrib_plot[, "Total"], type = "b", pch = 19)
+legend("bottomleft", legend = c("A", "B", "Total"),
+       fill = c("grey35", "grey75", NA), border = c("black", "black", NA),
+       pch = c(NA, NA, 19), lty = c(NA, NA, 1), bty = "n")
 ```
 
 ![](practical_case_files/figure-html/chart-1.png)
@@ -265,10 +259,9 @@ chain_contrib(x, cp, method = "ao", type = "annual", extra = "total") |>
 #> 2013 12.827 -10.499 2.328
 ```
 
-Indices are often published with a recent reference year.
 [`chain_rebase()`](https://aqlt.github.io/chainlink/reference/chain_rebase.md)
-changes it (the average of the new year is 100) without changing the
-growth rates:
+changes the reference year (the average of the new year is 100) without
+changing the growth rates:
 
 ``` r
 
@@ -364,14 +357,14 @@ adjusted components:
     ([`chain_unchain()`](https://aqlt.github.io/chainlink/reference/chain_unchain.md)):
     the volume at the prices of the previous year is additive within
     each year;
-3.  aggregate them and chain-link the aggregate again, with the same
-    technique;
-4.  re-reference it to the reference year (the annual current prices of
-    the reference year are those of the unadjusted data).
+3.  aggregate them and derive the volume index of the aggregate over the
+    previous year;
+4.  chain-link it again, with the same technique, and re-reference it to
+    the reference year (the annual current prices of the reference year
+    are those of the unadjusted data).
 
-[`chain_aggregate()`](https://aqlt.github.io/chainlink/reference/chain_unchain.md)
-does the steps 2 to 4. Here the seasonal adjustment is an illustration
-with [`stats::stl()`](https://rdrr.io/r/stats/stl.html) (the data of the
+Here the seasonal adjustment is an illustration with
+[`stats::stl()`](https://rdrr.io/r/stats/stl.html) (the data of the
 example only have 12 quarters and no real seasonality, so that the
 adjustment is not meaningful in itself):
 
@@ -404,7 +397,8 @@ previous year, that can be summed:
 
 ``` r
 
-chain_unchain(x_sa, cp, base_year = 2010) |> round(1)
+x_sa_py <- chain_unchain(x_sa, cp, base_year = 2010)
+round(x_sa_py, 1)
 #>             A     B
 #> 2011 Q1 160.3 217.0
 #> 2011 Q2 160.3 217.0
@@ -420,12 +414,46 @@ chain_unchain(x_sa, cp, base_year = 2010) |> round(1)
 #> 2013 Q4 244.7 146.2
 ```
 
-Steps 3 and 4: the indirectly seasonally adjusted aggregate, compared to
-the direct adjustment of the aggregate and to the unadjusted data:
+Step 3: the sum of the components is the volume of the aggregate at the
+prices of the previous year. Divided by the current prices of the
+previous year (per quarter), it gives the volume index of the aggregate
+over the previous year, which is chain-linked with the annual overlap
+technique:
 
 ``` r
 
-indirect <- chain_aggregate(x_sa, cp, base_year = 2010, output = "measure")
+cp_total <- cp[, "A"] + cp[, "B"]
+# annual current prices of the previous year, per quarter
+cp_total_py <- stats::lag(ts(rep(aggregate(cp_total), each = 4),
+                             start = c(2010, 1), frequency = 4), -4) / 4
+vo_sa <- 100 * (x_sa_py[, "A"] + x_sa_py[, "B"]) / cp_total_py
+```
+
+Step 4: the chain volume measure of the aggregate, with 2010 as
+reference year (its annual current prices are those of the unadjusted
+data):
+
+``` r
+
+indirect <- chain_link(vo_sa, cp_total, method = "ao", base_year = 2010,
+                       output = "measure")
+```
+
+Equivalently, the steps 2 to 4 can be done with
+[`chain_aggregate()`](https://aqlt.github.io/chainlink/reference/chain_unchain.md):
+
+``` r
+
+indirect2 <- chain_aggregate(x_sa, cp, base_year = 2010, output = "measure")
+all.equal(indirect, indirect2)
+#> [1] TRUE
+```
+
+The indirectly seasonally adjusted aggregate, compared to the direct
+adjustment of the aggregate and to the unadjusted data:
+
+``` r
+
 direct <- sa_stl(x[, "Total"])
 sa <- ts.union(Unadjusted = x[, "Total"], `SA direct` = direct,
                `SA indirect` = indirect)

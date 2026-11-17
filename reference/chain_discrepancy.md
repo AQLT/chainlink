@@ -5,7 +5,10 @@ of the total differs from the sum of the chain volume measures of its
 components (except in the base year and, with the annual overlap
 technique, in the year after the base year). This function returns the
 difference, with the sign of the column "Discrepancies" of the examples
-8.6 and 8.7 of the manual: the sum of the components minus the total.
+8.6 and 8.7 of the manual: the sum of the components minus the total,
+\$\$D_t = \sum_i x\_{i,t} - z_t,\$\$ with \\x\_{i,t}\\ the chain volume
+measures of the components and \\z_t\\ the one of the total (\\100\\ D_t
+/ z_t\\ with `relative = TRUE`).
 
 ## Usage
 

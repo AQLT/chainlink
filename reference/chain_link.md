@@ -3,9 +3,7 @@
 Chain-linking of volume indices. `chain_link()` links sub-annual
 (quarterly or monthly) volume indices with the annual overlap (`"ao"`)
 or the one-quarter overlap (`"oqo"`) technique; `annual_chain()` chains
-annual links. To compute the volume indices of a total from its
-components, see
-[`chain_laspeyres()`](https://aqlt.github.io/chainlink/reference/chain_laspeyres.md).
+annual links.
 
 ## Usage
 
@@ -73,6 +71,23 @@ annual_chain(
 
 A `ts` (or `mts`). With `output = "both"`, the columns are the indices
 then the measures of each variable.
+
+## Details
+
+With \\v_t\\ the volume index of period \\t\\ (year \\y(t)\\) over the
+reference of the previous year, the annual link of year \\y\\ is
+\\\lambda_y = \bar{v}\_y / 100\\ (annual average, `"ao"` and
+`annual_chain()`) or \\\lambda_y = v\_{y,f} / 100\\ (overlap period, the
+last one of the year, `"oqo"`). With the reference year \\b\\, the chain
+level of year \\y\\ is \\\Lambda_y = \prod\_{k=b+1}^{y} \lambda_k\\
+(\\\Lambda_b = 1\\) and the chain index is \$\$I_t = \Lambda\_{y(t)-1}\\
+v_t\$\$ for sub-annual series (`chain_link()`) and \\I_y = 100\\
+\Lambda_y\\ for annual series (`annual_chain()`). The chain volume
+measure is \\I_t\\ cp_b / (100 f)\\, with \\cp_b\\ the annual current
+prices of the reference year and \\f\\ the frequency (1 for
+`annual_chain()`). To compute the volume indices of a total from its
+components, see
+[`chain_laspeyres()`](https://aqlt.github.io/chainlink/reference/chain_laspeyres.md).
 
 ## Examples
 

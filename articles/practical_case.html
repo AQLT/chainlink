@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Practical case: from current prices to published contributions • chainlink</title>
+<title>Practical case: from current prices to contributions to growth • chainlink</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Practical case: from current prices to published contributions">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Practical case: from current prices to contributions to growth">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -34,7 +34,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/imf_qna_manual.html">Chapter 8 of the IMF Quarterly National Accounts Manual</a></li>
     <li><a class="dropdown-item" href="../articles/contributions.html">Contributions to percent change of chain-linked volume measures</a></li>
-    <li><a class="dropdown-item" href="../articles/practical_case.html">Practical case: from current prices to published contributions</a></li>
+    <li><a class="dropdown-item" href="../articles/practical_case.html">Practical case: from current prices to contributions to growth</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -57,7 +57,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Practical case: from current prices to published contributions</h1>
+      <h1>Practical case: from current prices to contributions to growth</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/AQLT/chainlink/blob/master/vignettes/practical_case.Rmd" class="external-link"><code>vignettes/practical_case.Rmd</code></a></small>
@@ -69,10 +69,9 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/AQLT/chainlink" class="external-link">chainlink</a></span><span class="op">)</span></span></code></pre></div>
 <p>This vignette follows a complete workflow, from raw quarterly data to
-the series that are usually published: chain-linked volume series,
-growth rates and contributions to growth. It does not require to know
-the examples of the IMF manual (see the vignette
-<code>imf_qna_manual</code> for them).</p>
+chain-linked volume series, growth rates and contributions to growth. It
+does not require to know the examples of the IMF manual (see the
+vignette <code>imf_qna_manual</code> for them).</p>
 <p>The data are those of the example 8.2 of the manual: two products,
 <code>A</code> and <code>B</code>, with their current prices and their
 price indices over the previous year (2010 is the reference year).</p>
@@ -99,14 +98,11 @@ table, with one row per quarter:</p>
 <span><span class="co">#&gt; 5 2011       1 159.7 218.9 102.0   99</span></span>
 <span><span class="co">#&gt; 6 2011       2 163.2 213.7 102.5   98</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">to_ts</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">columns</span>, <span class="va">names</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">df</span><span class="op">[</span>, <span class="va">columns</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>              start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">year</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">df</span><span class="op">$</span><span class="va">quarter</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, frequency <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">names</span></span>
-<span>    <span class="va">res</span></span>
-<span><span class="op">}</span></span>
-<span><span class="va">cp</span> <span class="op">&lt;-</span> <span class="fu">to_ts</span><span class="op">(</span><span class="va">raw</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A_cp"</span>, <span class="st">"B_cp"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">price_idx</span> <span class="op">&lt;-</span> <span class="fu">to_ts</span><span class="op">(</span><span class="va">raw</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A_pi"</span>, <span class="st">"B_pi"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">raw_ts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span><span class="va">raw</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A_cp"</span>, <span class="st">"B_cp"</span>, <span class="st">"A_pi"</span>, <span class="st">"B_pi"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>             start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">raw</span><span class="op">$</span><span class="va">year</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">raw</span><span class="op">$</span><span class="va">quarter</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, frequency <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="va">cp</span> <span class="op">&lt;-</span> <span class="va">raw_ts</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A_cp"</span>, <span class="st">"B_cp"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">price_idx</span> <span class="op">&lt;-</span> <span class="va">raw_ts</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A_pi"</span>, <span class="st">"B_pi"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">cp</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">price_idx</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span></span></code></pre></div>
 <p>What the functions expect:</p>
 <ul>
 <li>
@@ -245,8 +241,7 @@ minus the sum of the contributions):</p>
 <span><span class="co">#&gt; 2013 Q4  8.707  -7.310 1.398        0</span></span></code></pre></div>
 <p>The residual is zero if the data are fully consistent. Here it is not
 exactly zero (the annual price indices of the example are not exactly
-consistent with the quarterly data) but it is negligible: it must be
-reported rather than allocated.</p>
+consistent with the quarterly data) but it is negligible.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">contrib_qoq</span><span class="op">[</span>, <span class="st">"Residual"</span><span class="op">]</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 3.730349e-14</span></span>
@@ -254,24 +249,23 @@ reported rather than allocated.</p>
 <span><span class="co">#&gt; [1] 4.52971e-14</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="a-chart-for-the-publication">4. A chart for the publication<a class="anchor" aria-label="anchor" href="#a-chart-for-the-publication"></a>
+<h2 id="chart-of-the-contributions">4. Chart of the contributions<a class="anchor" aria-label="anchor" href="#chart-of-the-contributions"></a>
 </h2>
-<p>Stacked contributions and growth of the total (year-on-year):</p>
+<p>Contributions of the products (side by side, as they can be negative)
+and growth of the total (year-on-year):</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">plot_contributions</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">contrib</span>, <span class="va">main</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">contrib</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span>    <span class="va">growth</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">contrib</span><span class="op">[</span>, <span class="st">"Total"</span><span class="op">]</span><span class="op">)</span></span>
-<span>    <span class="va">labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">time</a></span><span class="op">(</span><span class="va">contrib</span><span class="op">)</span><span class="op">)</span>, <span class="st">"Q"</span>, <span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">cycle</a></span><span class="op">(</span><span class="va">contrib</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="va">keep</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">comp</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
-<span>    <span class="va">bp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">comp</span><span class="op">[</span><span class="va">keep</span>, <span class="op">]</span><span class="op">)</span>, names.arg <span class="op">=</span> <span class="va">labels</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span>,</span>
-<span>                  col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grey35"</span>, <span class="st">"grey75"</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span>,</span>
-<span>                  ylab <span class="op">=</span> <span class="st">"Percentage points"</span>, main <span class="op">=</span> <span class="va">main</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">bp</span>, <span class="va">growth</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">"b"</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"Total"</span><span class="op">)</span>,</span>
-<span>           fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grey35"</span>, <span class="st">"grey75"</span>, <span class="cn">NA</span><span class="op">)</span>, border <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"black"</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
-<span>           pch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">19</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">1</span><span class="op">)</span>, bty <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="fu">plot_contributions</span><span class="op">(</span><span class="va">contrib_yoy</span>, <span class="st">"Contributions to year-on-year growth"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">contrib_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/window.html" class="external-link">window</a></span><span class="op">(</span><span class="va">contrib_yoy</span>, start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2012</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">contrib_plot</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, beside <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>              names.arg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">time</a></span><span class="op">(</span><span class="va">contrib_plot</span><span class="op">)</span><span class="op">)</span>, <span class="st">"Q"</span>, <span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">cycle</a></span><span class="op">(</span><span class="va">contrib_plot</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>              col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grey35"</span>, <span class="st">"grey75"</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">2</span>, cex.names <span class="op">=</span> <span class="fl">0.7</span>,</span>
+<span>              ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">contrib_plot</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"Total"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="fl">1.1</span>,</span>
+<span>              ylab <span class="op">=</span> <span class="st">"Percentage points"</span>,</span>
+<span>              main <span class="op">=</span> <span class="st">"Contributions to year-on-year growth"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>h <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">colMeans</a></span><span class="op">(</span><span class="va">bp</span><span class="op">)</span>, <span class="va">contrib_plot</span><span class="op">[</span>, <span class="st">"Total"</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">"b"</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"bottomleft"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"Total"</span><span class="op">)</span>,</span>
+<span>       fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grey35"</span>, <span class="st">"grey75"</span>, <span class="cn">NA</span><span class="op">)</span>, border <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"black"</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>       pch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">19</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">1</span><span class="op">)</span>, bty <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="practical_case_files/figure-html/chart-1.png" class="r-plt" alt="" width="672"></p>
 </div>
 <div class="section level2">
@@ -289,9 +283,8 @@ reported rather than allocated.</p>
 <span><span class="co">#&gt; 2011  2.871  -2.139 0.732</span></span>
 <span><span class="co">#&gt; 2012  5.687  -4.779 0.909</span></span>
 <span><span class="co">#&gt; 2013 12.827 -10.499 2.328</span></span></code></pre></div>
-<p>Indices are often published with a recent reference year.
-<code><a href="../reference/chain_rebase.html">chain_rebase()</a></code> changes it (the average of the new year is
-100) without changing the growth rates:</p>
+<p><code><a href="../reference/chain_rebase.html">chain_rebase()</a></code> changes the reference year (the average
+of the new year is 100) without changing the growth rates:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/chain_rebase.html">chain_rebase</a></span><span class="op">(</span><span class="va">idx</span>, base_year <span class="op">=</span> <span class="fl">2012</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;              A      B  Total</span></span>
@@ -376,15 +369,16 @@ seasonally adjusted components:</p>
 <li>seasonally adjust the chain volume measures of the components;</li>
 <li>un-chain them (<code><a href="../reference/chain_unchain.html">chain_unchain()</a></code>): the volume at the
 prices of the previous year is additive within each year;</li>
-<li>aggregate them and chain-link the aggregate again, with the same
-technique;</li>
-<li>re-reference it to the reference year (the annual current prices of
-the reference year are those of the unadjusted data).</li>
+<li>aggregate them and derive the volume index of the aggregate over the
+previous year;</li>
+<li>chain-link it again, with the same technique, and re-reference it to
+the reference year (the annual current prices of the reference year are
+those of the unadjusted data).</li>
 </ol>
-<p><code><a href="../reference/chain_unchain.html">chain_aggregate()</a></code> does the steps 2 to 4. Here the
-seasonal adjustment is an illustration with <code><a href="https://rdrr.io/r/stats/stl.html" class="external-link">stats::stl()</a></code>
-(the data of the example only have 12 quarters and no real seasonality,
-so that the adjustment is not meaningful in itself):</p>
+<p>Here the seasonal adjustment is an illustration with
+<code><a href="https://rdrr.io/r/stats/stl.html" class="external-link">stats::stl()</a></code> (the data of the example only have 12 quarters
+and no real seasonality, so that the adjustment is not meaningful in
+itself):</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sa_stl</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">s</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/stl.html" class="external-link">stl</a></span><span class="op">(</span><span class="va">s</span>, s.window <span class="op">=</span> <span class="st">"periodic"</span><span class="op">)</span></span>
@@ -409,7 +403,8 @@ so that the adjustment is not meaningful in itself):</p>
 <p>Step 2: un-chained components, i.e. volumes at the prices of the
 previous year, that can be summed:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/chain_unchain.html">chain_unchain</a></span><span class="op">(</span><span class="va">x_sa</span>, <span class="va">cp</span>, base_year <span class="op">=</span> <span class="fl">2010</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">x_sa_py</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chain_unchain.html">chain_unchain</a></span><span class="op">(</span><span class="va">x_sa</span>, <span class="va">cp</span>, base_year <span class="op">=</span> <span class="fl">2010</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">x_sa_py</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             A     B</span></span>
 <span><span class="co">#&gt; 2011 Q1 160.3 217.0</span></span>
 <span><span class="co">#&gt; 2011 Q2 160.3 217.0</span></span>
@@ -423,12 +418,33 @@ previous year, that can be summed:</p>
 <span><span class="co">#&gt; 2013 Q2 238.1 153.7</span></span>
 <span><span class="co">#&gt; 2013 Q3 244.8 147.1</span></span>
 <span><span class="co">#&gt; 2013 Q4 244.7 146.2</span></span></code></pre></div>
-<p>Steps 3 and 4: the indirectly seasonally adjusted aggregate, compared
-to the direct adjustment of the aggregate and to the unadjusted
-data:</p>
+<p>Step 3: the sum of the components is the volume of the aggregate at
+the prices of the previous year. Divided by the current prices of the
+previous year (per quarter), it gives the volume index of the aggregate
+over the previous year, which is chain-linked with the annual overlap
+technique:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">indirect</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chain_unchain.html">chain_aggregate</a></span><span class="op">(</span><span class="va">x_sa</span>, <span class="va">cp</span>, base_year <span class="op">=</span> <span class="fl">2010</span>, output <span class="op">=</span> <span class="st">"measure"</span><span class="op">)</span></span>
-<span><span class="va">direct</span> <span class="op">&lt;-</span> <span class="fu">sa_stl</span><span class="op">(</span><span class="va">x</span><span class="op">[</span>, <span class="st">"Total"</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cp_total</span> <span class="op">&lt;-</span> <span class="va">cp</span><span class="op">[</span>, <span class="st">"A"</span><span class="op">]</span> <span class="op">+</span> <span class="va">cp</span><span class="op">[</span>, <span class="st">"B"</span><span class="op">]</span></span>
+<span><span class="co"># annual current prices of the previous year, per quarter</span></span>
+<span><span class="va">cp_total_py</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">cp_total</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span>
+<span>                             start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2010</span>, <span class="fl">1</span><span class="op">)</span>, frequency <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>, <span class="op">-</span><span class="fl">4</span><span class="op">)</span> <span class="op">/</span> <span class="fl">4</span></span>
+<span><span class="va">vo_sa</span> <span class="op">&lt;-</span> <span class="fl">100</span> <span class="op">*</span> <span class="op">(</span><span class="va">x_sa_py</span><span class="op">[</span>, <span class="st">"A"</span><span class="op">]</span> <span class="op">+</span> <span class="va">x_sa_py</span><span class="op">[</span>, <span class="st">"B"</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">cp_total_py</span></span></code></pre></div>
+<p>Step 4: the chain volume measure of the aggregate, with 2010 as
+reference year (its annual current prices are those of the unadjusted
+data):</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">indirect</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chain_link.html">chain_link</a></span><span class="op">(</span><span class="va">vo_sa</span>, <span class="va">cp_total</span>, method <span class="op">=</span> <span class="st">"ao"</span>, base_year <span class="op">=</span> <span class="fl">2010</span>,</span>
+<span>                       output <span class="op">=</span> <span class="st">"measure"</span><span class="op">)</span></span></code></pre></div>
+<p>Equivalently, the steps 2 to 4 can be done with
+<code><a href="../reference/chain_unchain.html">chain_aggregate()</a></code>:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">indirect2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chain_unchain.html">chain_aggregate</a></span><span class="op">(</span><span class="va">x_sa</span>, <span class="va">cp</span>, base_year <span class="op">=</span> <span class="fl">2010</span>, output <span class="op">=</span> <span class="st">"measure"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">indirect</span>, <span class="va">indirect2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<p>The indirectly seasonally adjusted aggregate, compared to the direct
+adjustment of the aggregate and to the unadjusted data:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">direct</span> <span class="op">&lt;-</span> <span class="fu">sa_stl</span><span class="op">(</span><span class="va">x</span><span class="op">[</span>, <span class="st">"Total"</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">sa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.union.html" class="external-link">ts.union</a></span><span class="op">(</span>Unadjusted <span class="op">=</span> <span class="va">x</span><span class="op">[</span>, <span class="st">"Total"</span><span class="op">]</span>, `SA direct` <span class="op">=</span> <span class="va">direct</span>,</span>
 <span>               `SA indirect` <span class="op">=</span> <span class="va">indirect</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">sa</span>, <span class="fl">1</span><span class="op">)</span></span>
@@ -448,7 +464,7 @@ data:</p>
 <p>The two approaches give different seasonally adjusted aggregates. The
 annual totals of the seasonally adjusted series are not forced to be
 those of the unadjusted data:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">sa</span>, FUN <span class="op">=</span> <span class="va">sum</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Time Series:</span></span>
 <span><span class="co">#&gt; Start = 2011 </span></span>

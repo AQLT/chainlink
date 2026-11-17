@@ -45,6 +45,16 @@ cp_pi2vol(cp, pi, reference_freq = 1, reference_cycle = NULL)
 
 A `ts` (or `mts`) of volume indices (reference period = 100).
 
+## Details
+
+With \\cp_t\\ the current prices and \\pi_t\\ the price index of period
+\\t\\, the volume index is \$\$v_t = 100 \times \frac{100\\ cp_t /
+pi_t}{\overline{cp}\_{r(t)}}\$\$ where \\\overline{cp}\_{r(t)}\\ is the
+value per period of the reference period \\r(t)\\: the annual sum of the
+previous year divided by the frequency \\f\\ (`reference_freq = 1`), the
+value of the previous period (`reference_freq = f`) or the value of the
+period `reference_cycle` of the previous year.
+
 ## Examples
 
 ``` r

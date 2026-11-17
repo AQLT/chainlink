@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/AQLT/chainlink/blob/master/inst/CITATION)
+[`DESCRIPTION`](https://github.com/AQLT/chainlink/blob/master/DESCRIPTION)
 
 Quartier-la-Tente A (2026). *chainlink: Chain-Linked Price and Volume
 Measures*. R package version 0.1.0.9000,

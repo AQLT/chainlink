@@ -31,11 +31,15 @@ reference year).
 
 ## Details
 
-The value is the volume measure at the prices of the previous year, \\cp
-/ pi \times 100\\, multiplied by the annual price index of the year (the
-annual current prices divided by the annual sum of the volume measures
-at the prices of the previous year), so that the annual sum is the
-annual current price value.
+The value is the volume measure at the prices of the previous year,
+multiplied by the annual price index of the year \\y\\ (the annual
+current prices divided by the annual sum of the volume measures at the
+prices of the previous year, see
+[`pi_annual()`](https://aqlt.github.io/chainlink/reference/pi_annual.md)):
+\$\$cy_t = \frac{100\\ cp_t}{pi_t} \times \frac{pi_y}{100}, \qquad pi_y
+= 100 \times \frac{\sum\_{q \in y} cp_q}{\sum\_{q \in y} 100\\ cp_q /
+pi_q},\$\$ so that the annual sum of \\cy_t\\ is the annual current
+price value.
 
 ## See also
 

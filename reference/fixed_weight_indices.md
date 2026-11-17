@@ -77,6 +77,18 @@ fisher(
 
 A `ts` (or `mts`).
 
+## Details
+
+With \\v\_{i,t}\\ the elementary volume index of the component \\i\\
+([`cp_pi2vol()`](https://aqlt.github.io/chainlink/reference/cp_pi2vol.md)),
+\\w\_{i,r}\\ its share in the current prices of the total in the
+reference period \\r\\ (the previous year, by default) and \\w\_{i,c}\\
+its share in the current period \\c\\ (the current year, by default):
+\$\$L_t = \sum_i w\_{i,r}\\ v\_{i,t}, \qquad P_t = \left(\sum_i
+\frac{w\_{i,c}}{v\_{i,t}}\right)^{-1}, \qquad F_t = \sqrt{L_t P_t}.\$\$
+The volume measure is the index times the value per period of the total
+in the reference period, divided by 100.
+
 ## Examples
 
 ``` r

@@ -71,8 +71,10 @@ and
 
 With the one-quarter overlap technique (`method = "oqo"`), the volume at
 the prices of the previous year of each period is divided by the value
-of the last period (quarter or month) of the previous year. This overlap
-period can be valued in two ways (`overlap_prices`):
+of the last period (quarter or month) of the previous year: \$\$v_t =
+100 \times \frac{100\\ cp_t / pi_t}{cy\_{y(t)-1, f}}\$\$ where
+\\cy\_{y,f}\\ is the value of the last period \\f\\ of year \\y\\. This
+overlap period can be valued in two ways (`overlap_prices`):
 
 - `"year_prices"` (default), as printed in the manual (paragraph 8.72
   and example 8.7): at the **average prices of the year** (see

@@ -28,7 +28,7 @@ the annual overlap or the one-quarter overlap technique."></head><body>
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/imf_qna_manual.html">Chapter 8 of the IMF Quarterly National Accounts Manual</a></li>
     <li><a class="dropdown-item" href="../articles/contributions.html">Contributions to percent change of chain-linked volume measures</a></li>
-    <li><a class="dropdown-item" href="../articles/practical_case.html">Practical case: from current prices to published contributions</a></li>
+    <li><a class="dropdown-item" href="../articles/practical_case.html">Practical case: from current prices to contributions to growth</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -115,8 +115,10 @@ overlap period, <code>"year_prices"</code> (average prices of the year, default)
 those of <code><a href="cp_pi2vol.html">cp_pi2vol()</a></code> and <code><a href="fixed_weight_indices.html">laspeyres()</a></code> (previous year average = 100).</p>
 <p>With the one-quarter overlap technique (<code>method = "oqo"</code>), the volume at the
 prices of the previous year of each period is divided by the value of the last
-period (quarter or month) of the previous year. This overlap period can be
-valued in two ways (<code>overlap_prices</code>):</p><ul><li><p><code>"year_prices"</code> (default), as printed in the manual (paragraph 8.72 and
+period (quarter or month) of the previous year:
+$$v_t = 100 \times \frac{100\, cp_t / pi_t}{cy_{y(t)-1, f}}$$
+where \(cy_{y,f}\) is the value of the last period \(f\) of year \(y\).
+This overlap period can be valued in two ways (<code>overlap_prices</code>):</p><ul><li><p><code>"year_prices"</code> (default), as printed in the manual (paragraph 8.72 and
 example 8.7): at the <strong>average prices of the year</strong> (see <code><a href="cp_pi2cy.html">cp_pi2cy()</a></code>);</p></li>
 <li><p><code>"current_prices"</code>, as in the spreadsheet of the manual: at its <strong>own current
 prices</strong>. The volume indices are then those of <code><a href="cp_pi2vol.html">cp_pi2vol()</a></code> with

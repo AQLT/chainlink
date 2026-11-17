@@ -14,33 +14,45 @@ to the inconsistencies of the data, see below).
 
 ## Principle
 
-Let `x` be the chain volume measure (in monetary terms) of a component
-and `z` the one of the total. Within a year `y`, the chain volume
-measure of the total is exactly the sum of the chain volume measures of
-the components, valued at the relative prices `rho` of the previous year
-(`y - 1`):
+Let $`x_{i,t}`$ be the chain volume measure (in monetary terms) of the
+component $`i`$ in period $`t`$, $`z_t`$ the one of the total, and
+$`y(t)`$ the year of the period $`t`$. Within a year $`y`$, the chain
+volume measure of the total is exactly the sum of the chain volume
+measures of the components, valued at the relative prices
+$`\rho_{i,y-1}`$ of the previous year:
+``` math
+z_t = \sum_i \rho_{i,y(t)-1}\, x_{i,t}.
+```
+The relative price $`\rho_{i,y}`$ is the implicit price of the component
+$`i`$ over the implicit price of the total:
 
-    z[t] = sum over the components i of rho[i, y - 1] * x[i, t]
+- annual overlap (`method = "ao"`), with the annual sums $`cp_{i,y}`$,
+  $`x_{i,y}`$, $`cp_y`$ and $`z_y`$ of the current prices and of the
+  chain volume measures:
+  ``` math
+  \rho_{i,y} = \frac{cp_{i,y} / x_{i,y}}{cp_y / z_y};
+  ```
+- one-quarter overlap (`method = "oqo"`): the same ratio computed on the
+  overlap period (the last quarter, or the last month, of year $`y`$),
+  the current prices being valued at the average prices of the year
+  ([`cp_pi2cy()`](https://aqlt.github.io/chainlink/reference/cp_pi2cy.md)).
 
-- annual overlap (`method = "ao"`): `rho[i, y]` is the price of the
-  component `i` relative to the price of the total in year `y`, with
-  annual sums `(cp[i, y] / x[i, y]) / (cp[z, y] / z[y])`;
-- one-quarter overlap (`method = "oqo"`): `rho[i, y]` is the same ratio
-  computed on the overlap period (the last quarter, or the last month,
-  of year `y`).
+The contribution of the component $`i`$ to the growth between a period
+$`s`$ and a period $`t`$ (previous period, same period of the previous
+year, or previous year) is
+``` math
+C_{i,t} = 100 \left[\frac{(x_{i,t} - x_{i,s})\,\rho_{i,y(t)-1}}{z_s}
++ \left(\frac{x_{i,s}}{z_s} - a_{i,y(t)-1}\right)
+\left(\rho_{i,y(t)-1} - \rho_{i,y(s)-1}\right)\right]
+```
+where $`a_{i,y}`$ is the share of the component in the total:
+$`a_{i,y} = x_{i,y} / z_y`$ (annual sums) for the annual overlap, and
+the same share on the overlap period for the one-quarter overlap.
+Summing over $`i`$ gives $`\sum_i C_{i,t} = 100\,(z_t / z_s - 1)`$.
 
-The contribution of the component `i` to the growth between a period `s`
-and a period `t` (previous period, same period of the previous year, or
-previous year) is
-
-    100 * [ (x[t] - x[s]) * rho[y(t) - 1] / z[s]
-          + (x[s] / z[s] - a[y(t) - 1]) * (rho[y(t) - 1] - rho[y(s) - 1]) ]
-
-where `a[y]` is the share of the component in the total (annual share
-for the annual overlap, share of the overlap period for the one-quarter
-overlap). The second term is zero if `s` and `t` are in the same year.
-For the annual overlap and the growth over the previous period, this is
-the formula of the example 8.9 of the manual. The formula for the
+The second term is zero if $`s`$ and $`t`$ are in the same year. For the
+annual overlap and the growth over the previous period, this is the
+formula of the example 8.9 of the manual. The formula for the
 one-quarter overlap, and for the growth over the same period of the
 previous year, derive from the same decomposition: they add up to the
 growth of the total exactly.
@@ -257,25 +269,37 @@ fisher_contrib(imf_cp, ep8.4, extra = c("total", "residual")) |> round(3)
 #> 2013 Q4 0.955 -1.130 -0.175        0
 ```
 
+With $`x_i^t`$ the current price value of the component $`i`$ in period
+$`t`$, $`z^t`$ the one of the aggregate, $`r_i = p_i^t / p_i^{t-1}`$ the
+price index of the component over the previous period and $`F`$ the
+Fisher volume index of the aggregate (previous period = 1), the
+contribution of the component $`i`$ is
+``` math
+C_i^t = 100\, \frac{\dfrac{z^t}{z^{t-1}} \left(\dfrac{x_i^t}{r_i} - x_i^{t-1}\right)
++ F \left(x_i^t - x_i^{t-1} r_i\right)}
+{z^t + F \sum_j x_j^{t-1} r_j}.
+```
+
 This is the equation (32) of the manual. The decomposition is exact: the
 residual is zero up to numerical errors. As printed in the manual, the
-equation has the ratio `z[t-1] / z[t]` in the first term and
-`x[t-1] * p[t-1] / p[t]` in the second one; with these ratios, the
+equation has the ratio $`z^{t-1} / z^t`$ in the first term and
+$`x_i^{t-1} / r_i`$ in the second one; with these ratios, the
 contributions do not add up to the percent change. The version
-implemented uses `z[t] / z[t-1]` and `x[t-1] * p[t] / p[t-1]`
-(consistent with the price relative of the denominator). The adjustments
-that some countries add to the quarterly contributions (benchmarking of
-the quarterly indices, annual rates) are not done.
+implemented uses $`z^t / z^{t-1}`$ and $`x_i^{t-1} r_i`$ (consistent
+with the denominator). The adjustments that some countries add to the
+quarterly contributions (benchmarking of the quarterly indices, annual
+rates) are not done.
 
 ## Non-additivity and residual
 
 Two different things must not be mixed up:
 
 - the chain volume measures are not additive: the chain measure of the
-  total is not the sum of the chain measures of the components
-  ([`chain_discrepancy()`](https://aqlt.github.io/chainlink/reference/chain_discrepancy.md)).
-  It is zero in the base year and, with the annual overlap, in the year
-  after;
+  total is not the sum of the chain measures of the components.
+  [`chain_discrepancy()`](https://aqlt.github.io/chainlink/reference/chain_discrepancy.md)
+  returns $`D_t = \sum_i x_{i,t} - z_t`$ (or $`100\, D_t / z_t`$ with
+  `relative = TRUE`). It is zero in the base year and, with the annual
+  overlap, in the year after;
 - the contributions take this into account and add up to the growth of
   the total. The residual (`extra = "residual"`) is therefore zero if
   the data are fully consistent, i.e. if the annual price indices are
@@ -362,9 +386,11 @@ chain_pseudo(imf_cp[, "A"], imf_pi[, "A"],
 ## Change of the reference year
 
 [`chain_rebase()`](https://aqlt.github.io/chainlink/reference/chain_rebase.md)
-changes the reference year of an index (the average of the new year is
-100) or of a measure (the annual sum of the new year is its annual
-current prices). The growth rates are unchanged.
+changes the reference year of an index or of a measure. With $`b`$ the
+new reference year and $`\bar{I}_b`$ the average of the index over its
+periods, the rebased index is $`100\, I_t / \bar{I}_b`$; a measure is
+multiplied by $`cp_b / x_b`$ (annual sums of the current prices and of
+the measure in year $`b`$). The growth rates are unchanged.
 
 ``` r
 

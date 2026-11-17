@@ -22,7 +22,7 @@ total from the current prices and the price indices of its components."></head><
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/imf_qna_manual.html">Chapter 8 of the IMF Quarterly National Accounts Manual</a></li>
     <li><a class="dropdown-item" href="../articles/contributions.html">Contributions to percent change of chain-linked volume measures</a></li>
-    <li><a class="dropdown-item" href="../articles/practical_case.html">Practical case: from current prices to published contributions</a></li>
+    <li><a class="dropdown-item" href="../articles/practical_case.html">Practical case: from current prices to contributions to growth</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -115,6 +115,18 @@ Paasche and Fisher indices instead of the Fisher index only.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A <code>ts</code> (or <code>mts</code>).</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>With \(v_{i,t}\) the elementary volume index of the component \(i\)
+(<code><a href="cp_pi2vol.html">cp_pi2vol()</a></code>), \(w_{i,r}\) its share in the current prices of the total in
+the reference period \(r\) (the previous year, by default) and \(w_{i,c}\)
+its share in the current period \(c\) (the current year, by default):
+$$L_t = \sum_i w_{i,r}\, v_{i,t}, \qquad
+P_t = \left(\sum_i \frac{w_{i,c}}{v_{i,t}}\right)^{-1}, \qquad
+F_t = \sqrt{L_t P_t}.$$
+The volume measure is the index times the value per period of the total in
+the reference period, divided by 100.</p>
     </div>
 
     <div class="section level2">

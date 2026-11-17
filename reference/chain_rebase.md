@@ -2,7 +2,11 @@
 
 Rescale a chain index so that the average of the new reference year is
 100, or a chain volume measure so that the annual sum of the new
-reference year is its annual current prices.
+reference year is its annual current prices. With \\b\\ the new
+reference year, \$\$I'\_t = 100\\ \frac{I_t}{\bar{I}\_b}, \qquad x'\_t =
+x_t\\ \frac{cp_b}{x_b},\$\$ where \\\bar{I}\_b\\ is the average of the
+index over the periods of year \\b\\, and \\cp_b\\ and \\x_b\\ the
+annual sums of the current prices and of the measure.
 
 ## Usage
 

@@ -59,6 +59,11 @@ the one of `cp_neg`.
 
 ## Details
 
+With \\x^{+}\_t\\ and \\x^{-}\_t\\ the chain volume measures of the two
+series
+([`chain_laspeyres()`](https://aqlt.github.io/chainlink/reference/chain_laspeyres.md)),
+the pseudo chain volume series is \\x^{+}\_t - x^{-}\_t\\.
+
 The result is a pseudo chain volume series: it is the difference of two
 chained components, which are not additive by construction. It is
 expressed in monetary terms (its growth rates are meaningless). The

@@ -34,7 +34,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/imf_qna_manual.html">Chapter 8 of the IMF Quarterly National Accounts Manual</a></li>
     <li><a class="dropdown-item" href="../articles/contributions.html">Contributions to percent change of chain-linked volume measures</a></li>
-    <li><a class="dropdown-item" href="../articles/practical_case.html">Practical case: from current prices to published contributions</a></li>
+    <li><a class="dropdown-item" href="../articles/practical_case.html">Practical case: from current prices to contributions to growth</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -76,34 +76,78 @@ inconsistencies of the data, see below).</p>
 <div class="section level2">
 <h2 id="principle">Principle<a class="anchor" aria-label="anchor" href="#principle"></a>
 </h2>
-<p>Let <code>x</code> be the chain volume measure (in monetary terms) of
-a component and <code>z</code> the one of the total. Within a year
-<code>y</code>, the chain volume measure of the total is exactly the sum
-of the chain volume measures of the components, valued at the relative
-prices <code>rho</code> of the previous year (<code>y - 1</code>):</p>
-<pre><code>z[t] = sum over the components i of rho[i, y - 1] * x[i, t]</code></pre>
+<p>Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><annotation encoding="application/x-tex">x_{i,t}</annotation></semantics></math>
+be the chain volume measure (in monetary terms) of the component
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+in period
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>t</mi></msub><annotation encoding="application/x-tex">z_t</annotation></semantics></math>
+the one of the total, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">y(t)</annotation></semantics></math>
+the year of the period
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>.
+Within a year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>,
+the chain volume measure of the total is exactly the sum of the chain
+volume measures of the components, valued at the relative prices
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi><mo>−</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\rho_{i,y-1}</annotation></semantics></math>
+of the previous year:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>t</mi></msub><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>ρ</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>1</mn></mrow></msub><mspace width="0.167em"></mspace><msub><mi>x</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+z_t = \sum_i \rho_{i,y(t)-1}\, x_{i,t}.
+</annotation></semantics></math> The relative price
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi></mrow></msub><annotation encoding="application/x-tex">\rho_{i,y}</annotation></semantics></math>
+is the implicit price of the component
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+over the implicit price of the total:</p>
 <ul>
-<li>annual overlap (<code>method = "ao"</code>): <code>rho[i, y]</code>
-is the price of the component <code>i</code> relative to the price of
-the total in year <code>y</code>, with annual sums
-<code>(cp[i, y] / x[i, y]) / (cp[z, y] / z[y])</code>;</li>
-<li>one-quarter overlap (<code>method = "oqo"</code>):
-<code>rho[i, y]</code> is the same ratio computed on the overlap period
-(the last quarter, or the last month, of year <code>y</code>).</li>
+<li>annual overlap (<code>method = "ao"</code>), with the annual sums
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><msub><mi>p</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi></mrow></msub></mrow><annotation encoding="application/x-tex">cp_{i,y}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi></mrow></msub><annotation encoding="application/x-tex">x_{i,y}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><msub><mi>p</mi><mi>y</mi></msub></mrow><annotation encoding="application/x-tex">cp_y</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>y</mi></msub><annotation encoding="application/x-tex">z_y</annotation></semantics></math>
+of the current prices and of the chain volume measures:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ρ</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi></mrow></msub><mo>=</mo><mfrac><mrow><mi>c</mi><msub><mi>p</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi></mrow></msub><mi>/</mi><msub><mi>x</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi></mrow></msub></mrow><mrow><mi>c</mi><msub><mi>p</mi><mi>y</mi></msub><mi>/</mi><msub><mi>z</mi><mi>y</mi></msub></mrow></mfrac><mo>;</mo></mrow><annotation encoding="application/x-tex">
+\rho_{i,y} = \frac{cp_{i,y} / x_{i,y}}{cp_y / z_y};
+</annotation></semantics></math>
+</li>
+<li>one-quarter overlap (<code>method = "oqo"</code>): the same ratio
+computed on the overlap period (the last quarter, or the last month, of
+year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>),
+the current prices being valued at the average prices of the year
+(<code><a href="../reference/cp_pi2cy.html">cp_pi2cy()</a></code>).</li>
 </ul>
-<p>The contribution of the component <code>i</code> to the growth
-between a period <code>s</code> and a period <code>t</code> (previous
-period, same period of the previous year, or previous year) is</p>
-<pre><code>100 * [ (x[t] - x[s]) * rho[y(t) - 1] / z[s]
-      + (x[s] / z[s] - a[y(t) - 1]) * (rho[y(t) - 1] - rho[y(s) - 1]) ]</code></pre>
-<p>where <code>a[y]</code> is the share of the component in the total
-(annual share for the annual overlap, share of the overlap period for
-the one-quarter overlap). The second term is zero if <code>s</code> and
-<code>t</code> are in the same year. For the annual overlap and the
-growth over the previous period, this is the formula of the example 8.9
-of the manual. The formula for the one-quarter overlap, and for the
-growth over the same period of the previous year, derive from the same
-decomposition: they add up to the growth of the total exactly.</p>
+<p>The contribution of the component
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+to the growth between a period
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+and a period
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+(previous period, same period of the previous year, or previous year) is
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mo>=</mo><mn>100</mn><mrow><mo stretchy="true" form="prefix">[</mo><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mo>−</mo><msub><mi>x</mi><mrow><mi>i</mi><mo>,</mo><mi>s</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><msub><mi>ρ</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>1</mn></mrow></msub></mrow><msub><mi>z</mi><mi>s</mi></msub></mfrac><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msub><mi>x</mi><mrow><mi>i</mi><mo>,</mo><mi>s</mi></mrow></msub><msub><mi>z</mi><mi>s</mi></msub></mfrac><mo>−</mo><msub><mi>a</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>1</mn></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>ρ</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="prefix">(</mo><mi>t</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mi>ρ</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mn>1</mn></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+C_{i,t} = 100 \left[\frac{(x_{i,t} - x_{i,s})\,\rho_{i,y(t)-1}}{z_s}
++ \left(\frac{x_{i,s}}{z_s} - a_{i,y(t)-1}\right)
+\left(\rho_{i,y(t)-1} - \rho_{i,y(s)-1}\right)\right]
+</annotation></semantics></math> where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>a</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi></mrow></msub><annotation encoding="application/x-tex">a_{i,y}</annotation></semantics></math>
+is the share of the component in the total:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi></mrow></msub><mo>=</mo><msub><mi>x</mi><mrow><mi>i</mi><mo>,</mo><mi>y</mi></mrow></msub><mi>/</mi><msub><mi>z</mi><mi>y</mi></msub></mrow><annotation encoding="application/x-tex">a_{i,y} = x_{i,y} / z_y</annotation></semantics></math>
+(annual sums) for the annual overlap, and the same share on the overlap
+period for the one-quarter overlap. Summing over
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+gives
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>C</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mo>=</mo><mn>100</mn><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><msub><mi>z</mi><mi>t</mi></msub><mi>/</mi><msub><mi>z</mi><mi>s</mi></msub><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\sum_i C_{i,t} = 100\,(z_t / z_s - 1)</annotation></semantics></math>.</p>
+<p>The second term is zero if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+are in the same year. For the annual overlap and the growth over the
+previous period, this is the formula of the example 8.9 of the manual.
+The formula for the one-quarter overlap, and for the growth over the
+same period of the previous year, derive from the same decomposition:
+they add up to the growth of the total exactly.</p>
 <p>The breakdown between the components is not unique, only its sum is:
 the second term (revaluation due to the change of relative prices) is
 allocated as in the manual.</p>
@@ -113,7 +157,7 @@ allocated as in the manual.</p>
 </h2>
 <p><code><a href="../reference/chain_laspeyres.html">chain_laspeyres()</a></code> computes the chain volume measures of
 the components and of their total (last column):</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chain_laspeyres.html">chain_laspeyres</a></span><span class="op">(</span><span class="va">imf_cp</span>, <span class="va">imf_pi</span>, method <span class="op">=</span> <span class="st">"ao"</span>, base_year <span class="op">=</span> <span class="fl">2010</span>,</span>
 <span>                     output <span class="op">=</span> <span class="st">"measure"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">3</span><span class="op">)</span></span>
@@ -134,7 +178,7 @@ the components and of their total (last column):</p>
 (<code>type = "period"</code>, the default). <code>extra</code> adds the
 growth of the total and the residual (growth of the total minus the sum
 of the contributions):</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/chain_contrib.html">chain_contrib</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">imf_cp</span>, method <span class="op">=</span> <span class="st">"ao"</span>, extra <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"total"</span>, <span class="st">"residual"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             A      B  Total Residual</span></span>
@@ -152,7 +196,7 @@ of the contributions):</p>
 <span><span class="co">#&gt; 2013 Q4 0.966 -1.109 -0.143        0</span></span></code></pre></div>
 <p>Contributions to the growth over the same quarter of the previous
 year:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/chain_contrib.html">chain_contrib</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">imf_cp</span>, method <span class="op">=</span> <span class="st">"ao"</span>, type <span class="op">=</span> <span class="st">"yoy"</span>, extra <span class="op">=</span> <span class="st">"total"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;              A       B Total</span></span>
@@ -169,7 +213,7 @@ year:</p>
 <span><span class="co">#&gt; 2013 Q3 14.419 -11.949 2.471</span></span>
 <span><span class="co">#&gt; 2013 Q4  8.707  -7.310 1.398</span></span></code></pre></div>
 <p>Contributions to the growth of the annual sums:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/chain_contrib.html">chain_contrib</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">imf_cp</span>, method <span class="op">=</span> <span class="st">"ao"</span>, type <span class="op">=</span> <span class="st">"annual"</span>, extra <span class="op">=</span> <span class="st">"total"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Time Series:</span></span>
@@ -184,7 +228,7 @@ year:</p>
 <div class="section level2">
 <h2 id="one-quarter-overlap">One-quarter overlap<a class="anchor" aria-label="anchor" href="#one-quarter-overlap"></a>
 </h2>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x_oqo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chain_laspeyres.html">chain_laspeyres</a></span><span class="op">(</span><span class="va">imf_cp</span>, <span class="va">imf_pi</span>, method <span class="op">=</span> <span class="st">"oqo"</span>, base_year <span class="op">=</span> <span class="fl">2010</span>,</span>
 <span>                         output <span class="op">=</span> <span class="st">"measure"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/chain_contrib.html">chain_contrib</a></span><span class="op">(</span><span class="va">x_oqo</span>, <span class="va">imf_cp</span>, method <span class="op">=</span> <span class="st">"oqo"</span>, type <span class="op">=</span> <span class="st">"period"</span>, pi <span class="op">=</span> <span class="va">imf_pi</span>,</span>
@@ -225,7 +269,7 @@ exactly additive. The package provides this variant with
 <code>method = "ao"</code> applied to the one-quarter overlap measures,
 and an exactly additive version with <code>method = "oqo"</code>:</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x_oqo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chain_laspeyres.html">chain_laspeyres</a></span><span class="op">(</span><span class="va">imf_cp</span>, <span class="va">imf_pi</span>, method <span class="op">=</span> <span class="st">"oqo"</span>, base_year <span class="op">=</span> <span class="fl">2010</span>,</span>
 <span>                         output <span class="op">=</span> <span class="st">"measure"</span><span class="op">)</span></span>
 <span><span class="co"># Formulas of the manual (annual deflators)</span></span>
@@ -274,7 +318,7 @@ quarterly Fisher index. <code><a href="../reference/fisher_contrib.html">fisher_
 prices of all the components and their price indices over the previous
 quarter (<code><a href="../reference/pi_py2pp.html">pi_py2pp()</a></code> converts price indices over the
 previous year):</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ep8.4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pi_py2pp.html">pi_py2pp</a></span><span class="op">(</span><span class="va">imf_pi</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/fisher_contrib.html">fisher_contrib</a></span><span class="op">(</span><span class="va">imf_cp</span>, <span class="va">ep8.4</span>, extra <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"total"</span>, <span class="st">"residual"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             A      B  Total Residual</span></span>
@@ -294,16 +338,40 @@ previous year):</p>
 <span><span class="co">#&gt; 2013 Q2 3.433 -2.895  0.538        0</span></span>
 <span><span class="co">#&gt; 2013 Q3 2.119 -2.182 -0.063        0</span></span>
 <span><span class="co">#&gt; 2013 Q4 0.955 -1.130 -0.175        0</span></span></code></pre></div>
+<p>With
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>x</mi><mi>i</mi><mi>t</mi></msubsup><annotation encoding="application/x-tex">x_i^t</annotation></semantics></math>
+the current price value of the component
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+in period
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>z</mi><mi>t</mi></msup><annotation encoding="application/x-tex">z^t</annotation></semantics></math>
+the one of the aggregate,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>i</mi></msub><mo>=</mo><msubsup><mi>p</mi><mi>i</mi><mi>t</mi></msubsup><mi>/</mi><msubsup><mi>p</mi><mi>i</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msubsup></mrow><annotation encoding="application/x-tex">r_i = p_i^t / p_i^{t-1}</annotation></semantics></math>
+the price index of the component over the previous period and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
+the Fisher volume index of the aggregate (previous period = 1), the
+contribution of the component
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+is
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>C</mi><mi>i</mi><mi>t</mi></msubsup><mo>=</mo><mn>100</mn><mspace width="0.167em"></mspace><mfrac><mrow><mstyle displaystyle="true"><mfrac><msup><mi>z</mi><mi>t</mi></msup><msup><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msup></mfrac></mstyle><mrow><mo stretchy="true" form="prefix">(</mo><mstyle displaystyle="true"><mfrac><msubsup><mi>x</mi><mi>i</mi><mi>t</mi></msubsup><msub><mi>r</mi><mi>i</mi></msub></mfrac></mstyle><mo>−</mo><msubsup><mi>x</mi><mi>i</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msubsup><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>F</mi><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>x</mi><mi>i</mi><mi>t</mi></msubsup><mo>−</mo><msubsup><mi>x</mi><mi>i</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msubsup><msub><mi>r</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><msup><mi>z</mi><mi>t</mi></msup><mo>+</mo><mi>F</mi><munder><mo>∑</mo><mi>j</mi></munder><msubsup><mi>x</mi><mi>j</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msubsup><msub><mi>r</mi><mi>j</mi></msub></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+C_i^t = 100\, \frac{\dfrac{z^t}{z^{t-1}} \left(\dfrac{x_i^t}{r_i} - x_i^{t-1}\right)
++ F \left(x_i^t - x_i^{t-1} r_i\right)}
+{z^t + F \sum_j x_j^{t-1} r_j}.
+</annotation></semantics></math></p>
 <p>This is the equation (32) of the manual. The decomposition is exact:
 the residual is zero up to numerical errors. As printed in the manual,
-the equation has the ratio <code>z[t-1] / z[t]</code> in the first term
-and <code>x[t-1] * p[t-1] / p[t]</code> in the second one; with these
-ratios, the contributions do not add up to the percent change. The
-version implemented uses <code>z[t] / z[t-1]</code> and
-<code>x[t-1] * p[t] / p[t-1]</code> (consistent with the price relative
-of the denominator). The adjustments that some countries add to the
-quarterly contributions (benchmarking of the quarterly indices, annual
-rates) are not done.</p>
+the equation has the ratio
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msup><mi>/</mi><msup><mi>z</mi><mi>t</mi></msup></mrow><annotation encoding="application/x-tex">z^{t-1} / z^t</annotation></semantics></math>
+in the first term and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>x</mi><mi>i</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msubsup><mi>/</mi><msub><mi>r</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i^{t-1} / r_i</annotation></semantics></math>
+in the second one; with these ratios, the contributions do not add up to
+the percent change. The version implemented uses
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>z</mi><mi>t</mi></msup><mi>/</mi><msup><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">z^t / z^{t-1}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>x</mi><mi>i</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msubsup><msub><mi>r</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i^{t-1} r_i</annotation></semantics></math>
+(consistent with the denominator). The adjustments that some countries
+add to the quarterly contributions (benchmarking of the quarterly
+indices, annual rates) are not done.</p>
 </div>
 <div class="section level2">
 <h2 id="non-additivity-and-residual">Non-additivity and residual<a class="anchor" aria-label="anchor" href="#non-additivity-and-residual"></a>
@@ -311,8 +379,12 @@ rates) are not done.</p>
 <p>Two different things must not be mixed up:</p>
 <ul>
 <li>the chain volume measures are not additive: the chain measure of the
-total is not the sum of the chain measures of the components
-(<code><a href="../reference/chain_discrepancy.html">chain_discrepancy()</a></code>). It is zero in the base year and,
+total is not the sum of the chain measures of the components.
+<code><a href="../reference/chain_discrepancy.html">chain_discrepancy()</a></code> returns
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mi>t</mi></msub><mo>=</mo><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>x</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mo>−</mo><msub><mi>z</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">D_t = \sum_i x_{i,t} - z_t</annotation></semantics></math>
+(or
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mspace width="0.167em"></mspace><msub><mi>D</mi><mi>t</mi></msub><mi>/</mi><msub><mi>z</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">100\, D_t / z_t</annotation></semantics></math>
+with <code>relative = TRUE</code>). It is zero in the base year and,
 with the annual overlap, in the year after;</li>
 <li>the contributions take this into account and add up to the growth of
 the total. The residual (<code>extra = "residual"</code>) is therefore
@@ -320,7 +392,7 @@ zero if the data are fully consistent, i.e. if the annual price indices
 are exactly those of the quarterly data. In the example of the manual,
 they are not (the residual is small, below 0.001 percentage point).</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/chain_discrepancy.html">chain_discrepancy</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        Qtr1   Qtr2   Qtr3   Qtr4</span></span>
 <span><span class="co">#&gt; 2011  0.000  0.000  0.000  0.000</span></span>
@@ -339,7 +411,7 @@ they are not (the residual is small, below 0.001 percentage point).</li>
 each quarter of the data of the example is spread over three months (the
 contributions are then non-zero only for the first month of each
 quarter, when the quarter changes):</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">spread</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">a</span>, <span class="va">scale</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span></span>
 <span>    <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span><span class="va">m</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span> <span class="op">*</span> <span class="va">scale</span>,</span>
@@ -383,7 +455,7 @@ series is their difference. <code><a href="../reference/chain_pseudo.html">chain
 the current prices and the price indices of the two series (the two
 products of the example below only stand in for them):</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/chain_pseudo.html">chain_pseudo</a></span><span class="op">(</span><span class="va">imf_cp</span><span class="op">[</span>, <span class="st">"A"</span><span class="op">]</span>, <span class="va">imf_pi</span><span class="op">[</span>, <span class="st">"A"</span><span class="op">]</span>,</span>
 <span>             <span class="va">imf_cp</span><span class="op">[</span>, <span class="st">"B"</span><span class="op">]</span>, <span class="va">imf_pi</span><span class="op">[</span>, <span class="st">"B"</span><span class="op">]</span>, base_year <span class="op">=</span> <span class="fl">2010</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       Qtr1  Qtr2  Qtr3  Qtr4</span></span>
@@ -394,11 +466,19 @@ products of the example below only stand in for them):</li>
 <div class="section level2">
 <h2 id="change-of-the-reference-year">Change of the reference year<a class="anchor" aria-label="anchor" href="#change-of-the-reference-year"></a>
 </h2>
-<p><code><a href="../reference/chain_rebase.html">chain_rebase()</a></code> changes the reference year of an index
-(the average of the new year is 100) or of a measure (the annual sum of
-the new year is its annual current prices). The growth rates are
-unchanged.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p><code><a href="../reference/chain_rebase.html">chain_rebase()</a></code> changes the reference year of an index or
+of a measure. With
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
+the new reference year and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>I</mi><mo accent="true">‾</mo></mover><mi>b</mi></msub><annotation encoding="application/x-tex">\bar{I}_b</annotation></semantics></math>
+the average of the index over its periods, the rebased index is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mspace width="0.167em"></mspace><msub><mi>I</mi><mi>t</mi></msub><mi>/</mi><msub><mover><mi>I</mi><mo accent="true">‾</mo></mover><mi>b</mi></msub></mrow><annotation encoding="application/x-tex">100\, I_t / \bar{I}_b</annotation></semantics></math>;
+a measure is multiplied by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><msub><mi>p</mi><mi>b</mi></msub><mi>/</mi><msub><mi>x</mi><mi>b</mi></msub></mrow><annotation encoding="application/x-tex">cp_b / x_b</annotation></semantics></math>
+(annual sums of the current prices and of the measure in year
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>).
+The growth rates are unchanged.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/chain_laspeyres.html">chain_laspeyres</a></span><span class="op">(</span><span class="va">imf_cp</span>, <span class="va">imf_pi</span>, base_year <span class="op">=</span> <span class="fl">2010</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/chain_rebase.html">chain_rebase</a></span><span class="op">(</span>base_year <span class="op">=</span> <span class="fl">2012</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
