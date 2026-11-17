@@ -50,6 +50,9 @@ pi_annual(imf_pi, method = "mean")
 # Annual Fisher volume index (previous year = 100)
 fisher(stats::aggregate(imf_cp), pi_annual(imf_pi, imf_cp))
 }
+\references{
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
+}
 \seealso{
 \code{\link[=cp_pi2cy]{cp_pi2cy()}}, \code{\link[=pi_py2pp]{pi_py2pp()}}
 }

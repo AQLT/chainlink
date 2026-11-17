@@ -20,6 +20,7 @@
 #' @return A `ts` (or `mts`) with the structure of `cp` (extended to complete
 #' years). It is `NA` for the years without price indices (e.g. the reference
 #' year).
+#' @references `r ref_imf()`
 #' @examples
 #' cp_pi2cy(imf_cp, imf_pi)
 #' @seealso [chain_laspeyres()], [chain_contrib()], [pi_annual()]
@@ -88,6 +89,7 @@ weighted_annual_pi <- function(cur, pi, f) {
 #' @return An annual `ts` (or `mts`) with the structure of `pi`. It is `NA` for
 #' the incomplete years and the years without price indices (e.g. the reference
 #' year).
+#' @references `r ref_imf()`
 #' @examples
 #' pi_annual(imf_pi, imf_cp)
 #' pi_annual(imf_pi, method = "mean")

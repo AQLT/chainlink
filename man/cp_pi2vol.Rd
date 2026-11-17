@@ -50,3 +50,6 @@ cp_pi2vol(imf_cp, pi_py2pp(imf_pi), reference_freq = 4)
 # Volume indices over the last quarter of the previous year
 cp_pi2vol(imf_cp, imf_pi, reference_freq = 4, reference_cycle = 4)
 }
+\references{
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
+}

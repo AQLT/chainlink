@@ -19,6 +19,7 @@
 #'
 #' @return A `ts`: sum of the chain volume measures of the components minus the
 #' chain volume measure of the total.
+#' @references `r ref_imf()`
 #' @examples
 #' x <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,
 #' 					 output = "measure")
@@ -68,6 +69,7 @@ chain_discrepancy <- function(vo, vo_total = NULL, relative = FALSE) {
 #' volume measure.
 #'
 #' @return A `ts` (or `mts`) with the same structure as `x`.
+#' @references `r ref_imf()`
 #' @examples
 #' x <- chain_laspeyres(imf_cp, imf_pi, base_year = 2010)
 #' chain_rebase(x, base_year = 2012)

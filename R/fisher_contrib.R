@@ -45,6 +45,7 @@
 #' @references
 #' Chevalier, M. (2003), "Chain Fisher Volume Index Methodology", Statistics
 #' Canada (formula drawn from the appendix II).
+#' @references `r ref_imf()`
 #' @examples
 #' # Price indices over the previous quarter (example 8.4)
 #' ep <- pi_py2pp(imf_pi)

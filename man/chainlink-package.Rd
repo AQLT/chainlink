@@ -6,7 +6,40 @@
 \alias{chainlink-package}
 \title{chainlink: Chain-Linked Price and Volume Measures}
 \description{
-Tools to derive price and volume measures of national accounts following chapter 8 of the International Monetary Fund's Quarterly National Accounts Manual: Laspeyres-type, Paasche-type and Fisher-type volume indices, chain-linking of quarterly or monthly volume indices with the annual overlap and the one-quarter overlap techniques, exact contributions to percent change of the chain-linked volume measures, and non-additivity of the chain-linked series. The benchmarking of the quarterly series on annual data can be done with the 'tempdisagg' package.
+Tools to derive price and volume measures of national accounts following chapter 8 of the International Monetary Fund (2018) "Quarterly National Accounts Manual (2017 Edition)" \doi{10.5089/9781475589870.069}: Laspeyres-type, Paasche-type and Fisher-type volume indices, chain-linking of quarterly or monthly volume indices with the annual overlap and the one-quarter overlap techniques, exact contributions to percent change of the chain-linked volume measures, and non-additivity of the chain-linked series. The benchmarking of the quarterly series on annual data can be done with the 'tempdisagg' package.
+}
+\details{
+The package follows the chapter 8 (Price and Volume Measures) of the IMF
+\emph{Quarterly National Accounts Manual}. All the functions use \code{ts} objects
+(quarterly or monthly series, or annual series for the annual indices).
+
+Main functions:
+\itemize{
+\item volume indices from current prices and price indices: \code{\link[=cp_pi2vol]{cp_pi2vol()}},
+\code{\link[=laspeyres]{laspeyres()}}, \code{\link[=paasche]{paasche()}}, \code{\link[=fisher]{fisher()}}, and the conversion of price indices
+with \code{\link[=pi_py2pp]{pi_py2pp()}}, \code{\link[=pi_annual]{pi_annual()}} and \code{\link[=cp_pi2cy]{cp_pi2cy()}};
+\item chain-linking with the annual overlap and the one-quarter overlap
+techniques: \code{\link[=chain_laspeyres]{chain_laspeyres()}}, \code{\link[=chain_link]{chain_link()}}, \code{\link[=annual_chain]{annual_chain()}}, and
+\code{\link[=chain_rebase]{chain_rebase()}} to change the reference year;
+\item contributions to percent change: \code{\link[=chain_contrib]{chain_contrib()}} (chain-linked
+Laspeyres-type measures) and \code{\link[=fisher_contrib]{fisher_contrib()}} (Fisher indices);
+\item non-additivity and related tools: \code{\link[=chain_discrepancy]{chain_discrepancy()}}, \code{\link[=chain_pseudo]{chain_pseudo()}}
+(variables that change sign), \code{\link[=chain_unchain]{chain_unchain()}} and \code{\link[=chain_aggregate]{chain_aggregate()}}
+(indirect seasonal adjustment of chain-linked series, following the ESS
+Guidelines on Seasonal Adjustment).
+}
+
+The benchmarking of the quarterly series on annual data is not implemented:
+see for instance the \code{tempdisagg} package.
+
+See the vignettes: \code{vignette("imf_qna_manual", package = "chainlink")} (examples
+of the manual), \code{vignette("contributions", package = "chainlink")} and
+\code{vignette("practical_case", package = "chainlink")}.
+}
+\references{
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
+
+Eurostat (2015), \emph{ESS Guidelines on Seasonal Adjustment (2015 Edition)}, Luxembourg, Publications Office of the European Union. \doi{10.2785/317290}.
 }
 \seealso{
 Useful links:

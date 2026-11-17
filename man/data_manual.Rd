@@ -12,8 +12,9 @@ Quarterly \code{mts} from 2010Q1 to 2013Q4 with two columns (\code{A} and \code{
 An object of class \code{mts} (inherits from \code{ts}, \code{matrix}) with 16 rows and 2 columns.
 }
 \source{
-IMF, Quarterly National Accounts Manual, chapter 8 (Price and Volume
-Measures), tables and charts of the examples.
+Tables and charts of the examples of the chapter 8 (Price and Volume
+Measures) of the IMF \emph{Quarterly National Accounts Manual (2017 Edition)},
+\doi{10.5089/9781475589870.069}.
 }
 \usage{
 imf_cp
@@ -31,5 +32,8 @@ over the previous year (average of the previous year = 100) of the example
 \examples{
 imf_cp
 imf_pi
+}
+\references{
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
 }
 \keyword{datasets}

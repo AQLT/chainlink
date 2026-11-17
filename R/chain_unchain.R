@@ -73,6 +73,8 @@
 #' @return `chain_unchain()`: a `ts` (or `mts`) with the structure of `x`: the volume
 #' of each period at the (average) prices of the previous year, in monetary terms.
 #' `chain_aggregate()`: a `ts` (see [chain_link()] for `output = "both"`).
+#' @references `r ref_imf()`
+#' @references `r ref_ess()`
 #' @examples
 #' x <- chain_laspeyres(imf_cp, imf_pi, base_year = 2010, output = "measure")
 #' # Volumes at the prices of the previous year (additive within each year)

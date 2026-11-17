@@ -18,8 +18,10 @@ library(chainlink)
 ```
 
 This vignette follows a complete workflow, from raw quarterly data to
-chain-linked volume series, growth rates and contributions to growth. It does not require to know the examples of the IMF
-manual (see the vignette `imf_qna_manual` for them).
+chain-linked volume series, growth rates and contributions to growth. It does
+not require to know the examples of the IMF [*Quarterly National Accounts
+Manual*](https://doi.org/10.5089/9781475589870.069) (see the vignette
+`imf_qna_manual` for them).
 
 The data are those of the example 8.2 of the manual: two products, `A` and `B`,
 with their current prices and their price indices over the previous year
@@ -201,8 +203,8 @@ through `chain_contrib()`.
 
 # 7. Seasonal adjustment of chain-linked series
 
-Chain-linked volume series are often seasonally adjusted. The ESS Guidelines on
-Seasonal Adjustment (item 5.6) describe how to derive the seasonally adjusted
+Chain-linked volume series are often seasonally adjusted. The [ESS Guidelines on
+Seasonal Adjustment](https://doi.org/10.2785/317290) (item 5.6) describe how to derive the seasonally adjusted
 aggregate of annually chain-linked Laspeyres-type components **indirectly**, that
 is by aggregating the seasonally adjusted components:
 
@@ -291,3 +293,8 @@ the direct approach is feasible. With the one-quarter overlap technique, use
 `method = "oqo"` and the price indices `pi` (the overlap quarter is valued at the
 average prices of the year).
 
+# References
+
+* Eurostat (2015), *ESS Guidelines on Seasonal Adjustment (2015 Edition)*, Luxembourg, Publications Office of the European Union. [doi:10.2785/317290](https://doi.org/10.2785/317290).
+
+* International Monetary Fund (2018), *Quarterly National Accounts Manual (2017 Edition)*, Washington, DC. [doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069).

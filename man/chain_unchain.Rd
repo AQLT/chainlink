@@ -119,6 +119,11 @@ chain_unchain(x[, c("A", "B")], imf_cp, base_year = 2010)
 # Aggregate of the components: the chain volume measure of the total
 chain_aggregate(x[, c("A", "B")], imf_cp, base_year = 2010, output = "measure")
 }
+\references{
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
+
+Eurostat (2015), \emph{ESS Guidelines on Seasonal Adjustment (2015 Edition)}, Luxembourg, Publications Office of the European Union. \doi{10.2785/317290}.
+}
 \seealso{
 \code{\link[=chain_link]{chain_link()}}, \code{\link[=chain_laspeyres]{chain_laspeyres()}}
 }

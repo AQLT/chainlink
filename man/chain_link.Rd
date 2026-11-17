@@ -84,3 +84,6 @@ chain_laspeyres(imf_cp, imf_pi, method = "oqo", base_year = 2010)
 fis <- fisher(stats::aggregate(imf_cp), pi_annual(imf_pi, imf_cp))
 annual_chain(fis, base_year = 2010)
 }
+\references{
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
+}

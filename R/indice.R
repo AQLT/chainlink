@@ -27,6 +27,7 @@
 #' technique of the manual values it at the average prices of the year, see
 #' [chain_laspeyres()] and [cp_pi2cy()].
 #' @return A `ts` (or `mts`) of volume indices (reference period = 100).
+#' @references `r ref_imf()`
 #' @examples
 #' # Volume indices over the previous year (previous-year prices)
 #' cp_pi2vol(imf_cp, imf_pi)
@@ -89,6 +90,7 @@ cp_pi2vol.mts <- function(cp, pi, reference_freq = 1, reference_cycle = NULL) {
 #' @param all_index (`fisher()` only) Boolean: if `TRUE`, return the Laspeyres,
 #' Paasche and Fisher indices instead of the Fisher index only.
 #' @return A `ts` (or `mts`).
+#' @references `r ref_imf()`
 #' @examples
 #' # Laspeyres-type volume index over the previous year
 #' laspeyres(imf_cp, imf_pi)
@@ -322,6 +324,7 @@ fisher <- function(
 #' average of its year).
 #' @return A `ts` (or `mts`) of price indices (previous period = 100).
 #' @seealso [pi_annual()]
+#' @references `r ref_imf()`
 #' @examples
 #' pi_py2pp(imf_pi)
 #' @export

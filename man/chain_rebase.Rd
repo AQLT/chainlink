@@ -42,3 +42,6 @@ cp_all <- ts(cbind(as.matrix(imf_cp), Total = rowSums(imf_cp)),
 			 start = start(imf_cp), frequency = frequency(imf_cp))
 chain_rebase(x_measure, base_year = 2012, cp = cp_all)
 }
+\references{
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
+}

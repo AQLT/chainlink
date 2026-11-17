@@ -63,6 +63,9 @@ reference year), their simple difference is the pseudo chain volume series.
 chain_pseudo(imf_cp[, "A"], imf_pi[, "A"],
 			 imf_cp[, "B"], imf_pi[, "B"], base_year = 2010)
 }
+\references{
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
+}
 \seealso{
 \code{\link[=chain_laspeyres]{chain_laspeyres()}}, \code{\link[=chain_contrib]{chain_contrib()}}
 }

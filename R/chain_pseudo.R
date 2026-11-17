@@ -31,6 +31,7 @@
 #'
 #' @return A `ts`: the chain volume measure (in monetary terms) of `cp_pos` minus
 #' the one of `cp_neg`.
+#' @references `r ref_imf()`
 #' @examples
 #' # Illustration: the two products of the example 8.2 stand in for closing and
 #' # opening inventories

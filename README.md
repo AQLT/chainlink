@@ -9,23 +9,28 @@
 <!-- badges: end -->
 
 `chainlink` derives price and volume measures of national accounts,
-following chapter 8 of the IMF *Quarterly National Accounts Manual*:
+following chapter 8 of the IMF [*Quarterly National Accounts Manual (2017
+Edition)*](https://doi.org/10.5089/9781475589870.069):
 
 - Laspeyres-type, Paasche-type and Fisher-type volume indices from
   current prices and price indices (`cp_pi2vol()`, `laspeyres()`,
-  `paasche()`, `fisher()`);
+  `paasche()`, `fisher()`), and conversion of price indices: over the
+  previous period (`pi_py2pp()`), annual (`pi_annual()`), values at the
+  average prices of the year (`cp_pi2cy()`);
 - chain-linking of quarterly or monthly volume indices with the annual
   overlap and the one-quarter overlap techniques (`chain_link()`,
   `chain_laspeyres()`, `annual_chain()`);
 - exact contributions to percent change of chain-linked volume measures,
   over the previous period, over the same period of the previous year or
-  for the annual growth (`chain_contrib()`);
+  for the annual growth (`chain_contrib()`), and contributions to percent
+  change of Fisher indices (`fisher_contrib()`);
 - non-additivity of chain-linked series (`chain_discrepancy()`), change
   of the reference year (`chain_rebase()`) and pseudo chain series for
   variables that change sign (`chain_pseudo()`);
 - un-chaining and aggregation of chain-linked series, for the indirect
   seasonal adjustment of Laspeyres-type series (`chain_unchain()`,
-  `chain_aggregate()`).
+  `chain_aggregate()`), following the [ESS Guidelines on Seasonal
+  Adjustment](https://doi.org/10.2785/317290).
 
 All the functions use `ts` objects. The benchmarking of the quarterly
 series on annual data is not implemented: use for example the
@@ -139,4 +144,4 @@ round(chain_contrib(x, imf_cp, method = "ao", type = "yoy"), 3)
 - `vignette("contributions")` details the contributions to percent
   change;
 - `vignette("practical_case")` follows a complete workflow, from raw
-  quarterly data to the published series and contributions.
+  quarterly data to chain-linked series and contributions to growth.

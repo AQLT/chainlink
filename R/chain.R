@@ -39,6 +39,7 @@
 #'
 #' @return A `ts` (or `mts`). With `output = "both"`, the columns are the
 #' indices then the measures of each variable.
+#' @references `r ref_imf()`
 #' @examples
 #' # Annual overlap: volume indices over the previous year
 #' vo <- cp_pi2vol(imf_cp, imf_pi)

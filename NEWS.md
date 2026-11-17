@@ -40,6 +40,10 @@
   valued at the average prices of the previous year (not at its current prices) and
   the first year is linked with the annual overlap technique. The printed example
   8.7 and the annex 8.1 are reproduced.
+* The argument `overlap_prices = "current_prices"` of `chain_laspeyres()` values the
+  overlap quarter at its own current prices instead, as in the spreadsheet of the
+  manual (the "q4 previous year = 100" volume measures). `chain_contrib()`,
+  `chain_unchain()` and `chain_aggregate()` have the same argument.
 * `chain_contrib(method = "oqo")` has a `pi` argument (see `cp_pi2cy()`).
 * `chain_discrepancy()` has the sign of the manual: sum of the components minus
   the total.

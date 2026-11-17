@@ -36,6 +36,9 @@ so that the annual sum of \eqn{cy_t} is the annual current price value.
 \examples{
 cp_pi2cy(imf_cp, imf_pi)
 }
+\references{
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
+}
 \seealso{
 \code{\link[=chain_laspeyres]{chain_laspeyres()}}, \code{\link[=chain_contrib]{chain_contrib()}}, \code{\link[=pi_annual]{pi_annual()}}
 }

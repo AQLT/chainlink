@@ -18,7 +18,9 @@ library(chainlink)
 Chain-linked volume measures are not additive, so that the contribution of a
 component to the growth of the total cannot be read from the growth of the
 components. `chain_contrib()` computes exact contributions: they add up to the
-growth of the total (up to the inconsistencies of the data, see below).
+growth of the total (up to the inconsistencies of the data, see below). The
+formulas follow the chapter 8 of the IMF [*Quarterly National Accounts
+Manual*](https://doi.org/10.5089/9781475589870.069) (paragraphs 8.86-8.90).
 
 # Principle
 
@@ -247,3 +249,9 @@ chain_laspeyres(imf_cp, imf_pi, base_year = 2010) |>
 	chain_rebase(base_year = 2012) |>
 	round(2)
 ```
+
+# References
+
+* Chevalier, M. (2003), "Chain Fisher Volume Index Methodology", Statistics Canada.
+
+* International Monetary Fund (2018), *Quarterly National Accounts Manual (2017 Edition)*, Washington, DC. [doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069).

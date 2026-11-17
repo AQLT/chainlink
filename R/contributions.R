@@ -85,6 +85,7 @@
 #' same columns as `vo` (followed by `Total` and/or `Residual`). It has the span
 #' of `vo` (extended to complete years), with `NA` when a contribution cannot be
 #' computed (e.g. the first periods).
+#' @references `r ref_imf()`
 #' @examples
 #' # Chain volume measures of the components and of the total (last column)
 #' x <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,

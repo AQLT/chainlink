@@ -37,6 +37,9 @@ x <- chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010,
 chain_discrepancy(x)
 chain_discrepancy(x, relative = TRUE)
 }
+\references{
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
+}
 \seealso{
 \code{\link[=chain_contrib]{chain_contrib()}}
 }

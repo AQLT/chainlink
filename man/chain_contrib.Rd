@@ -141,6 +141,9 @@ x_cp <- chain_laspeyres(
 chain_contrib(x_cp, imf_cp, method = "oqo", type = "yoy",
 			  overlap_prices = "current_prices")
 }
+\references{
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
+}
 \seealso{
 \code{\link[=chain_laspeyres]{chain_laspeyres()}}, \code{\link[=chain_link]{chain_link()}}, \code{\link[=chain_discrepancy]{chain_discrepancy()}},
 \code{\link[=fisher_contrib]{fisher_contrib()}}

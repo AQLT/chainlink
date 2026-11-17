@@ -25,7 +25,8 @@ growth_rate <- function(x) 100 * (x / stats::lag(x, -1) - 1)
 # Correspondence between the manual and the package
 
 This vignette reproduces the examples of chapter 8 (price and volume measures) of
-the IMF *Quarterly National Accounts Manual* with the functions of the package.
+the IMF [*Quarterly National Accounts Manual*](https://doi.org/10.5089/9781475589870.069)
+with the functions of the package.
 The table gives the function(s) used for each example. The paragraph numbers are those of the
 2017 edition.
 
@@ -867,3 +868,7 @@ ratio <- ts.union(`QOB / QO` = x_qob / x_oqo, `AO / QO` = x_ao / x_oqo)
 plot(ratio, plot.type = "single", lty = 1:2, ylab = "Ratio", main = "Effect of the benchmarking")
 legend("topleft", legend = colnames(ratio), lty = 1:2, bty = "n")
 ```
+
+# References
+
+* International Monetary Fund (2018), *Quarterly National Accounts Manual (2017 Edition)*, Washington, DC. [doi:10.5089/9781475589870.069](https://doi.org/10.5089/9781475589870.069).

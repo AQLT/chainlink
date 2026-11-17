@@ -42,6 +42,7 @@
 #' @return A `ts` (`mts`): the columns of `cp` and a column `Total`. With
 #' `output = "both"`, the indices then the measures of each variable
 #' (see [chain_link()]).
+#' @references `r ref_imf()`
 #' @examples
 #' # Annual overlap
 #' chain_laspeyres(imf_cp, imf_pi, method = "ao", base_year = 2010)

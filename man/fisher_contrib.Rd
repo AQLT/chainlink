@@ -63,6 +63,8 @@ fisher_contrib(imf_cp, ep, extra = c("total", "residual"))
 \references{
 Chevalier, M. (2003), "Chain Fisher Volume Index Methodology", Statistics
 Canada (formula drawn from the appendix II).
+
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
 }
 \seealso{
 \code{\link[=fisher]{fisher()}}, \code{\link[=chain_contrib]{chain_contrib()}}

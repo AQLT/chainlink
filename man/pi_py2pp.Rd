@@ -36,6 +36,9 @@ annual data, which is by default their weighted average (see \code{\link[=pi_ann
 \examples{
 pi_py2pp(imf_pi)
 }
+\references{
+International Monetary Fund (2018), \emph{Quarterly National Accounts Manual (2017 Edition)}, chapter 8 "Price and Volume Measures", Washington, DC. \doi{10.5089/9781475589870.069}.
+}
 \seealso{
 \code{\link[=pi_annual]{pi_annual()}}
 }
