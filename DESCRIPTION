@@ -7,16 +7,16 @@ Authors@R: c(
                  email = "alain.quartier@yahoo.fr",
                  comment = c(ORCID = "0000-0001-7890-3857")))
 Description: Tools to derive price and volume measures of national accounts
-    following chapter 8 of the International Monetary Fund's Quarterly National
-    Accounts Manual: Laspeyres-type, Paasche-type and Fisher-type volume
-    indices, chain-linking of quarterly or monthly volume indices with the
+    following chapter 8 of the International Monetary Fund (2018) "Quarterly
+    National Accounts Manual (2017 Edition)" <doi:10.5089/9781475589870.069>:
+    Laspeyres-type, Paasche-type and Fisher-type volume indices, chain-linking of quarterly or monthly volume indices with the
     annual overlap and the one-quarter overlap techniques, exact contributions
     to percent change of the chain-linked volume measures, and non-additivity of
     the chain-linked series. The benchmarking of the quarterly series on annual
     data can be done with the 'tempdisagg' package.
 URL: https://github.com/AQLT/chainlink, https://aqlt.github.io/chainlink/
 BugReports: https://github.com/AQLT/chainlink/issues
-License: EUPL
+License: EUPL-1.2
 Encoding: UTF-8
 Language: en
 LazyData: true

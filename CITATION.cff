@@ -1,0 +1,42 @@
+# ------------------------------------------------
+# CITATION.cff file created with {cffr} R package
+# See also: https://docs.ropensci.org/cffr/
+# ------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "chainlink" in publications use:'
+type: software
+license: EUPL-1.2
+title: 'chainlink: Chain-Linked Price and Volume Measures'
+version: 0.1.0.9000
+abstract: 'Tools to derive price and volume measures of national accounts following
+  chapter 8 of the International Monetary Fund (2018) "Quarterly National Accounts
+  Manual (2017 Edition)" <https://doi.org/10.5089/9781475589870.069>: Laspeyres-type,
+  Paasche-type and Fisher-type volume indices, chain-linking of quarterly or monthly
+  volume indices with the annual overlap and the one-quarter overlap techniques, exact
+  contributions to percent change of the chain-linked volume measures, and non-additivity
+  of the chain-linked series. The benchmarking of the quarterly series on annual data
+  can be done with the ''tempdisagg'' package.'
+authors:
+- family-names: Quartier-la-Tente
+  given-names: Alain
+  email: alain.quartier@yahoo.fr
+  orcid: https://orcid.org/0000-0001-7890-3857
+repository-code: https://github.com/AQLT/chainlink
+url: https://aqlt.github.io/chainlink/
+contact:
+- family-names: Quartier-la-Tente
+  given-names: Alain
+  email: alain.quartier@yahoo.fr
+  orcid: https://orcid.org/0000-0001-7890-3857
+references:
+- type: book
+  title: Quarterly National Accounts Manual (2017 Edition)
+  authors:
+  - name: International Monetary Fund
+  year: '2018'
+  publisher:
+    name: International Monetary Fund
+  doi: 10.5089/9781475589870.069
+  isbn: '9781475589870'
+
