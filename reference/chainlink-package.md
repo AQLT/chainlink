@@ -89,9 +89,9 @@ Useful links:
 ## Author
 
 **Maintainer**: Alain Quartier-la-Tente <alain.quartier@yahoo.fr>
-([ORCID](https://orcid.org/0000-0001-7890-3857))
+([ORCID](https://orcid.org/0000-0001-7890-3857)) \[copyright holder\]
 
 Authors:
 
 - Alain Quartier-la-Tente <alain.quartier@yahoo.fr>
-  ([ORCID](https://orcid.org/0000-0001-7890-3857))
+  ([ORCID](https://orcid.org/0000-0001-7890-3857)) \[copyright holder\]

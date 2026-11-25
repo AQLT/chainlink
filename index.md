@@ -47,8 +47,16 @@ series on annual data is not implemented: use for example the
 
 ## Installation
 
-You can install the development version of `chainlink` from
-[GitHub](https://github.com/AQLT/chainlink) with:
+To install the developpment version:
+
+- From [r-universe](https://aqlt.r-universe.dev/fable.rjd3):
+
+``` r
+
+install.packages("chainlink", repos = c("https://aqlt.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+- From \[GitHub\](<https://github.com/AQLT/chainlink->:
 
 ``` r
 

@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="index.html">chainlink</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,8 +70,16 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of <code>chainlink</code> from <a href="https://github.com/AQLT/chainlink" class="external-link">GitHub</a> with:</p>
+<p>To install the developpment version:</p>
+<ul>
+<li>From <a href="https://aqlt.r-universe.dev/fable.rjd3" class="external-link">r-universe</a>:</li>
+</ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"chainlink"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://aqlt.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<ul>
+<li>From [GitHub](<a href="https://github.com/AQLT/chainlink-" class="external-link uri">https://github.com/AQLT/chainlink-</a>:</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"AQLT/chainlink"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -79,7 +87,7 @@
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>The data of the example 8.2 of the manual are two products, <code>A</code> and <code>B</code>, with current prices (<code>imf_cp</code>) and price indices over the previous year (<code>imf_pi</code>):</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/AQLT/chainlink" class="external-link">chainlink</a></span><span class="op">)</span></span>
 <span><span class="va">imf_cp</span></span>
 <span><span class="co">#&gt;             A     B</span></span>
@@ -100,7 +108,7 @@
 <span><span class="co">#&gt; 2013 Q3 242.9 148.5</span></span>
 <span><span class="co">#&gt; 2013 Q4 245.4 144.8</span></span></code></pre></div>
 <p>Chain-linked Laspeyres-type volume measures of the products and of the total, with the annual overlap technique and 2010 as reference year:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/chain_laspeyres.html">chain_laspeyres</a></span><span class="op">(</span><span class="va">imf_cp</span>, <span class="va">imf_pi</span>, method <span class="op">=</span> <span class="st">"ao"</span>, base_year <span class="op">=</span> <span class="fl">2010</span>,</span>
 <span>                     output <span class="op">=</span> <span class="st">"measure"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">)</span></span>
@@ -118,7 +126,7 @@
 <span><span class="co">#&gt; 2013 Q3 235.0 151.0 390.7</span></span>
 <span><span class="co">#&gt; 2013 Q4 238.6 146.6 390.1</span></span></code></pre></div>
 <p>Contributions of the products to the quarter-to-quarter growth of the total, and the non-additivity residual:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="reference/chain_contrib.html">chain_contrib</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">imf_cp</span>, method <span class="op">=</span> <span class="st">"ao"</span>, extra <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"total"</span>, <span class="st">"residual"</span><span class="op">)</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             A      B  Total Residual</span></span>
 <span><span class="co">#&gt; 2011 Q1    NA     NA     NA       NA</span></span>
@@ -134,7 +142,7 @@
 <span><span class="co">#&gt; 2013 Q3 2.136 -2.156 -0.020        0</span></span>
 <span><span class="co">#&gt; 2013 Q4 0.966 -1.109 -0.143        0</span></span></code></pre></div>
 <p>Contributions to the growth over the same quarter of the previous year:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="reference/chain_contrib.html">chain_contrib</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">imf_cp</span>, method <span class="op">=</span> <span class="st">"ao"</span>, type <span class="op">=</span> <span class="st">"yoy"</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;              A       B</span></span>
 <span><span class="co">#&gt; 2011 Q1     NA      NA</span></span>
@@ -189,13 +197,14 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Alain Quartier-la-Tente <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-7890-3857" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Alain Quartier-la-Tente <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0001-7890-3857" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
 
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
+<li><a href="https://aqlt.r-universe.dev/chainlink" class="external-link"><img src="https://aqlt.r-universe.dev/badges/chainlink" alt="R universe version"></a></li>
 <li><a href="https://github.com/AQLT/chainlink/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/AQLT/chainlink/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>

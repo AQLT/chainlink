@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">chainlink</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,52 +39,10 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0.9000" id="chainlink-0109000">chainlink 0.1.0.9000<a class="anchor" aria-label="anchor" href="#chainlink-0109000"></a></h2>
-<div class="section level3">
-<h3 id="new-functions-0-1-0-9000">New functions<a class="anchor" aria-label="anchor" href="#new-functions-0-1-0-9000"></a></h3>
-<ul><li>
-<code><a href="../reference/chain_link.html">chain_link()</a></code> chains sub-annual (quarterly or monthly) volume indices with the annual overlap (<code>method = "ao"</code>) or the one-quarter overlap (<code>method = "oqo"</code>) technique. It replaces the <code>vo_cp2vpch_*()</code> functions, and <code><a href="../reference/chain_link.html">annual_chain()</a></code> is simplified.</li>
-<li>
-<code><a href="../reference/chain_laspeyres.html">chain_laspeyres()</a></code> computes in one step the chain-linked Laspeyres-type volume indices (or measures) of the components and of their total.</li>
-<li>
-<code><a href="../reference/chain_contrib.html">chain_contrib()</a></code> computes the exact contributions to percent change of the chain-linked volume measures, for the annual overlap and the one-quarter overlap techniques, over the previous period (<code>type = "period"</code>), over the same period of the previous year (<code>type = "yoy"</code>) or for the annual growth (<code>type = "annual"</code>). The argument <code>extra</code> adds the growth of the total and the non-additivity residual.</li>
-<li>
-<code><a href="../reference/chain_unchain.html">chain_unchain()</a></code> and <code><a href="../reference/chain_unchain.html">chain_aggregate()</a></code> un-chain chain volume measures and derive the chain volume measure of an aggregate of components: indirect seasonal adjustment of chain-linked Laspeyres-type series (ESS Guidelines on Seasonal Adjustment, item 5.6).</li>
-<li>
-<code><a href="../reference/chain_pseudo.html">chain_pseudo()</a></code> computes the pseudo chain volume series of a variable that changes sign (changes in inventories, trade balance), as the difference of the chain volume measures of two positive series (paragraphs 8.56-8.58 of the manual).</li>
-<li>
-<code><a href="../reference/chain_discrepancy.html">chain_discrepancy()</a></code> returns the non-additivity of chain-linked volume measures and <code><a href="../reference/chain_rebase.html">chain_rebase()</a></code> changes their reference year.</li>
-<li>
-<code><a href="../reference/fisher_contrib.html">fisher_contrib()</a></code> computes the exact contributions to the percent change of a Fisher volume index (paragraph 8.89 of the manual).</li>
-<li>
-<code><a href="../reference/cp_pi2cy.html">cp_pi2cy()</a></code> gives the quarterly (or monthly) values at the weighted average prices of the year, which value the overlap quarter of the one-quarter overlap technique (paragraph 8.72 and example 8.7 of the manual).</li>
-<li>
-<code><a href="../reference/pi_py2pp.html">pi_py2pp()</a></code> converts price indices over the previous year into price indices over the previous period, as needed for quarter-to-quarter (or month-to-month) Fisher indices.</li>
-<li>
-<code><a href="../reference/pi_annual.html">pi_annual()</a></code> derives annual price indices from quarterly (or monthly) ones: by default their weighted average (annual current prices over the annual sum of the volumes at the prices of the previous year), consistent with the quarterly data as in the examples 8.3, 8.8 and 8.9 of the manual, or their simple average (<code>method = "mean"</code>).</li>
-<li>
-<code>chain_laspeyres(method = "oqo")</code> follows the manual: the overlap quarter is valued at the average prices of the previous year (not at its current prices) and the first year is linked with the annual overlap technique. The printed example 8.7 and the annex 8.1 are reproduced.</li>
-<li>The argument <code>overlap_prices = "current_prices"</code> of <code><a href="../reference/chain_laspeyres.html">chain_laspeyres()</a></code> values the overlap quarter at its own current prices instead, as in the spreadsheet of the manual (the “q4 previous year = 100” volume measures). <code><a href="../reference/chain_contrib.html">chain_contrib()</a></code>, <code><a href="../reference/chain_unchain.html">chain_unchain()</a></code> and <code><a href="../reference/chain_unchain.html">chain_aggregate()</a></code> have the same argument.</li>
-<li>
-<code>chain_contrib(method = "oqo")</code> has a <code>pi</code> argument (see <code><a href="../reference/cp_pi2cy.html">cp_pi2cy()</a></code>).</li>
-<li>
-<code><a href="../reference/chain_discrepancy.html">chain_discrepancy()</a></code> has the sign of the manual: sum of the components minus the total.</li>
-<li>The functions work with monthly series (the overlap period is the last month).</li>
+<h2 class="pkg-version" data-toc-text="0.1.0" id="chainlink-010">chainlink 0.1.0<a class="anchor" aria-label="anchor" href="#chainlink-010"></a></h2>
+<ul><li>Initial release</li>
 </ul></div>
-<div class="section level3">
-<h3 id="other-changes-0-1-0-9000">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-0-1-0-9000"></a></h3>
-<ul><li>
-<code>cp_py2vol()</code> is removed (identical to <code><a href="../reference/cp_pi2vol.html">cp_pi2vol()</a></code>).</li>
-<li>The datasets <code>data8.2cp</code> and <code>data8.2ep</code> are renamed <code>imf_cp</code> and <code>imf_pi</code>.</li>
-<li>The quarterly chain (<code>"pq"</code>) is not implemented. The benchmarking of the quarterly series is done with the <code>tempdisagg</code> package (see the vignette).</li>
-<li>Fixes in <code><a href="../reference/fixed_weight_indices.html">laspeyres()</a></code>, <code><a href="../reference/fixed_weight_indices.html">paasche()</a></code> and <code><a href="../reference/fixed_weight_indices.html">fisher()</a></code> (typo in the <code>output</code> argument, one-component case) and in their documentation.</li>
-<li>New vignettes: contributions to percent change and a practical case. The vignette on the manual starts with the correspondence between its examples and the functions. Examples 8.1, 8.5, 8.8, A8.1 and figures 8.1, 8.2 and A8.1 of the manual are reproduced in the vignette <code>imf_qna_manual</code>.</li>
-<li>Tests against the examples of the manual and against fully consistent synthetic data (contributions add up exactly).</li>
-<li>Inputs are checked (class, frequency, number of variables, base year).</li>
-</ul></div>
-</div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
-    </nav></aside></div>
+  </main></div>
 
 
     <footer><div class="pkgdown-footer-left">
