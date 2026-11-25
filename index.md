@@ -56,7 +56,7 @@ To install the developpment version:
 install.packages("chainlink", repos = c("https://aqlt.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
-- From \[GitHub\](<https://github.com/AQLT/chainlink->:
+- From [GitHub](https://github.com/AQLT/chainlink):
 
 ``` r
 
