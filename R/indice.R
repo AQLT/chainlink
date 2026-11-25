@@ -57,11 +57,11 @@ cp_pi2vol.ts <- function(cp, pi, reference_freq = 1, reference_cycle = NULL) {
 #' @export
 cp_pi2vol.mts <- function(cp, pi, reference_freq = 1, reference_cycle = NULL) {
     if (ncol(cp) != ncol(pi)) {
-        stop("cp and pi must have the same number of variables")
+        stop("`cp` and `pi` must have the same number of variables", call. = FALSE)
     }
     vol <- do.call(
         cbind,
-        lapply(1:ncol(pi), function(i) {
+        lapply(seq_len(ncol(pi)), function(i) {
             cp_pi2vol(cp[, i], pi[, i], reference_freq = reference_freq, reference_cycle = reference_cycle)
         })
     )
@@ -142,7 +142,7 @@ laspeyres <- function(cp, pi, output = c("index", "measure", "both"), reference_
         cp_y_trim_py[, -ncol(cp_y_trim_py), drop = FALSE] /
         cp_y_trim_py[, ncol(cp_y_trim_py)]
 
-    lvi <- ts(apply(lvi, 1, sum), start = start(lvi), frequency = frequency(lvi))
+    lvi <- ts(rowSums(lvi), start = start(lvi), frequency = frequency(lvi))
 
     if (output == 'index') {
         return(lvi)
@@ -199,7 +199,7 @@ paasche <- function(cp, pi, output = c("index", "measure", "both"), reference_fr
         cp_y_trim[, -ncol(cp_y_trim), drop = FALSE] /
         cp_y_trim[, ncol(cp_y_trim)]
     pvi <- 1 /
-        ts(apply(pvi, 1, sum), start = start(pvi), frequency = frequency(pvi))
+        ts(rowSums(pvi), start = start(pvi), frequency = frequency(pvi))
 
     if (output == 'index') {
         return(pvi)
@@ -260,17 +260,17 @@ fisher <- function(
     lvi <- evi *
         cp_y_trim_py[, -ncol(cp_y_trim_py), drop = FALSE] /
         cp_y_trim_py[, ncol(cp_y_trim_py)]
-    lvi <- ts(apply(lvi, 1, sum), start = start(lvi), frequency = frequency(lvi))
+    lvi <- ts(rowSums(lvi), start = start(lvi), frequency = frequency(lvi))
 
     pvi <-
         (1 / evi) *
         cp_y_trim[, -ncol(cp_y_trim), drop = FALSE] /
         cp_y_trim[, ncol(cp_y_trim)]
     pvi <- 1 /
-        ts(apply(pvi, 1, sum), start = start(pvi), frequency = frequency(pvi))
+        ts(rowSums(pvi), start = start(pvi), frequency = frequency(pvi))
 
     fvi <- ts.union(lvi, pvi)
-    fvi <- ts(exp(apply(log(fvi), 1, mean)), start = start(fvi), frequency = frequency(fvi))
+    fvi <- ts(exp(rowMeans(log(fvi))), start = start(fvi), frequency = frequency(fvi))
     all_vi <- ts.union(lvi, pvi, fvi)
     colnames(all_vi) <- c("Laspeyres", "Paasche", "Fisher")
     if (output == 'index') {
@@ -346,7 +346,7 @@ pi_py2pp <- function(pi, previous = 100) {
 pi_py2pp_ts <- function(x, previous = 100) {
     f <- stats::frequency(x)
     if (f == 1) {
-        stop("price indices must be quarterly or monthly")
+        stop("price indices must be quarterly or monthly", call. = FALSE)
     }
     # Leading and trailing missing values (e.g. no price index in the base year)
     x <- stats::na.omit(x)

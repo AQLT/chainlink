@@ -51,11 +51,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Alain Quartier-la-Tente \email{alain.quartier@yahoo.fr} (\href{https://orcid.org/0000-0001-7890-3857}{ORCID})
+\strong{Maintainer}: Alain Quartier-la-Tente \email{alain.quartier@yahoo.fr} (\href{https://orcid.org/0000-0001-7890-3857}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{
-  \item Alain Quartier-la-Tente \email{alain.quartier@yahoo.fr} (\href{https://orcid.org/0000-0001-7890-3857}{ORCID})
+  \item Alain Quartier-la-Tente \email{alain.quartier@yahoo.fr} (\href{https://orcid.org/0000-0001-7890-3857}{ORCID}) [copyright holder]
 }
 
 }

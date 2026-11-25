@@ -5,12 +5,14 @@
 
 <!-- badges: start -->
 
+[![R universe
+version](https://aqlt.r-universe.dev/badges/chainlink)](https://aqlt.r-universe.dev/chainlink)
 [![R-CMD-check](https://github.com/AQLT/chainlink/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AQLT/chainlink/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `chainlink` derives price and volume measures of national accounts,
-following chapter 8 of the IMF [*Quarterly National Accounts Manual (2017
-Edition)*](https://doi.org/10.5089/9781475589870.069):
+following chapter 8 of the IMF [*Quarterly National Accounts Manual
+(2017 Edition)*](https://doi.org/10.5089/9781475589870.069):
 
 - Laspeyres-type, Paasche-type and Fisher-type volume indices from
   current prices and price indices (`cp_pi2vol()`, `laspeyres()`,
@@ -22,8 +24,8 @@ Edition)*](https://doi.org/10.5089/9781475589870.069):
   `chain_laspeyres()`, `annual_chain()`);
 - exact contributions to percent change of chain-linked volume measures,
   over the previous period, over the same period of the previous year or
-  for the annual growth (`chain_contrib()`), and contributions to percent
-  change of Fisher indices (`fisher_contrib()`);
+  for the annual growth (`chain_contrib()`), and contributions to
+  percent change of Fisher indices (`fisher_contrib()`);
 - non-additivity of chain-linked series (`chain_discrepancy()`), change
   of the reference year (`chain_rebase()`) and pseudo chain series for
   variables that change sign (`chain_pseudo()`);
@@ -39,8 +41,15 @@ series on annual data is not implemented: use for example the
 
 ## Installation
 
-You can install the development version of `chainlink` from
-[GitHub](https://github.com/AQLT/chainlink) with:
+To install the developpment version:
+
+- From [r-universe](https://aqlt.r-universe.dev/fable.rjd3):
+
+``` r
+install.packages("chainlink", repos = c("https://aqlt.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+- From \[GitHub\](<https://github.com/AQLT/chainlink->:
 
 ``` r
 # install.packages("pak")
@@ -50,8 +59,8 @@ pak::pak("AQLT/chainlink")
 ## Example
 
 The data of the example 8.2 of the manual are two products, `A` and `B`,
-with current prices (`imf_cp`) and price indices over the previous
-year (`imf_pi`):
+with current prices (`imf_cp`) and price indices over the previous year
+(`imf_pi`):
 
 ``` r
 library(chainlink)

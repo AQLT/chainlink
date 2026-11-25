@@ -28,6 +28,7 @@
 cran-comments.md
 
 ^\.DS_Store$
+^\.Rhistory$
 
 ^revdep$
 ^reconf\.sh$

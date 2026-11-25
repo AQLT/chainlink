@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # chainlink
 
 <!-- badges: start -->
+[![R universe version](https://aqlt.r-universe.dev/badges/chainlink)](https://aqlt.r-universe.dev/chainlink)
 [![R-CMD-check](https://github.com/AQLT/chainlink/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/AQLT/chainlink/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -49,10 +50,18 @@ vignette `imf_qna_manual`).
 
 ## Installation
 
-You can install the development version of `chainlink` from
-[GitHub](https://github.com/AQLT/chainlink) with:
 
-``` r
+To install the developpment version:
+
+- From [r-universe](https://aqlt.r-universe.dev/fable.rjd3):
+
+```{r, echo = TRUE, eval = FALSE}
+install.packages("chainlink", repos = c("https://aqlt.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+- From [GitHub](https://github.com/AQLT/chainlink-:
+
+```{r, echo = TRUE, eval = FALSE}
 # install.packages("pak")
 pak::pak("AQLT/chainlink")
 ```
