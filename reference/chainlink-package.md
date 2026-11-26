@@ -8,8 +8,7 @@ Accounts Manual (2017 Edition)"
 chain-linking of quarterly or monthly volume indices with the annual
 overlap and the one-quarter overlap techniques, exact contributions to
 percent change of the chain-linked volume measures, and non-additivity
-of the chain-linked series. The benchmarking of the quarterly series on
-annual data can be done with the 'tempdisagg' package.
+of the chain-linked series.
 
 ## Details
 
