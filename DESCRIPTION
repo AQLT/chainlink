@@ -13,8 +13,7 @@ Description: Tools to derive price and volume measures of national accounts
     chain-linking of quarterly or monthly volume indices with the annual
     overlap and the one-quarter overlap techniques, exact contributions to
     percent change of the chain-linked volume measures, and non-additivity of
-    the chain-linked series. The benchmarking of the quarterly series on
-    annual data can be done with the 'tempdisagg' package.
+    the chain-linked series. 
 URL: https://github.com/AQLT/chainlink, https://aqlt.github.io/chainlink/
 BugReports: https://github.com/AQLT/chainlink/issues
 License: EUPL-1.2

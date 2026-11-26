@@ -6,7 +6,7 @@
 \alias{chainlink-package}
 \title{chainlink: Chain-Linked Price and Volume Measures}
 \description{
-Tools to derive price and volume measures of national accounts following chapter 8 of the International Monetary Fund (2018) "Quarterly National Accounts Manual (2017 Edition)" \doi{10.5089/9781475589870.069}: Laspeyres-type, Paasche-type and Fisher-type volume indices, chain-linking of quarterly or monthly volume indices with the annual overlap and the one-quarter overlap techniques, exact contributions to percent change of the chain-linked volume measures, and non-additivity of the chain-linked series. The benchmarking of the quarterly series on annual data can be done with the 'tempdisagg' package.
+Tools to derive price and volume measures of national accounts following chapter 8 of the International Monetary Fund (2018) "Quarterly National Accounts Manual (2017 Edition)" \doi{10.5089/9781475589870.069}: Laspeyres-type, Paasche-type and Fisher-type volume indices, chain-linking of quarterly or monthly volume indices with the annual overlap and the one-quarter overlap techniques, exact contributions to percent change of the chain-linked volume measures, and non-additivity of the chain-linked series.
 }
 \details{
 The package follows the chapter 8 (Price and Volume Measures) of the IMF
